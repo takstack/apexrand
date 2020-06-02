@@ -32,6 +32,7 @@ type Loadout struct {
 	W2   string
 	Chal []string
 	Cstr string
+	Chct int //challenge count
 }
 
 const maxInt = 1<<(bits.UintSize-1) - 1 // 1<<31 - 1 or 1<<63 - 1
@@ -55,6 +56,7 @@ func Rollnewload(res Player, mode int) Player {
 		res = assignzones2(randSL4, res, 1)
 		res = clearwhammies(res, 1)
 		res = assignwhammies(res, 1, r)
+		res = convstrings(res, 1)
 	case 2:
 		randSL1 := fillrand(data.Chars, r) //[][]string with random chars
 		res = assignchars(randSL1, res, 2)
@@ -64,8 +66,9 @@ func Rollnewload(res Player, mode int) Player {
 		res = assignzones1(randSL3, res, 2)
 		randSL4 := fillrand(data.Zonesworlds, r) //[][]string with random zonesworlds
 		res = assignzones2(randSL4, res, 2)
-		res = clearwhammies(res, 1)
+		res = clearwhammies(res, 2)
 		res = assignwhammies(res, 2, r)
+		res = convstrings(res, 2)
 	case 3:
 		randSL1 := fillrand(data.Chars, r) //[][]string with random chars
 		res = assignchars(randSL1, res, 1)
@@ -87,24 +90,33 @@ func Rollnewload(res Player, mode int) Player {
 		res = clearwhammies(res, 2)
 		res = assignwhammies(res, 1, r)
 		res = assignwhammies(res, 2, r)
+		res = convstrings(res, 1)
+		res = convstrings(res, 2)
 	}
-	res = convstrings(res)
+
 	//log.Println("res after reroll", res)
 	return res
 }
-func convstrings(res Player) Player {
+func convstrings(res Player, team int) Player {
 	//log.Println("tchal1:", res.Tchal1)
 	//log.Println("tchal2:", res.Tchal2)
-
-	res.T1str = strings.Join(res.Tchal1, ", ")
-	res.T2str = strings.Join(res.Tchal2, ", ")
-	for elem := range res.Loadouts1 {
-		//log.Println("pchal1:", res.Loadouts1[elem].Chal)
-		res.Loadouts1[elem].Cstr = strings.Join(res.Loadouts1[elem].Chal, ", ")
-	}
-	for elem2 := range res.Loadouts2 {
-		//log.Println("pchal2:", res.Loadouts2[elem2].Chal)
-		res.Loadouts2[elem2].Cstr = strings.Join(res.Loadouts2[elem2].Chal, ", ")
+	switch team {
+	case 1:
+		res.T1str = strings.Join(res.Tchal1, ", ")
+		for elem := range res.Loadouts1 {
+			//log.Println("pchal1:", res.Loadouts1[elem].Chal)
+			res.Loadouts1[elem].Chct = res.Loadouts1[elem].Chct + len(res.Loadouts1[elem].Chal)
+			res.Loadouts1[elem].Cstr = strings.Join(res.Loadouts1[elem].Chal, ", ")
+			log.Println("Team 1 player curse count", res.Loadouts1[elem].Num, res.Loadouts1[elem].Chct, "+", len(res.Loadouts1[elem].Chal))
+		}
+	case 2:
+		res.T2str = strings.Join(res.Tchal2, ", ")
+		for elem2 := range res.Loadouts2 {
+			//log.Println("pchal2:", res.Loadouts2[elem2].Chal)
+			res.Loadouts2[elem2].Chct = res.Loadouts2[elem2].Chct + len(res.Loadouts2[elem2].Chal)
+			res.Loadouts2[elem2].Cstr = strings.Join(res.Loadouts2[elem2].Chal, ", ")
+			log.Println("Team 2 player curse count", res.Loadouts2[elem2].Num, res.Loadouts2[elem2].Chct, "+", len(res.Loadouts2[elem2].Chal))
+		}
 	}
 	return res
 }
@@ -211,6 +223,12 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 		if genrand(r) < 10 {
 			res.Tchal1 = append(res.Tchal1, "HEALS ONLY!!!!")
 		}
+		if genrand(r) < 30 {
+			res.Tchal1 = append(res.Tchal1, "Four corners")
+		}
+		if genrand(r) < threshold {
+			res.Tchal1 = append(res.Tchal1, "No jump balloons")
+		}
 	case 2:
 		for i := 0; i < 3; i++ {
 			if genrand(r) < threshold {
@@ -240,6 +258,12 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 		}
 		if genrand(r) < 10 {
 			res.Tchal2 = append(res.Tchal2, "Heals Only")
+		}
+		if genrand(r) < 30 {
+			res.Tchal2 = append(res.Tchal2, "Four corners")
+		}
+		if genrand(r) < threshold {
+			res.Tchal2 = append(res.Tchal2, "No jump balloons")
 		}
 	}
 	return res

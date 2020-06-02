@@ -11,6 +11,8 @@ import (
 
 //Res exp
 var Res random.Player
+var viewcounter int = 0
+var rollcounter int = 0
 
 func main() {
 	http.HandleFunc("/current", handler1)
@@ -23,19 +25,27 @@ func main() {
 
 }
 func reroll1(w http.ResponseWriter, r *http.Request) {
+	rollcounter++
+	log.Println("rollcounter: ", rollcounter)
 	Res = random.Rollnewload(Res, 1)
 	//log.Println("reroll1 res:", Res)
 	http.Redirect(w, r, "/current", 302)
 }
 func reroll2(w http.ResponseWriter, r *http.Request) {
+	rollcounter++
+	log.Println("rollcounter: ", rollcounter)
 	Res = random.Rollnewload(Res, 2)
 	http.Redirect(w, r, "/current", 302)
 }
 func reroll3(w http.ResponseWriter, r *http.Request) {
+	rollcounter++
+	log.Println("rollcounter: ", rollcounter)
 	Res = random.Rollnewload(Res, 3)
 	http.Redirect(w, r, "/current", 302)
 }
 func handler1(w http.ResponseWriter, r *http.Request) {
+	viewcounter++
+	log.Println("viewcounter: ", viewcounter)
 	log.Println("Page loaded")
 	tmpl := template.Must(template.ParseFiles("forms.html"))
 	tmpl.Execute(w, Res)
