@@ -34,7 +34,9 @@ type Loadout struct {
 	Cstr string
 	Chct int //challenge count
 }
+
 var rollcounter int = 0
+
 const maxInt = 1<<(bits.UintSize-1) - 1 // 1<<31 - 1 or 1<<63 - 1
 //Rollnewload exp
 func Rollnewload(res Player, mode int) Player {
@@ -120,6 +122,7 @@ func convstrings(res Player, team int) Player {
 	}
 	return res
 }
+
 func fillplayernums(res Player) Player {
 	for i := 0; i < 3; i++ {
 		res.Loadouts1[i].Num = i + 1
@@ -191,7 +194,7 @@ func assignzones2(randSL [][]int, res Player, team int) Player {
 	return res
 }
 func assignwhammies(res Player, team int, r *rand.Rand) Player {
-	threshold := 100
+	threshold := 50
 	switch team {
 	case 1:
 		for i := 0; i < 3; i++ {
@@ -217,7 +220,7 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 				res.Loadouts1[i].Chal = append(res.Loadouts1[i].Chal, "Can't open doors")
 			}
 		}
-		if genrand(r) < 200 {
+		if genrand(r) < 100 {
 			res.Tchal1 = append(res.Tchal1, "Land Blind")
 		}
 		if genrand(r) < 10 {
