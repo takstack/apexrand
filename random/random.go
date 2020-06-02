@@ -34,7 +34,7 @@ type Loadout struct {
 	Cstr string
 	Chct int //challenge count
 }
-
+var rollcounter int = 0
 const maxInt = 1<<(bits.UintSize-1) - 1 // 1<<31 - 1 or 1<<63 - 1
 //Rollnewload exp
 func Rollnewload(res Player, mode int) Player {
@@ -45,7 +45,6 @@ func Rollnewload(res Player, mode int) Player {
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	switch mode {
 	case 1:
-		log.Println("beg case 1")
 		randSL1 := fillrand(data.Chars, r) //[][]string with random chars
 		res = assignchars(randSL1, res, 1)
 		randSL2 := fillrand(data.Weapons, r) //[][]string with random weapons
@@ -93,7 +92,8 @@ func Rollnewload(res Player, mode int) Player {
 		res = convstrings(res, 1)
 		res = convstrings(res, 2)
 	}
-
+	rollcounter++
+	log.Println("rollcounter: ", rollcounter)
 	//log.Println("res after reroll", res)
 	return res
 }
