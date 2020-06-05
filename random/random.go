@@ -194,7 +194,7 @@ func assignzones2(randSL [][]int, res Player, team int) Player {
 	return res
 }
 func assignwhammies(res Player, team int, r *rand.Rand) Player {
-	threshold := 50
+	threshold := 75
 	switch team {
 	case 1:
 		for i := 0; i < 3; i++ {
@@ -256,7 +256,7 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 				res.Loadouts2[i].Chal = append(res.Loadouts2[i].Chal, "Can't open doors")
 			}
 		}
-		if genrand(r) < 200 {
+		if genrand(r) < 100 {
 			res.Tchal2 = append(res.Tchal2, "Land Blind")
 		}
 		if genrand(r) < 10 {

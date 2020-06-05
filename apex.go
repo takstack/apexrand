@@ -17,9 +17,12 @@ var viewcounter int = 0
 
 func main() {
 	srv := &http.Server{
-		ReadTimeout:  5 * time.Second,
-		WriteTimeout: 10 * time.Second,
-		Addr:         ":9999",
+		ReadTimeout:       5 * time.Second,
+		ReadHeaderTimeout: 5 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       120 * time.Second,
+
+		Addr: ":9999",
 	}
 
 	http.HandleFunc("/current", handler1)
@@ -35,7 +38,6 @@ func reroll1(w http.ResponseWriter, r *http.Request) {
 	Res = random.Rollnewload(Res, 1)
 	//log.Println("reroll1 res:", Res)
 	http.Redirect(w, r, "/current", 302)
-	//return 301,int???
 }
 func reroll2(w http.ResponseWriter, r *http.Request) {
 	Res = random.Rollnewload(Res, 2)
