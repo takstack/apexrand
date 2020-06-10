@@ -232,6 +232,9 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 		if genrand(r) < threshold {
 			res.Tchal1 = append(res.Tchal1, "No jump balloons")
 		}
+		if genrand(r) < threshold {
+			res.Tchal1 = append(res.Tchal1, "Musical boxes")
+		}
 	case 2:
 		for i := 0; i < 3; i++ {
 			if genrand(r) < threshold {
@@ -267,6 +270,9 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 		}
 		if genrand(r) < threshold {
 			res.Tchal2 = append(res.Tchal2, "No jump balloons")
+		}
+		if genrand(r) < threshold {
+			res.Tchal1 = append(res.Tchal2, "Musical boxes")
 		}
 	}
 	return res
