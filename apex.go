@@ -38,14 +38,17 @@ func reroll1(w http.ResponseWriter, r *http.Request) {
 	Res = random.Rollnewload(Res, 1)
 	//log.Println("reroll1 res:", Res)
 	http.Redirect(w, r, "/current", 302)
+	return
 }
 func reroll2(w http.ResponseWriter, r *http.Request) {
 	Res = random.Rollnewload(Res, 2)
 	http.Redirect(w, r, "/current", 302)
+	return
 }
 func reroll3(w http.ResponseWriter, r *http.Request) {
 	Res = random.Rollnewload(Res, 3)
 	http.Redirect(w, r, "/current", 302)
+	return
 }
 func handler1(w http.ResponseWriter, r *http.Request) {
 	viewcounter++
@@ -54,9 +57,11 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	//log.Println("Page loaded")
 	tmpl := template.Must(template.ParseFiles("forms.html"))
 	tmpl.Execute(w, Res)
+	return
 }
 func helloServer(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "The server you were connecting to was disconnected or no longer in use.  Please try your request again or leave a message below")
+	return
 }
 
 func fromRequest(req *http.Request) (net.IP, error) {
