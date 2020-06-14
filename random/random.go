@@ -208,7 +208,7 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 				res.Loadouts1[i].Chal = append(res.Loadouts1[i].Chal, "No Backpack")
 			}
 			if genrand(r) < threshold {
-				res.Loadouts1[i].Chal = append(res.Loadouts1[i].Chal, "A pirate's life (swap boxes)")
+				res.Loadouts1[i].Chal = append(res.Loadouts1[i].Chal, "A pirate's life (swap victim's box)")
 			}
 			if genrand(r) < 10 {
 				res.Loadouts1[i].Chal = append(res.Loadouts1[i].Chal, "Crouch only (entire game)")
@@ -233,7 +233,7 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 			res.Tchal1 = append(res.Tchal1, "No jump balloons")
 		}
 		if genrand(r) < threshold {
-			res.Tchal1 = append(res.Tchal1, "Musical boxes")
+			res.Tchal1 = append(res.Tchal1, "Musical boxes (rotate boxes with squad)")
 		}
 	case 2:
 		for i := 0; i < 3; i++ {
@@ -247,7 +247,7 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 				res.Loadouts2[i].Chal = append(res.Loadouts2[i].Chal, "No Backpack")
 			}
 			if genrand(r) < threshold {
-				res.Loadouts2[i].Chal = append(res.Loadouts2[i].Chal, "A pirate's life (swap boxes)")
+				res.Loadouts2[i].Chal = append(res.Loadouts2[i].Chal, "A pirate's life (swap victim's box)")
 			}
 			if genrand(r) < 10 {
 				res.Loadouts2[i].Chal = append(res.Loadouts2[i].Chal, "Crouch only (entire game)")
@@ -272,7 +272,7 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 			res.Tchal2 = append(res.Tchal2, "No jump balloons")
 		}
 		if genrand(r) < threshold {
-			res.Tchal1 = append(res.Tchal2, "Musical boxes")
+			res.Tchal1 = append(res.Tchal2, "Musical boxes (rotate boxes with squad)")
 		}
 	}
 	return res
