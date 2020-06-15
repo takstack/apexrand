@@ -3,7 +3,7 @@ package random
 import (
 	"apexrand/data"
 	"log"
-	"math/bits"
+	//"math/bits"
 	"math/rand"
 	"sort"
 	"strings"
@@ -12,15 +12,15 @@ import (
 
 //Player exported
 type Player struct {
-	Loadouts1 [3]Loadout
+	Loadouts1 [3]Loadout //3 players
 	Loadouts2 [3]Loadout
-	Zones1    [2]string
+	Zones1    [2]string //2 zones
 	Zones2    [2]string
 	Updmin    int
 	Updsec    int
-	Tchal1    []string
+	Tchal1    []string //holds team chals
 	Tchal2    []string
-	T1str     string
+	T1str     string //holds joined team chals
 	T2str     string
 }
 
@@ -30,15 +30,16 @@ type Loadout struct {
 	Char string
 	W1   string
 	W2   string
-	Chal []string
-	Cstr string
-	Chct int //challenge count
+	Chal []string //holds player chals
+	Cstr string   //holds joined player chals
+	Chct int      //challenge count
 }
 
 var rollcounter int = 0
 
-const maxInt = 1<<(bits.UintSize-1) - 1 // 1<<31 - 1 or 1<<63 - 1
-//Rollnewload exp
+//const maxInt = 1<<(bits.UintSize-1) - 1 // 1<<31 - 1 or 1<<63 - 1
+
+//Rollnewload handler for rolling team 1 or 2
 func Rollnewload(res Player, mode int) Player {
 	log.Println("New roll requested, mode:", mode)
 	res.Updmin = time.Now().UTC().Minute()
@@ -99,6 +100,8 @@ func Rollnewload(res Player, mode int) Player {
 	//log.Println("res after reroll", res)
 	return res
 }
+
+//joins strings for display as single element in html
 func convstrings(res Player, team int) Player {
 	//log.Println("tchal1:", res.Tchal1)
 	//log.Println("tchal2:", res.Tchal2)
@@ -123,6 +126,7 @@ func convstrings(res Player, team int) Player {
 	return res
 }
 
+//adds player nums to empty player sl
 func fillplayernums(res Player) Player {
 	for i := 0; i < 3; i++ {
 		res.Loadouts1[i].Num = i + 1
@@ -130,11 +134,14 @@ func fillplayernums(res Player) Player {
 	}
 	return res
 }
+
+//creates random sl for assigning later
 func fillrand(sl []string, r *rand.Rand) [][]int {
 	//log.Println("beg fillrand. sl is:", sl, "len sl is:", len(sl))
 
 	resSL := make([][]int, len(sl)) //sl to hold rand nums
 	for elem := range resSL {
+		//makes 2d sl for each elem and assigns num and rand
 		resSL[elem] = make([]int, 2)
 		resSL[elem][0] = elem
 		resSL[elem][1] = genrand(r)
