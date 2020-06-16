@@ -228,19 +228,22 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 			}
 		}
 		if genrand(r) < 100 {
-			res.Tchal1 = append(res.Tchal1, "Land Blind")
+			res.Tchal1 = append(res.Tchal1, "Land Blind (put trashcan on head and land the squad)")
 		}
 		if genrand(r) < 10 {
-			res.Tchal1 = append(res.Tchal1, "HEALS ONLY!!!!")
+			res.Tchal1 = append(res.Tchal1, "HEALS ONLY!!!! (no guns/throwables)")
 		}
 		if genrand(r) < 30 {
-			res.Tchal1 = append(res.Tchal1, "Four corners")
+			res.Tchal1 = append(res.Tchal1, "Four corners (land in different corners)")
 		}
 		if genrand(r) < threshold {
 			res.Tchal1 = append(res.Tchal1, "No jump balloons")
 		}
 		if genrand(r) < threshold {
 			res.Tchal1 = append(res.Tchal1, "Musical boxes (rotate boxes with squad)")
+		}
+		if genrand(r) < threshold {
+			res.Tchal1 = append(res.Tchal1, "Your L1 buttons broke!")
 		}
 	case 2:
 		for i := 0; i < 3; i++ {
@@ -267,19 +270,22 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 			}
 		}
 		if genrand(r) < 100 {
-			res.Tchal2 = append(res.Tchal2, "Land Blind")
+			res.Tchal2 = append(res.Tchal2, "Land Blind (put trashcan on head and land the squad)")
 		}
 		if genrand(r) < 10 {
-			res.Tchal2 = append(res.Tchal2, "Heals Only")
+			res.Tchal2 = append(res.Tchal2, "Heals Only (no guns/throwables)")
 		}
 		if genrand(r) < 30 {
-			res.Tchal2 = append(res.Tchal2, "Four corners")
+			res.Tchal2 = append(res.Tchal2, "Four corners (land in different corners)")
 		}
 		if genrand(r) < threshold {
 			res.Tchal2 = append(res.Tchal2, "No jump balloons")
 		}
 		if genrand(r) < threshold {
-			res.Tchal1 = append(res.Tchal2, "Musical boxes (rotate boxes with squad)")
+			res.Tchal2 = append(res.Tchal2, "Musical boxes (rotate boxes with squad)")
+		}
+		if genrand(r) < threshold {
+			res.Tchal2 = append(res.Tchal2, "Your L1 buttons broke!")
 		}
 	}
 	return res
