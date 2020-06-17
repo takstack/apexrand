@@ -36,6 +36,14 @@ type Loadout struct {
 	Chct int      //challenge count
 }
 
+//Randints holds int order for randomized lists
+type Randints struct {
+	R1 [][]int
+	R2 [][]int
+	R3 [][]int
+	R4 [][]int
+}
+
 var rollcounter int = 0
 
 //const maxInt = 1<<(bits.UintSize-1) - 1 // 1<<31 - 1 or 1<<63 - 1
@@ -50,54 +58,28 @@ func Rollnewload(res Player, mode int) Player {
 	res.Updhr = time.Now().UTC().In(loc).Hour()
 	res.Updmin = time.Now().UTC().Minute()
 	res.Updsec = time.Now().UTC().Second()
+
 	res = fillplayernums(res)
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+
 	switch mode {
 	case 1:
-		randSL1 := fillrand(data.Chars, r) //[][]string with random chars
-		res = assignchars(randSL1, res, 1)
-		randSL2 := fillrand(data.Weapons, r) //[][]string with random weapons
-		res = assignweapons(randSL2, res, 1)
-		randSL3 := fillrand(data.Zonesking, r) //[][]string with random zonesking
-		res = assignzones1(randSL3, res, 1)
-		randSL4 := fillrand(data.Zonesworlds, r) //[][]string with random zonesworlds
-		res = assignzones2(randSL4, res, 1)
-		res = clearwhammies(res, 1)
-		res = assignwhammies(res, 1, r)
+		randlist1 := randomizelists(r)
+		res = assignslots(randlist1, res, 1)
+		res = handlewhammies(res, 1, r)
 		res = convstrings(res, 1)
 	case 2:
-		randSL1 := fillrand(data.Chars, r) //[][]string with random chars
-		res = assignchars(randSL1, res, 2)
-		randSL2 := fillrand(data.Weapons, r) //[][]string with random weapons
-		res = assignweapons(randSL2, res, 2)
-		randSL3 := fillrand(data.Zonesking, r) //[][]string with random zonesking
-		res = assignzones1(randSL3, res, 2)
-		randSL4 := fillrand(data.Zonesworlds, r) //[][]string with random zonesworlds
-		res = assignzones2(randSL4, res, 2)
-		res = clearwhammies(res, 2)
-		res = assignwhammies(res, 2, r)
+		randlist2 := randomizelists(r)
+		res = assignslots(randlist2, res, 2)
+		res = handlewhammies(res, 2, r)
 		res = convstrings(res, 2)
 	case 3:
-		randSL1 := fillrand(data.Chars, r) //[][]string with random chars
-		res = assignchars(randSL1, res, 1)
-		randSL2 := fillrand(data.Weapons, r) //[][]string with random weapons
-		res = assignweapons(randSL2, res, 1)
-		randSL3 := fillrand(data.Zonesking, r) //[][]string with random zonesking
-		res = assignzones1(randSL3, res, 1)
-		randSL4 := fillrand(data.Zonesworlds, r) //[][]string with random zonesworlds
-		res = assignzones2(randSL4, res, 1)
-		randSL5 := fillrand(data.Chars, r) //[][]string with random chars
-		res = assignchars(randSL5, res, 2)
-		randSL6 := fillrand(data.Weapons, r) //[][]string with random weapons
-		res = assignweapons(randSL6, res, 2)
-		randSL7 := fillrand(data.Zonesking, r) //[][]string with random zonesking
-		res = assignzones1(randSL7, res, 2)
-		randSL8 := fillrand(data.Zonesworlds, r) //[][]string with random zonesworlds
-		res = assignzones2(randSL8, res, 2)
-		res = clearwhammies(res, 1)
-		res = clearwhammies(res, 2)
-		res = assignwhammies(res, 1, r)
-		res = assignwhammies(res, 2, r)
+		randlist1 := randomizelists(r)
+		randlist2 := randomizelists(r)
+		res = assignslots(randlist1, res, 1)
+		res = assignslots(randlist2, res, 2)
+		res = handlewhammies(res, 1, r)
+		res = handlewhammies(res, 2, r)
 		res = convstrings(res, 1)
 		res = convstrings(res, 2)
 	}
@@ -138,6 +120,32 @@ func fillplayernums(res Player) Player {
 		res.Loadouts1[i].Num = i + 1
 		res.Loadouts2[i].Num = i + 4
 	}
+	return res
+}
+
+//add randomized ints to lists for each roll
+func randomizelists(r *rand.Rand) Randints {
+	var ri Randints
+	ri.R1 = fillrand(data.Chars, r)       //[][]string with random chars
+	ri.R2 = fillrand(data.Weapons, r)     //[][]string with random weapons
+	ri.R3 = fillrand(data.Zonesking, r)   //[][]string with random zonesking
+	ri.R4 = fillrand(data.Zonesworlds, r) //[][]string with random zonesworlds
+	return ri
+}
+
+//assigns the random vars to players
+func assignslots(ri Randints, res Player, team int) Player {
+	res = assignchars(ri.R1, res, team)
+	res = assignweapons(ri.R2, res, team)
+	res = assignzones1(ri.R3, res, team)
+	res = assignzones2(ri.R4, res, team)
+	return res
+}
+
+//clears and assigns player and team whammies
+func handlewhammies(res Player, team int, r *rand.Rand) Player {
+	res = clearwhammies(res, team)
+	res = assignwhammies(res, team, r)
 	return res
 }
 
@@ -208,92 +216,69 @@ func assignzones2(randSL [][]int, res Player, team int) Player {
 }
 func assignwhammies(res Player, team int, r *rand.Rand) Player {
 	threshold := 75
+	var ichal []string
+	var tchal []string
+
+	for i := 0; i < 3; i++ {
+
+		if genrand(r) < threshold {
+			ichal = append(ichal, "No Attachments")
+		}
+		if genrand(r) < threshold {
+			ichal = append(ichal, "No Shields")
+		}
+		if genrand(r) < 10 {
+			ichal = append(ichal, "No Backpack")
+		}
+		if genrand(r) < threshold {
+			ichal = append(ichal, "A pirate's life (swap victim's box)")
+		}
+		if genrand(r) < 10 {
+			ichal = append(ichal, "Crouch only (entire game)")
+		}
+		if genrand(r) < threshold {
+			ichal = append(ichal, "No Throwables")
+		}
+		if genrand(r) < threshold {
+			ichal = append(ichal, "Can't open doors")
+		}
+
+		switch team {
+		case 1:
+			//log.Println("ichal3:", ichal)
+			res.Loadouts1[i].Chal = ichal
+
+		case 2:
+			res.Loadouts2[i].Chal = ichal
+
+		}
+		ichal = nil
+	}
+	if genrand(r) < 100 {
+		tchal = append(tchal, "Land Blind (put trashcan on head and land the squad)")
+	}
+	if genrand(r) < 10 {
+		tchal = append(tchal, "Heals Only (no guns/throwables)")
+	}
+	if genrand(r) < 30 {
+		tchal = append(tchal, "Four corners (land in different corners)")
+	}
+	if genrand(r) < threshold {
+		tchal = append(tchal, "No jump balloons")
+	}
+	if genrand(r) < threshold {
+		tchal = append(tchal, "Musical boxes (rotate boxes with squad)")
+	}
+	if genrand(r) < threshold {
+		tchal = append(tchal, "Your L1 buttons broke!")
+	}
 	switch team {
 	case 1:
-		for i := 0; i < 3; i++ {
-			if genrand(r) < threshold {
-				res.Loadouts1[i].Chal = append(res.Loadouts1[i].Chal, "No Attachments")
-			}
-			if genrand(r) < threshold {
-				res.Loadouts1[i].Chal = append(res.Loadouts1[i].Chal, "No Shields")
-			}
-			if genrand(r) < 10 {
-				res.Loadouts1[i].Chal = append(res.Loadouts1[i].Chal, "No Backpack")
-			}
-			if genrand(r) < threshold {
-				res.Loadouts1[i].Chal = append(res.Loadouts1[i].Chal, "A pirate's life (swap victim's box)")
-			}
-			if genrand(r) < 10 {
-				res.Loadouts1[i].Chal = append(res.Loadouts1[i].Chal, "Crouch only (entire game)")
-			}
-			if genrand(r) < threshold {
-				res.Loadouts1[i].Chal = append(res.Loadouts1[i].Chal, "No Throwables")
-			}
-			if genrand(r) < threshold {
-				res.Loadouts1[i].Chal = append(res.Loadouts1[i].Chal, "Can't open doors")
-			}
-		}
-		if genrand(r) < 100 {
-			res.Tchal1 = append(res.Tchal1, "Land Blind (put trashcan on head and land the squad)")
-		}
-		if genrand(r) < 10 {
-			res.Tchal1 = append(res.Tchal1, "HEALS ONLY!!!! (no guns/throwables)")
-		}
-		if genrand(r) < 30 {
-			res.Tchal1 = append(res.Tchal1, "Four corners (land in different corners)")
-		}
-		if genrand(r) < threshold {
-			res.Tchal1 = append(res.Tchal1, "No jump balloons")
-		}
-		if genrand(r) < threshold {
-			res.Tchal1 = append(res.Tchal1, "Musical boxes (rotate boxes with squad)")
-		}
-		if genrand(r) < threshold {
-			res.Tchal1 = append(res.Tchal1, "Your L1 buttons broke!")
-		}
+		res.Tchal1 = tchal
 	case 2:
-		for i := 0; i < 3; i++ {
-			if genrand(r) < threshold {
-				res.Loadouts2[i].Chal = append(res.Loadouts2[i].Chal, "No Attachments")
-			}
-			if genrand(r) < threshold {
-				res.Loadouts2[i].Chal = append(res.Loadouts2[i].Chal, "No Shields")
-			}
-			if genrand(r) < 10 {
-				res.Loadouts2[i].Chal = append(res.Loadouts2[i].Chal, "No Backpack")
-			}
-			if genrand(r) < threshold {
-				res.Loadouts2[i].Chal = append(res.Loadouts2[i].Chal, "A pirate's life (swap victim's box)")
-			}
-			if genrand(r) < 10 {
-				res.Loadouts2[i].Chal = append(res.Loadouts2[i].Chal, "Crouch only (entire game)")
-			}
-			if genrand(r) < threshold {
-				res.Loadouts2[i].Chal = append(res.Loadouts2[i].Chal, "No Throwables")
-			}
-			if genrand(r) < threshold {
-				res.Loadouts2[i].Chal = append(res.Loadouts2[i].Chal, "Can't open doors")
-			}
-		}
-		if genrand(r) < 100 {
-			res.Tchal2 = append(res.Tchal2, "Land Blind (put trashcan on head and land the squad)")
-		}
-		if genrand(r) < 10 {
-			res.Tchal2 = append(res.Tchal2, "Heals Only (no guns/throwables)")
-		}
-		if genrand(r) < 30 {
-			res.Tchal2 = append(res.Tchal2, "Four corners (land in different corners)")
-		}
-		if genrand(r) < threshold {
-			res.Tchal2 = append(res.Tchal2, "No jump balloons")
-		}
-		if genrand(r) < threshold {
-			res.Tchal2 = append(res.Tchal2, "Musical boxes (rotate boxes with squad)")
-		}
-		if genrand(r) < threshold {
-			res.Tchal2 = append(res.Tchal2, "Your L1 buttons broke!")
-		}
+		res.Tchal2 = tchal
 	}
+	//log.Println(res)
 	return res
 }
 func clearwhammies(res Player, team int) Player {
