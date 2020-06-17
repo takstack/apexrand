@@ -46,8 +46,6 @@ type Randints struct {
 
 var rollcounter int = 0
 
-//const maxInt = 1<<(bits.UintSize-1) - 1 // 1<<31 - 1 or 1<<63 - 1
-
 //Rollnewload handler for rolling team 1 or 2
 func Rollnewload(res Player, mode int) Player {
 	log.Println("New roll requested, mode:", mode)
@@ -227,13 +225,13 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 		if genrand(r) < threshold {
 			ichal = append(ichal, "No Shields")
 		}
-		if genrand(r) < 10 {
+		if genrand(r) < threshold/10 {
 			ichal = append(ichal, "No Backpack")
 		}
 		if genrand(r) < threshold {
 			ichal = append(ichal, "A pirate's life (swap victim's box)")
 		}
-		if genrand(r) < 10 {
+		if genrand(r) < threshold/10 {
 			ichal = append(ichal, "Crouch only (entire game)")
 		}
 		if genrand(r) < threshold {
@@ -254,13 +252,13 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 		}
 		ichal = nil
 	}
-	if genrand(r) < 100 {
+	if genrand(r) < threshold+(threshold/4) {
 		tchal = append(tchal, "Land Blind (put trashcan on head and land the squad)")
 	}
-	if genrand(r) < 10 {
+	if genrand(r) < threshold/10 {
 		tchal = append(tchal, "Heals Only (no guns/throwables)")
 	}
-	if genrand(r) < 30 {
+	if genrand(r) < threshold/2 {
 		tchal = append(tchal, "Four corners (land in different corners)")
 	}
 	if genrand(r) < threshold {
