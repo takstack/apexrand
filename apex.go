@@ -34,6 +34,7 @@ func main() {
 	log.Println(srv.ListenAndServe())
 
 }
+
 func reroll1(w http.ResponseWriter, r *http.Request) {
 	Res = random.Rollnewload(Res, 1)
 	//log.Println("reroll1 res:", Res)

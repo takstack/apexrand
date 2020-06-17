@@ -16,6 +16,7 @@ type Player struct {
 	Loadouts2 [3]Loadout
 	Zones1    [2]string //2 zones
 	Zones2    [2]string
+	Updhr     int
 	Updmin    int
 	Updsec    int
 	Tchal1    []string //holds team chals
@@ -42,6 +43,11 @@ var rollcounter int = 0
 //Rollnewload handler for rolling team 1 or 2
 func Rollnewload(res Player, mode int) Player {
 	log.Println("New roll requested, mode:", mode)
+	loc, err := time.LoadLocation("America/Los_Angeles")
+	if err != nil {
+		log.Println(err)
+	}
+	res.Updhr = time.Now().UTC().In(loc).Hour()
 	res.Updmin = time.Now().UTC().Minute()
 	res.Updsec = time.Now().UTC().Second()
 	res = fillplayernums(res)
