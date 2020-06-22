@@ -16,6 +16,8 @@ type Player struct {
 	Loadouts2 [3]Loadout
 	Zones1    [2]string //2 zones
 	Zones2    [2]string
+	Z1str     string
+	Z2str     string
 	Updhr     int
 	Updmin    int
 	Updsec    int
@@ -94,6 +96,7 @@ func convstrings(res Player, team int) Player {
 	switch team {
 	case 1:
 		res.T1str = strings.Join(res.Tchal1, ", ")
+		res.Z1str = strings.Join([]string{res.Zones1[0], res.Zones1[1]}, ", ")
 		for elem := range res.Loadouts1 {
 			//log.Println("pchal1:", res.Loadouts1[elem].Chal)
 			res.Loadouts1[elem].Chct = res.Loadouts1[elem].Chct + len(res.Loadouts1[elem].Chal)
@@ -102,6 +105,7 @@ func convstrings(res Player, team int) Player {
 		}
 	case 2:
 		res.T2str = strings.Join(res.Tchal2, ", ")
+		res.Z2str = strings.Join([]string{res.Zones2[0], res.Zones2[1]}, ", ")
 		for elem2 := range res.Loadouts2 {
 			//log.Println("pchal2:", res.Loadouts2[elem2].Chal)
 			res.Loadouts2[elem2].Chct = res.Loadouts2[elem2].Chct + len(res.Loadouts2[elem2].Chal)
