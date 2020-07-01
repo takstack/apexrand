@@ -16,9 +16,9 @@ type Player struct {
 	Loadouts2 [3]Loadout
 	Zones1    [2]string //2 zones
 	Zones2    [2]string
-	Z1str     string
+	Z1str     string  //holds joined zones
 	Z2str     string
-	Updhr     int
+	Updhr     int  //update time
 	Updmin    int
 	Updsec    int
 	Tchal1    []string //holds team chals
@@ -29,10 +29,10 @@ type Player struct {
 
 //Loadout exported
 type Loadout struct {
-	Num  int
-	Char string
-	W1   string
-	W2   string
+	Num  int  //player number
+	Char string  //player name
+	W1   string  //weapon 1
+	W2   string  //weapon 2
 	Chal []string //holds player chals
 	Cstr string   //holds joined player chals
 	Chct int      //challenge count
@@ -60,7 +60,7 @@ func Rollnewload(res Player, mode int) Player {
 	res.Updsec = time.Now().UTC().Second()
 
 	res = fillplayernums(res)
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))  //set new rand seed, only once for each web call
 
 	switch mode {
 	case 1:
@@ -99,7 +99,7 @@ func convstrings(res Player, team int) Player {
 		res.Z1str = strings.Join([]string{res.Zones1[0], res.Zones1[1]}, ", ")
 		for elem := range res.Loadouts1 {
 			//log.Println("pchal1:", res.Loadouts1[elem].Chal)
-			res.Loadouts1[elem].Chct = res.Loadouts1[elem].Chct + len(res.Loadouts1[elem].Chal)
+			res.Loadouts1[elem].Chct = res.Loadouts1[elem].Chct + len(res.Loadouts1[elem].Chal) //track num challenges assigned
 			res.Loadouts1[elem].Cstr = strings.Join(res.Loadouts1[elem].Chal, ", ")
 			log.Println("Team 1 player curse count", res.Loadouts1[elem].Num, res.Loadouts1[elem].Chct, "+", len(res.Loadouts1[elem].Chal))
 		}
@@ -108,7 +108,7 @@ func convstrings(res Player, team int) Player {
 		res.Z2str = strings.Join([]string{res.Zones2[0], res.Zones2[1]}, ", ")
 		for elem2 := range res.Loadouts2 {
 			//log.Println("pchal2:", res.Loadouts2[elem2].Chal)
-			res.Loadouts2[elem2].Chct = res.Loadouts2[elem2].Chct + len(res.Loadouts2[elem2].Chal)
+			res.Loadouts2[elem2].Chct = res.Loadouts2[elem2].Chct + len(res.Loadouts2[elem2].Chal) //track num challenges assigned
 			res.Loadouts2[elem2].Cstr = strings.Join(res.Loadouts2[elem2].Chal, ", ")
 			log.Println("Team 2 player curse count", res.Loadouts2[elem2].Num, res.Loadouts2[elem2].Chct, "+", len(res.Loadouts2[elem2].Chal))
 		}
