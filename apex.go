@@ -8,6 +8,8 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -31,7 +33,7 @@ func main() {
 	http.HandleFunc("/reroll3", reroll3) //roll both
 	http.HandleFunc("/apex", handler1)
 	http.HandleFunc("/", helloServer)
-	log.Println(srv.ListenAndServe())
+	log.Fatalln(srv.ListenAndServe())
 
 }
 
@@ -53,9 +55,14 @@ func reroll3(w http.ResponseWriter, r *http.Request) {
 }
 func handler1(w http.ResponseWriter, r *http.Request) {
 	viewcounter++
-	ip, _ := fromRequest(r)
+	ip, ips, _ := fromRequest(r)
+	log.Println("Read cookie:", r.Header.Get("Cookie"))
 	log.Println(ip, ", viewcounter: ", viewcounter)
 	//log.Println("Page loaded")
+
+	expiration := time.Now().Add(1 * time.Hour)
+	cookie := http.Cookie{Name: "CSRFtoken", Value: ips, Expires: expiration, SameSite: http.SameSiteStrictMode}
+	http.SetCookie(w, &cookie)
 	tmpl := template.Must(template.ParseFiles("forms.html"))
 	tmpl.Execute(w, Res)
 	return
@@ -65,14 +72,31 @@ func helloServer(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
-func fromRequest(req *http.Request) (net.IP, error) {
+func fromRequest(req *http.Request) (net.IP, string, error) {
 	ip, _, err := net.SplitHostPort(req.RemoteAddr)
 	if err != nil {
-		return nil, fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
+		return nil, "", fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
 	}
 	userIP := net.ParseIP(ip)
+
 	if userIP == nil {
-		return nil, fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
+		return nil, "", fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
 	}
-	return userIP, nil
+
+	IPsplit := strings.Split(ip, ".") //split ip into slice
+	IPcalc := 0
+	for _, elem := range IPsplit {
+		//var err error
+		ipint, err := strconv.Atoi(elem)
+		IPcalc = IPcalc + ipint
+		if err != nil {
+			return nil, "", fmt.Errorf("userip: %q did not convert to int", req.RemoteAddr)
+		}
+	}
+	userIPs := strconv.Itoa(IPcalc)
+	if err != nil {
+		return nil, "", fmt.Errorf("userip: %q did not convert to str", req.RemoteAddr)
+	}
+	//log.Println(userIP, userIPs)
+	return userIP, userIPs, nil
 }
