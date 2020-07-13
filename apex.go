@@ -63,6 +63,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	expiration := time.Now().Add(1 * time.Hour)
 	cookie := http.Cookie{Name: "CSRFtoken", Value: ips, Expires: expiration, SameSite: http.SameSiteStrictMode}
 	http.SetCookie(w, &cookie)
+
 	tmpl := template.Must(template.ParseFiles("forms.html"))
 	tmpl.Execute(w, Res)
 	return
@@ -82,7 +83,7 @@ func fromRequest(req *http.Request) (net.IP, string, error) {
 	if userIP == nil {
 		return nil, "", fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
 	}
-
+	//create bogus csrf val based on ip
 	IPsplit := strings.Split(ip, ".") //split ip into slice
 	IPcalc := 0
 	for _, elem := range IPsplit {
@@ -97,6 +98,7 @@ func fromRequest(req *http.Request) (net.IP, string, error) {
 	if err != nil {
 		return nil, "", fmt.Errorf("userip: %q did not convert to str", req.RemoteAddr)
 	}
+
 	//log.Println(userIP, userIPs)
 	return userIP, userIPs, nil
 }
