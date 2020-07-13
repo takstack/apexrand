@@ -59,6 +59,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("Error - IP Parse: ", err)
 	}
+
 	log.Println("Read cookie:", r.Header.Get("Cookie"))
 	log.Println(ip, ", viewcounter: ", viewcounter)
 	//log.Println("Page loaded")
@@ -81,11 +82,12 @@ func fromRequest(req *http.Request) (net.IP, string, error) {
 	if err != nil {
 		return nil, "", fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
 	}
-	userIP := net.ParseIP(ip)
 
+	userIP := net.ParseIP(ip)
 	if userIP == nil {
 		return nil, "", fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
 	}
+
 	//create bogus csrf val based on ip
 	IPsplit := strings.Split(ip, ".") //split ip into slice
 	IPcalc := 0
