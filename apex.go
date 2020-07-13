@@ -55,7 +55,10 @@ func reroll3(w http.ResponseWriter, r *http.Request) {
 }
 func handler1(w http.ResponseWriter, r *http.Request) {
 	viewcounter++
-	ip, ips, _ := fromRequest(r)
+	ip, ips, err := fromRequest(r)
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
 	log.Println("Read cookie:", r.Header.Get("Cookie"))
 	log.Println(ip, ", viewcounter: ", viewcounter)
 	//log.Println("Page loaded")
