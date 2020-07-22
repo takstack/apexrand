@@ -8,6 +8,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	_ "net/http/pprof"
 	"strconv"
 	"strings"
 	"time"
@@ -33,33 +34,45 @@ func main() {
 	http.HandleFunc("/reroll3", reroll3) //roll both
 	http.HandleFunc("/apex", handler1)
 	http.HandleFunc("/", helloServer)
+
+	srv.SetKeepAlivesEnabled(false)
 	log.Fatalln(srv.ListenAndServe())
 
 }
 
 func reroll1(w http.ResponseWriter, r *http.Request) {
+	log.Println("reroll1 started")
 	Res = random.Rollnewload(Res, 1)
+	_ = Res
+	//log.Println("reroll res:", Res)
 	//log.Println("reroll1 res:", Res)
 	http.Redirect(w, r, "/current", 302)
 	return
 }
 func reroll2(w http.ResponseWriter, r *http.Request) {
+	log.Println("reroll2 started")
 	Res = random.Rollnewload(Res, 2)
+	_ = Res
+	//log.Println("reroll res:", Res)
 	http.Redirect(w, r, "/current", 302)
 	return
 }
 func reroll3(w http.ResponseWriter, r *http.Request) {
+	log.Println("reroll3 started")
 	Res = random.Rollnewload(Res, 3)
+	_ = Res
+	//log.Println("reroll res:", Res)
 	http.Redirect(w, r, "/current", 302)
 	return
 }
 func handler1(w http.ResponseWriter, r *http.Request) {
+	//r.Host = "sheldonconn.ddns.net" //attempt to eliminate hanging issue
 	viewcounter++
 	ip, ips, err := fromRequest(r)
 	if err != nil {
 		log.Println("Error - IP Parse: ", err)
 	}
-
+	log.Println(r.Header)
 	log.Println("Read cookie:", r.Header.Get("Cookie"))
 	log.Println(ip, ", viewcounter: ", viewcounter)
 	//log.Println("Page loaded")
@@ -78,6 +91,7 @@ func helloServer(w http.ResponseWriter, r *http.Request) {
 }
 
 func fromRequest(req *http.Request) (net.IP, string, error) {
+	log.Println("parsing new req ip")
 	ip, _, err := net.SplitHostPort(req.RemoteAddr)
 	if err != nil {
 		return nil, "", fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
@@ -103,7 +117,7 @@ func fromRequest(req *http.Request) (net.IP, string, error) {
 	if err != nil {
 		return nil, "", fmt.Errorf("userip: %q did not convert to str", req.RemoteAddr)
 	}
-
+	log.Println("ip parsed")
 	//log.Println(userIP, userIPs)
 	return userIP, userIPs, nil
 }
