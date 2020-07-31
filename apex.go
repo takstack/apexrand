@@ -35,6 +35,7 @@ func main() {
 	http.HandleFunc("/apex", handler1)
 	http.HandleFunc("/", helloServer)
 
+	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
 	srv.SetKeepAlivesEnabled(false)
 	log.Fatalln(srv.ListenAndServe())
 
@@ -61,7 +62,9 @@ func reroll3(w http.ResponseWriter, r *http.Request) {
 	log.Println("reroll3 started")
 	Res = random.Rollnewload(Res, 3)
 	_ = Res
-	//log.Println("reroll res:", Res)
+	log.Printf("reroll res:%+v", Res.Tchals)
+	//log.Println("reroll res:", Res.Tchals.Tchal2)
+	log.Println("len tchals:", len(Res.Tchals))
 	http.Redirect(w, r, "/current", 302)
 	return
 }
