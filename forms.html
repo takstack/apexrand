@@ -18,11 +18,12 @@
         width: 50%;
         
     }
-    .row{
-    margin-bottom: 0px;
+    
+    .rowmargin{
+    margin-bottom: 2px;
     }
     .rowhalf{
-        line-height: 8px;
+        line-height: 4px;
     }
     /* Clear floats after the columns */
     .row:after {
@@ -42,88 +43,92 @@
 <p>{{.Updhr}}:{{.Updmin}}:{{.Updsec}}<br><br></p>
 
 <div class="row">
-    <div class="column" style="background-color:rgba(0,80,255,.5);">
+    <div class="column" style="background-color:rgba(102,204,255,1);">
         <b>Team 1</b> 
     </div>
-    <div class="column" style="background-color:rgba(255,80,0,.5);">
+    <div class="column" style="background-color:rgba(153,255,204,1);">
         <b>Team 2</b>
     </div>
 </div>
 
-<div class="row">
-    <div class="column" style="background-color:rgba(0,80,255,.5);">&nbsp</div>
-    <div class="column" style="background-color:rgba(255,80,0,.5);">&nbsp</div>
+<div class="rowmargin">
+    <div class="column" style="background-color:rgba(102,204,255,1);">&nbsp</div>
+    <div class="column" style="background-color:rgba(153,255,204,1);">&nbsp</div>
 </div>
 
 {{range $t:= .Tchals}}
 <div class="row">
-    <div class="column" style="background-color:rgba(0,80,255,.5);">
+    <div class="column" style="background-color:rgba(102,204,255,1);">
         {{$t.Tchal1}} 
     </div>
-    <div class="column" style="background-color:rgba(255,80,0,.5);">
+    <div class="column" style="background-color:rgba(153,255,204,1);">
         {{$t.Tchal2}} 
     </div>
+</div>
+<div class="rowhalf">
+    <div class="column" style="background-color:rgba(102,204,255,1);">&nbsp</div>
+    <div class="column" style="background-color:rgba(153,255,204,1);">&nbsp</div>
 </div>
 {{end}}
 
 <div class="row">
-    <div class="column" style="background-color:rgba(0,80,255,.5);">&nbsp</div>
-    <div class="column" style="background-color:rgba(255,80,0,.5);">&nbsp</div>
+    <div class="column" style="background-color:rgba(102,204,255,1);">&nbsp</div>
+    <div class="column" style="background-color:rgba(153,255,204,1);">&nbsp</div>
 </div>
 
 {{range $l:= .AllLoads}}
 <div class="row">
-    <div class="column" style="background-color:rgba(0,80,255,.5);">
+    <div class="column" style="background-color:rgba(102,204,255,1);">
         <u><i><b>Player: {{$l.L1.Num}} - {{$l.L1.Char}}</b></i></u>
     </div>
-    <div class="column" style="background-color:rgba(255,80,0,.5);">
+    <div class="column" style="background-color:rgba(153,255,204,1);">
         <u><i><b>Player: {{$l.L2.Num}} - {{$l.L2.Char}}</b></i></u>
     </div>
 </div>  
 
 <div class="row">
-    <div class="column" style="background-color:rgba(0,80,255,.5);">
+    <div class="column" style="background-color:rgba(102,204,255,1);">
         weapon1: {{$l.L1.W1}}
     </div>
-    <div class="column" style="background-color:rgba(255,80,0,.5);">
+    <div class="column" style="background-color:rgba(153,255,204,1);">
         weapon1: {{$l.L2.W1}}
     </div>
 </div>   
 <div class="row">
-    <div class="column" style="background-color:rgba(0,80,255,.5);">
+    <div class="column" style="background-color:rgba(102,204,255,1);">
         weapon2: {{$l.L1.W2}}
     </div>
-    <div class="column" style="background-color:rgba(255,80,0,.5);">
+    <div class="column" style="background-color:rgba(153,255,204,1);">
         weapon2: {{$l.L2.W2}}
     </div>
 </div>   
 
 <div class="rowhalf">
-    <div class="column" style="background-color:rgba(0,80,255,.5);">&nbsp</div>
-    <div class="column" style="background-color:rgba(255,80,0,.5);">&nbsp</div>
+    <div class="column" style="background-color:rgba(102,204,255,1);">&nbsp</div>
+    <div class="column" style="background-color:rgba(153,255,204,1);">&nbsp</div>
 </div>
 
 <div class="row">
-    <div class="column" style="background-color:rgba(0,80,255,.5);">       
+    <div class="column" style="background-color:rgba(102,204,255,1);">       
         curses: {{$l.L1.Cstr}}
     </div>
-    <div class="column" style="background-color:rgba(255,80,0,.5);">
+    <div class="column" style="background-color:rgba(153,255,204,1);">
         curses: {{$l.L2.Cstr}}
     </div>
 </div>
 
 <div class="row">
-    <div class="column" style="background-color:rgba(0,80,255,.5);">&nbsp</div>
-    <div class="column" style="background-color:rgba(255,80,0,.5);">&nbsp</div>
+    <div class="column" style="background-color:rgba(102,204,255,1);">&nbsp</div>
+    <div class="column" style="background-color:rgba(153,255,204,1);">&nbsp</div>
 </div>
 {{end}}
 
 
 <div class="row"></div>
-    <div class="column" style="background-color:rgba(0,80,255,.5);">
+    <div class="column" style="background-color:rgba(102,204,255,1);">
         Zones: {{.Z1str}} 
     </div>
-    <div class="column" style="background-color:rgba(255,80,0,.5);">
+    <div class="column" style="background-color:rgba(153,255,204,1);">
         Zones: {{.Z2str}} 
     </div>
 </div>

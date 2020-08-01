@@ -62,9 +62,7 @@ func reroll3(w http.ResponseWriter, r *http.Request) {
 	log.Println("reroll3 started")
 	Res = random.Rollnewload(Res, 3)
 	_ = Res
-	log.Printf("reroll res:%+v", Res.Tchals)
-	//log.Println("reroll res:", Res.Tchals.Tchal2)
-	log.Println("len tchals:", len(Res.Tchals))
+	//log.Printf("reroll res:%+v", Res.Tchals)
 	http.Redirect(w, r, "/current", 302)
 	return
 }
@@ -77,7 +75,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(r.Header)
 	log.Println("Read cookie:", r.Header.Get("Cookie"))
-	log.Println(ip, ", viewcounter: ", viewcounter)
+	log.Printf("%v, viewcounter:%d \n ", ip, viewcounter)
 	//log.Println("Page loaded")
 
 	expiration := time.Now().Add(1 * time.Hour)
@@ -94,7 +92,7 @@ func helloServer(w http.ResponseWriter, r *http.Request) {
 }
 
 func fromRequest(req *http.Request) (net.IP, string, error) {
-	log.Println("parsing new req ip")
+	//log.Println("parsing new req ip")
 	ip, _, err := net.SplitHostPort(req.RemoteAddr)
 	if err != nil {
 		return nil, "", fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
@@ -120,7 +118,7 @@ func fromRequest(req *http.Request) (net.IP, string, error) {
 	if err != nil {
 		return nil, "", fmt.Errorf("userip: %q did not convert to str", req.RemoteAddr)
 	}
-	log.Println("ip parsed")
+	//log.Println("ip parsed")
 	//log.Println(userIP, userIPs)
 	return userIP, userIPs, nil
 }

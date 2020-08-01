@@ -7,15 +7,15 @@ import (
 	"math"
 	"math/rand"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 )
 
 //Player exported
 type Player struct {
-	AllLoads [3]Loadouts //3 players
-
-	Zones1    [2]string //2 zones
+	AllLoads  [3]Loadouts //3 players
+	Zones1    [2]string   //2 zones
 	Zones2    [2]string
 	Z1str     string //holds joined zones
 	Z2str     string
@@ -37,7 +37,7 @@ type Loadouts struct {
 
 //Teamchals holds both sets of team challenges for html parsing
 type Teamchals struct {
-	Tchal1 string //holds team chals
+	Tchal1 string
 	Tchal2 string
 }
 
@@ -81,12 +81,14 @@ func Rollnewload(res Player, mode int) Player {
 		randlist1 := randomizelists(r)
 		res = assignslots(randlist1, res, 1)
 		res = handlewhammies(res, 1, r)
+		res = numtchal(res, 1)
 		res = convstrings(res, 1)
 		res = equalizeslice(res)
 	case 2:
 		randlist2 := randomizelists(r)
 		res = assignslots(randlist2, res, 2)
 		res = handlewhammies(res, 2, r)
+		res = numtchal(res, 2)
 		res = convstrings(res, 2)
 		res = equalizeslice(res)
 	case 3:
@@ -96,6 +98,8 @@ func Rollnewload(res Player, mode int) Player {
 		res = assignslots(randlist2, res, 2)
 		res = handlewhammies(res, 1, r)
 		res = handlewhammies(res, 2, r)
+		res = numtchal(res, 1)
+		res = numtchal(res, 2)
 		res = convstrings(res, 1)
 		res = convstrings(res, 2)
 		res = equalizeslice(res)
@@ -373,5 +377,30 @@ func equalizeslice(res Player) Player {
 	res.T1tmpchal = t1
 	res.T2tmpchal = t2
 	res.Tchals = tc
+	return res
+}
+
+//just numbers team chals for team passed
+func numtchal(res Player, team int) Player {
+	t1 := res.T1tmpchal
+	t2 := res.T2tmpchal
+
+	if team == 1 {
+		for i := range t1 {
+			//log.Println("for 1 i:", i, t1[i])
+			s := strconv.Itoa(i + 1)
+			t1[i] = s + ". " + t1[i]
+		}
+	} else if team == 2 {
+		for i := range t2 {
+			//log.Println("for 2 i:", i, t2[i])
+			s := strconv.Itoa(i + 1)
+			t2[i] = s + ". " + t2[i]
+		}
+	} else {
+		log.Fatalln("error - mode not set for numtchal ")
+	}
+	res.T1tmpchal = t1
+	res.T2tmpchal = t2
 	return res
 }
