@@ -248,7 +248,18 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 		if genrand(r) < thresh {
 			ichal = append(ichal, "Move between towns backward")
 		}
-
+		if genrand(r) < thresh {
+			ichal = append(ichal, "No Attachments")
+		}
+		if genrand(r) < thresh/2 {
+			ichal = append(ichal, "No Shields")
+		}
+		if genrand(r) < thresh/2 {
+			ichal = append(ichal, "No Backpack")
+		}
+		if genrand(r) < thresh/2 {
+			ichal = append(ichal, "Crouch only (entire game)")
+		}
 		switch team {
 		case 1:
 			//log.Println("ichal3:", ichal)
