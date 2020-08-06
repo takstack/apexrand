@@ -75,7 +75,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(r.Header)
 	log.Println("Read cookie:", r.Header.Get("Cookie"))
-	log.Printf("%v, viewcounter:%d \n ", ip, viewcounter)
+	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
 	//log.Println("Page loaded")
 
 	expiration := time.Now().Add(1 * time.Hour)

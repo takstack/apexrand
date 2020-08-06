@@ -1,35 +1,28 @@
 <!DOCTYPE html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-    /*
-    body{
-        background-image: url(./images/apexmiragecrop.jpg);
-        background-repeat: no-repeat;
-        background-blend-mode: lighten;  lighten only works in div?
+<style type="text/css">
+    table{
+        border: 1px solid black;
+        border-spacing: 0px;
+        border-collapse: collapse; 
     }
-    
-    */
-    *{
-    box-sizing: border-box;
+    .smallrow{
+        line-height: 10px;
     }
-    .column {
-        float: left;
+    .rowborder{
+        border-bottom:1px solid black;
+    }
+    .col1{
+        border-right:1px solid black;
+        background-color: rgba(51,113,255,.6);
         width: 50%;
-        
+        padding: 0px 5px;
     }
-    
-    .rowmargin{
-    margin-bottom: 2px;
-    }
-    .rowhalf{
-        line-height: 4px;
-    }
-    /* Clear floats after the columns */
-    .row:after {
-    content: "";
-    display: table;
-    clear: both;
+    .col2{
+        background-color: rgba(255,51,51,.6);
+        width: 50%;
+        padding: 0px 5px;
     }
 </style>
 </head>
@@ -42,97 +35,99 @@
 <p></p>
 <p>{{.Updhr}}:{{.Updmin}}:{{.Updsec}}<br><br></p>
 
-<div class="row">
-    <div class="column" style="background-color:rgba(102,204,255,1);">
+<table>
+<tr>
+    <td class="col1">
         <b>Team 1</b> 
-    </div>
-    <div class="column" style="background-color:rgba(153,255,204,1);">
+    </td>
+    <td class="col2">
         <b>Team 2</b>
-    </div>
-</div>
+    </td>
+</tr>
 
-<div class="rowmargin">
-    <div class="column" style="background-color:rgba(102,204,255,1);">&nbsp</div>
-    <div class="column" style="background-color:rgba(153,255,204,1);">&nbsp</div>
-</div>
+<tr>
+    <td class="col1">&nbsp</td>
+    <td class="col2">&nbsp</td>
+</tr>
 
 {{range $t:= .Tchals}}
-<div class="row">
-    <div class="column" style="background-color:rgba(102,204,255,1);">
+<tr>
+    <td class="col1">
         {{$t.Tchal1}} 
-    </div>
-    <div class="column" style="background-color:rgba(153,255,204,1);">
+    </td>
+    <td class="col2">
         {{$t.Tchal2}} 
-    </div>
-</div>
-<div class="rowhalf">
-    <div class="column" style="background-color:rgba(102,204,255,1);">&nbsp</div>
-    <div class="column" style="background-color:rgba(153,255,204,1);">&nbsp</div>
-</div>
+    </td>
+</tr>
+<tr>
+    <td class="col1">&nbsp</td>
+    <td class="col2">&nbsp</td>
+</tr>
 {{end}}
 
-<div class="row">
-    <div class="column" style="background-color:rgba(102,204,255,1);">&nbsp</div>
-    <div class="column" style="background-color:rgba(153,255,204,1);">&nbsp</div>
-</div>
+<tr class="rowborder">
+    <td class="col1">&nbsp</td>
+    <td class="col2">&nbsp</td>
+</tr>
 
 {{range $l:= .AllLoads}}
-<div class="row">
-    <div class="column" style="background-color:rgba(102,204,255,1);">
+<tr>
+    <td class="col1">
         <u><i><b>Player: {{$l.L1.Num}} - {{$l.L1.Char}}</b></i></u>
-    </div>
-    <div class="column" style="background-color:rgba(153,255,204,1);">
+    </td>
+    <td class="col2">
         <u><i><b>Player: {{$l.L2.Num}} - {{$l.L2.Char}}</b></i></u>
-    </div>
-</div>  
+    </td>
+</tr>  
 
-<div class="row">
-    <div class="column" style="background-color:rgba(102,204,255,1);">
+<tr>
+    <td class="col1">
         weapon1: {{$l.L1.W1}}
-    </div>
-    <div class="column" style="background-color:rgba(153,255,204,1);">
+    </td>
+    <td class="col2">
         weapon1: {{$l.L2.W1}}
-    </div>
-</div>   
-<div class="row">
-    <div class="column" style="background-color:rgba(102,204,255,1);">
+    </td>
+</tr>   
+<tr>
+    <td class="col1">
         weapon2: {{$l.L1.W2}}
-    </div>
-    <div class="column" style="background-color:rgba(153,255,204,1);">
+    </td>
+    <td class="col2">
         weapon2: {{$l.L2.W2}}
-    </div>
-</div>   
+    </td>
+</tr>   
 
-<div class="rowhalf">
-    <div class="column" style="background-color:rgba(102,204,255,1);">&nbsp</div>
-    <div class="column" style="background-color:rgba(153,255,204,1);">&nbsp</div>
-</div>
+<tr class="smallrow">
+    <td class="col1">&nbsp</td>
+    <td class="col2">&nbsp</td>
+</tr>
 
-<div class="row">
-    <div class="column" style="background-color:rgba(102,204,255,1);">       
+<tr>
+    <td class="col1">       
         curses: {{$l.L1.Cstr}}
-    </div>
-    <div class="column" style="background-color:rgba(153,255,204,1);">
+    </td>
+    <td class="col2">
         curses: {{$l.L2.Cstr}}
-    </div>
-</div>
+    </td>
+</tr>
 
-<div class="row">
-    <div class="column" style="background-color:rgba(102,204,255,1);">&nbsp</div>
-    <div class="column" style="background-color:rgba(153,255,204,1);">&nbsp</div>
-</div>
+<tr class="rowborder">
+    <td class="col1">&nbsp</td>
+    <td class="col2">&nbsp</td>
+</tr>
 {{end}}
 
 
-<div class="row"></div>
-    <div class="column" style="background-color:rgba(102,204,255,1);">
+<tr>
+    <td class="col1">
         Zones: {{.Z1str}} 
-    </div>
-    <div class="column" style="background-color:rgba(153,255,204,1);">
+    </td>
+    <td class="col2">
         Zones: {{.Z2str}} 
-    </div>
-</div>
+    </td>
+</tr>
 
+</table>
 <p><br><br><u>Guidelines for harmonious living</u><br><br>
 1. Break a rule? Drop shield (if no shield,drop weapon)<br>
 2. Don't pick your character? Don't pick up any mags either<br>

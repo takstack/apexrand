@@ -398,7 +398,7 @@ func numtchal(res Player, team int) Player {
 			t2[i] = s + ". " + t2[i]
 		}
 	} else {
-		log.Fatalln("error - mode not set for numtchal ")
+		log.Fatalln("error - team not set for numtchal ")
 	}
 	res.T1tmpchal = t1
 	res.T2tmpchal = t2

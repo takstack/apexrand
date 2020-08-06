@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    /*
+    body{
+        background-image: url(./images/apexmiragecrop.jpg);
+        background-repeat: no-repeat;
+        background-blend-mode: lighten;  lighten only works in div?
+    }
+    
+    */
+    *{
+    box-sizing: border-box;
+    }
+    .col1 {
+        float: left;
+        width: 50%;
+        padding: 0px 5px;
+        display: table-column;
+        background-color:rgba(102,204,255,1);
+    }
+    .col2 {
+        float: left;
+        width: 50%;
+        padding: 0px 5px;
+        display: table-column;
+        background-color:rgba(153,255,204,1);
+    }
+    .rowmargin{
+    margin-bottom: 2px;
+    }
+    .rowhalf{
+        line-height: 4px;
+    }
+    /* Clear floats after the columns */
+    .row:after {
+    content: "";
+    display: table;
+    clear: both;
+    }
+</style>
+</head>
+
+<h1>Apex Roulette</h1>
+    
+<button onclick="location.href = '/reroll3'">Roll All</button> &nbsp &nbsp &nbsp     
+<button onclick="location.href = '/reroll1'">Roll Team 1</button>   &nbsp &nbsp &nbsp  
+<button onclick="location.href = '/reroll2'">Roll Team 2</button><br>
+<p></p>
+<p>{{.Updhr}}:{{.Updmin}}:{{.Updsec}}<br><br></p>
+
+<div class="row">
+    <div class="col1">
+        <b>Team 1</b> 
+    </div>
+    <div class="col2">
+        <b>Team 2</b>
+    </div>
+</div>
+
+<div class="rowmargin">
+    <div class="col1">&nbsp</div>
+    <div class="col2">&nbsp</div>
+</div>
+
+{{range $t:= .Tchals}}
+<div class="row">
+    <div class="col1">
+        {{$t.Tchal1}} 
+    </div>
+    <div class="col2">
+        {{$t.Tchal2}} 
+    </div>
+</div>
+<div class="rowhalf">
+    <div class="col1">&nbsp</div>
+    <div class="col2">&nbsp</div>
+</div>
+{{end}}
+
+<div class="row">
+    <div class="col1">&nbsp</div>
+    <div class="col2">&nbsp</div>
+</div>
+
+{{range $l:= .AllLoads}}
+<div class="row">
+    <div class="col1">
+        <u><i><b>Player: {{$l.L1.Num}} - {{$l.L1.Char}}</b></i></u>
+    </div>
+    <div class="col2">
+        <u><i><b>Player: {{$l.L2.Num}} - {{$l.L2.Char}}</b></i></u>
+    </div>
+</div>  
+
+<div class="row">
+    <div class="col1">
+        weapon1: {{$l.L1.W1}}
+    </div>
+    <div class="col2">
+        weapon1: {{$l.L2.W1}}
+    </div>
+</div>   
+<div class="row">
+    <div class="col1">
+        weapon2: {{$l.L1.W2}}
+    </div>
+    <div class="col2">
+        weapon2: {{$l.L2.W2}}
+    </div>
+</div>   
+
+<div class="rowhalf">
+    <div class="col1">&nbsp</div>
+    <div class="col2">&nbsp</div>
+</div>
+
+<div class="row">
+    <div class="col1">       
+        curses: {{$l.L1.Cstr}}
+    </div>
+    <div class="col2">
+        curses: {{$l.L2.Cstr}}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col1">&nbsp</div>
+    <div class="col2">&nbsp</div>
+</div>
+{{end}}
+
+
+<div class="row"></div>
+    <div class="col1">
+        Zones: {{.Z1str}} 
+    </div>
+    <div class="col2">
+        Zones: {{.Z2str}} 
+    </div>
+</div>
+
+<p><br><br><u>Guidelines for harmonious living</u><br><br>
+1. Break a rule? Drop shield (if no shield,drop weapon)<br>
+2. Don't pick your character? Don't pick up any mags either<br>
+3. Break the spirit of the game? Drop all your stuff, homie<br>
+</p>

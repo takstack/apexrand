@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+    <h1>Apex Roulette</h1>
+    
+    <button onclick="location.href = '/reroll3'">Roll All</button> &nbsp &nbsp &nbsp     
+    <button onclick="location.href = '/reroll1'">Roll Team 1</button>   &nbsp &nbsp &nbsp  
+    <button onclick="location.href = '/reroll2'">Roll Team 2</button><br>
+    <p></p>
+    <p></p>
+    
+    <div>
+        {{.Updhr}}:{{.Updmin}}:{{.Updsec}}<br><br>
+        <b>Team 1 - </b> {{.T1str}}<br>
+        <BLOCKQUOTE>
+        {{range .Loadouts1}}
+            <u>Player: {{.Num}} - {{.Char}}</u><br>
+            <BLOCKQUOTE>Weapons: {{.W1}}, {{.W2}}<br>
+            Curses: {{.Cstr}}</BLOCKQUOTE>
+        {{end}}
+        Zones: {{.Z1str}} 
+        <br><br>
+        </BLOCKQUOTE>
+
+        <b>Team 2 - </b>{{.T2str}}<br>
+        <BLOCKQUOTE>
+        {{range .Loadouts2}}
+            <u>Player: {{.Num}} - {{.Char}}</u><br>
+            <BLOCKQUOTE>Weapons: {{.W1}}, {{.W2}}<br>
+           Curses: {{.Cstr}}</BLOCKQUOTE>
+        {{end}}
+        Zones: {{.Z2str}} 
+        
+        </BLOCKQUOTE>
+
+    </div>
+    
