@@ -149,6 +149,7 @@ func fillplayernums(res Player) Player {
 //add randomized ints to lists for each roll
 func randomizelists(r *rand.Rand) Randints {
 	var ri Randints
+
 	ri.R1 = fillrand(data.Chars, r)       //[][]string with random chars
 	ri.R2 = fillrand(data.Weapons, r)     //[][]string with random weapons
 	ri.R3 = fillrand(data.Zonesking, r)   //[][]string with random zonesking
@@ -238,11 +239,12 @@ func assignzones2(randSL [][]int, res Player, team int) Player {
 	return res
 }
 func assignwhammies(res Player, team int, r *rand.Rand) Player {
-	threshold := 30
-	thresh := 10
+	threshold := 30 // team starting threshold
+	thresh := 10    //team starting threshold
 	var ichal []string
 	var tchal []string
 
+	//assign indv challenges here
 	for i := 0; i < 3; i++ {
 
 		if genrand(r) < thresh {
@@ -271,6 +273,7 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 		}
 		ichal = nil
 	}
+	//assign team challenges here
 	for {
 		if genrand(r) < threshold {
 			tchal = append(tchal, "No Attachments")

@@ -8,7 +8,7 @@ var Weapons = []string{
 	"Sentinel",
 	"Prowler",
 	"Alternator",
-	"R-99",
+	"Devotion",
 	"G7 Scout",
 	"Hemlok Burst AR",
 	"R-301",
@@ -22,6 +22,7 @@ var Weapons = []string{
 	"P2020",
 	"RE-45 Auto",
 	"Havoc",
+	"Volt",
 }
 
 //Chars exported
@@ -39,6 +40,7 @@ var Chars = []string{
 	"Crypto",
 	"Loba",
 	"Pathfinder",
+	"Rampart",
 }
 
 //Zonesking exported
@@ -69,18 +71,20 @@ var Zonesworlds = []string{
 	"Skyhook",
 	"Survey camp",
 	"Refinery",
-	"The epicenter",
-	"Drill site",
+	"Epicenter",
+	"Countdown",
 	"Overlook",
 	"Lava fissure",
 	"The fragments",
-	"The train yard",
-	"Mirage voyage",
-	"The harvester",
-	"The geyser",
+	"Train yard",
+	"Staging",
+	"Harvester",
+	"Geyser",
 	"Thermal station",
 	"Sorting factory",
 	"Lava city",
 	"The tree",
 	"The dome",
+	"Launch site",
+	"Trials",
 }

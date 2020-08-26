@@ -2,6 +2,7 @@ package main
 
 import (
 	//"logger"
+	"apexrand/db"
 	"apexrand/random"
 	"fmt"
 	"html/template"
@@ -27,7 +28,7 @@ func main() {
 
 		Addr: ":9999",
 	}
-
+	apexdb.Insfromfile()
 	http.HandleFunc("/current", handler1)
 	http.HandleFunc("/reroll1", reroll1)
 	http.HandleFunc("/reroll2", reroll2)
@@ -74,9 +75,9 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error - IP Parse: ", err)
 	}
 	log.Println(r.Header)
-	log.Println("Read cookie:", r.Header.Get("Cookie"))
+	//log.Println("Read cookie:", r.Header.Get("Cookie"))
 	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
-	//log.Println("Page loaded")
+	log.Println("Request executed")
 
 	expiration := time.Now().Add(1 * time.Hour)
 	cookie := http.Cookie{Name: "CSRFtoken", Value: ips, Expires: expiration, SameSite: http.SameSiteStrictMode}
