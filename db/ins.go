@@ -38,14 +38,14 @@ func init() {
 
 }
 
-//Insfromfile imports the current game vars
-func Insfromfile() {
-	sl := readfile()
+//Insvarfromfile imports the current game vars
+func Insvarfromfile() {
+	sl := readfile("importvar.csv")
 	//log.Println(sl)
 	tx, err := db.Begin() //get connection
 	handleError(err)
 	//LOG.GL.Println("in batch insert after tx begin")
-	qry := qryins()
+	qry := qryins("var")
 	//LOG.GL.Println("in batch insert after qry gotten", qry)
 	stmt, err := tx.Prepare(qry)
 	handleError(err)
@@ -66,8 +66,56 @@ func Insfromfile() {
 	}
 }
 
-func readfile() [][]string {
-	r := qrw.StartCSVreader(qrw.Getreadfile("apexrand/file/varsimport.csv", 0))
+//Inscursefromfile imports the curses
+func Inscursefromfile() {
+	sl := readfile("importcurse.csv")
+	//log.Println(sl)
+	tx, err := db.Begin() //get connection
+	handleError(err)
+	//LOG.GL.Println("in batch insert after tx begin")
+	qry := qryins("curse")
+	//LOG.GL.Println("in batch insert after qry gotten", qry)
+	stmt, err := tx.Prepare(qry)
+	handleError(err)
+
+	for _, elem := range sl {
+		_, err = stmt.Exec(elem[1], elem[0], elem[2], elem[3], elem[0])
+
+		if err != nil {
+			log.Println("DB Error on this row: ", elem)
+			tx.Rollback()
+			handleError(err)
+		}
+
+	}
+	err = tx.Commit()
+	if err != nil {
+		log.Fatalln("Commit Error")
+	}
+}
+
+//Logcurse enters all curses into db
+func Logcurse(cid int, player int, team int, assigntype string, rollcounter int) {
+	pid := player
+	switch assigntype {
+	case "player":
+		if team == 2 {
+			pid = player + 3
+		}
+	case "team":
+		pid = team * 10
+	}
+
+	now := time.Now()
+	form, err := db.Prepare("INSERT INTO assign(curse_id, player_id, adate,roll) VALUES (?,?,?,?)")
+	if err != nil {
+		panic(err.Error())
+	}
+	form.Exec(cid, pid, now, rollcounter)
+}
+
+func readfile(s string) [][]string {
+	r := qrw.StartCSVreader(qrw.Getreadfile("apexrand/file/"+s, 0))
 	i := 0
 	var resSL [][]string
 	for {
@@ -84,8 +132,16 @@ func readfile() [][]string {
 	return resSL
 }
 
-func qryins() string {
-	s := "INSERT INTO vars VALUES(?,?) ON DUPLICATE KEY UPDATE descrip=?"
+func qryins(mode string) string {
+	var s string
+	switch mode {
+	case "var":
+		s = "INSERT INTO var (descrip,cat) VALUES(?,?) ON DUPLICATE KEY UPDATE descrip=?"
+		return s
+	case "curse":
+		s = "INSERT INTO curse (id,descrip,adjfactor,assigntype) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE descrip=?"
+		return s
+	}
 	return s
 }
 func handleError(err error) {

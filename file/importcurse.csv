@@ -1,0 +1,18 @@
+Move between towns backward,100,.3,player,,Move�between�towns�backward,,,,1
+No Attachments,101,.3,player,,No�Attachments,,,,1
+No Shields,102,.15,player,,No�Shields,,,,0.5
+No Backpack,103,.15,player,,No�Backpack,,,,0.5
+Crouch only (entire game),104,.15,player,,Crouch�only�(entire�game),,,,0.5
+No Attachments,200,1,team,,No�Attachments,,,,1
+No Shields,201,1,team,,No�Shields,,,,1
+No Backpack,202,0.1,team,,No�Backpack,,,,0.1
+A pirate's life (swap victim's box),203,1,team,,A�pirate's�life�(swap�victim's�box),,,,1
+Crouch only (entire game),204,0.1,team,,Crouch�only�(entire�game),,,,0.1
+Can't open doors,205,1,team,,Can't�open�doors,,,,1
+Land Blind (close eyes and ping map),206,1,team,,Land�Blind�(close�eyes�and�ping�map),,,,1
+Heals Only (no guns/throwables),207,0.1,team,,Heals�Only�(no�guns/throwables),,,,0.1
+Four corners (land in different corners),208,0.5,team,,Four�corners�(land�in�different�corners),,,,0.5
+No jump balloons,209,1,team,,No�jump�balloons,,,,1
+Musical boxes (rotate all inventory with squad),210,1,team,,Musical�boxes�(rotate�all�inventory�with�squad),,,,1
+Your L1 buttons broke! (ult ok),211,1,team,,Your�L1�buttons�broke!�(ult�ok),,,,1
+Your R1 buttons broke!,212,1,team,,Your�R1�buttons�broke!,,,,1

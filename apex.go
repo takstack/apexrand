@@ -4,8 +4,11 @@ import (
 	//"logger"
 	"apexrand/db"
 	"apexrand/random"
+	"bytes"
+	"encoding/json"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -17,6 +20,7 @@ import (
 
 //Res exp
 var Res random.Player
+
 var viewcounter int = 0
 
 func main() {
@@ -28,12 +32,18 @@ func main() {
 
 		Addr: ":9999",
 	}
-	apexdb.Insfromfile()
+	apexdb.Insvarfromfile()
+	apexdb.Inscursefromfile()
 	http.HandleFunc("/current", handler1)
+	//http.HandleFunc("/testroll", testroll)
 	http.HandleFunc("/reroll1", reroll1)
 	http.HandleFunc("/reroll2", reroll2)
 	http.HandleFunc("/reroll3", reroll3) //roll both
+	http.HandleFunc("/stats", getstats)
+	http.HandleFunc("/wipestats", wipestats)
+	http.HandleFunc("/rollauto", rollauto)
 	http.HandleFunc("/apex", handler1)
+	http.HandleFunc("/login", login)
 	http.HandleFunc("/", helloServer)
 
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
@@ -42,6 +52,61 @@ func main() {
 
 }
 
+//not working
+func testroll(w http.ResponseWriter, r *http.Request) {
+	for i := 0; i < 2; i++ {
+		reqbody, err := json.Marshal(map[string]string{
+			"name": "howdy",
+		})
+		if err != nil {
+			log.Fatal(err)
+		}
+		req, err := http.NewRequest("POST", "/reroll3", bytes.NewBuffer(reqbody))
+		if err != nil {
+			log.Fatal(err)
+		}
+		client := http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(string(body))
+	}
+}
+func getstats(w http.ResponseWriter, r *http.Request) {
+	log.Println("stats started")
+
+	var st apexdb.Stats
+	st.Cursecount = apexdb.Selcursestats()
+	st.Playercount = apexdb.Selplayerstats()
+	st.Totalrolls = random.Rollcounter
+
+	tmpl := template.Must(template.ParseFiles("stats.html"))
+	tmpl.Execute(w, st)
+
+	return
+}
+func rollauto(w http.ResponseWriter, r *http.Request) {
+	log.Println("autorolling")
+
+	Res = random.Autoroller(Res)
+
+	http.Redirect(w, r, "/stats", 302)
+	return
+}
+func wipestats(w http.ResponseWriter, r *http.Request) {
+	log.Println("stats wiped")
+
+	apexdb.Wipestats()
+	random.Rollcounter = 0
+	http.Redirect(w, r, "/stats", 302)
+	return
+}
 func reroll1(w http.ResponseWriter, r *http.Request) {
 	log.Println("reroll1 started")
 	Res = random.Rollnewload(Res, 1)
@@ -67,6 +132,20 @@ func reroll3(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/current", 302)
 	return
 }
+func login(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("login.html"))
+	if r.Method != http.MethodPost {
+		tmpl.Execute(w, nil)
+		return
+	}
+	det := Credentials{
+		Username: r.FormValue("fielduser"),
+		Password: r.FormValue("fieldpass"),
+	}
+	log.Printf("login:%+v", det)
+	http.Redirect(w, r, "/current", 302)
+	return
+}
 func handler1(w http.ResponseWriter, r *http.Request) {
 	//r.Host = "sheldonconn.ddns.net" //attempt to eliminate hanging issue
 	viewcounter++
@@ -77,7 +156,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	log.Println(r.Header)
 	//log.Println("Read cookie:", r.Header.Get("Cookie"))
 	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
-	log.Println("Request executed")
+	log.Printf("Request executed \n\n")
 
 	expiration := time.Now().Add(1 * time.Hour)
 	cookie := http.Cookie{Name: "CSRFtoken", Value: ips, Expires: expiration, SameSite: http.SameSiteStrictMode}

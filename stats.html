@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<style type="text/css">
+    
+    table{
+        border: 1px solid black;
+        border-spacing: 0px;
+        border-collapse: collapse; 
+    }
+    .smallrow{
+        line-height: 10px;
+    }
+    .rowborder{
+        border-bottom:1px solid black;
+    }
+    .col1{
+        border:1px solid black;
+        /*background-color: rgba(51,113,255,.6);*/
+        width: 25%;
+        padding: 0px 5px;
+    }
+    .col2{
+        /*background-color: rgba(255,51,51,.6);*/
+        border: 1px solid black;
+        width: 50%;
+        padding: 0px 5px;
+    }
+</style>
+</head>
+
+<h1>Stats</h1>
+    
+<button onclick="location.href = '/apex'">Back to roulette</button> &nbsp &nbsp &nbsp     
+
+Total Rolls: {{.Totalrolls}}
+<p></p>
+
+<table>
+<tr>
+    <td class="col1">
+        <b>Curses</b> 
+    </td>
+    
+</tr>
+<tr>
+    <td class="col1">
+        <b>curse_id</b> 
+    </td>
+    <td class="col1">
+        <b>descrip</b> 
+    </td>
+    <td class="col1">
+        <b>adjfactor</b> 
+    </td>
+    <td class="col1">
+        <b>count</b> 
+    </td>
+</tr>
+
+
+{{range $c:= .Cursecount}}
+<tr>
+    <td class="col1">
+        {{$c.ID}} 
+    </td>
+    <td class="col1">
+        {{$c.Descrip}} 
+    </td>
+    <td class="col1">
+        {{$c.Adj}} 
+    </td>
+    <td class="col1">
+        {{$c.Count}} 
+    </td>
+</tr>
+{{end}}
+</table>
+
+<p></p>
+<table>
+<tr>
+    <td class="col2">
+        <b>Players</b> 
+    </td>
+    
+</tr>
+<tr>
+    <td class="col2">
+        <b>player_id</b> 
+    </td>
+    <td class="col2">
+        <b>count</b> 
+    </td>
+    
+</tr>
+Note: 100 range is for player curses and 200 are team curses
+Baseline threshold is {{.Thresh}}/1000
+<p></p>
+
+{{range $p:= .Playercount}}
+<tr>
+    <td class="col2">
+        {{$p.ID}} 
+    </td>
+    <td class="col2">
+        {{$p.Count}} 
+    </td>
+    
+</tr>
+{{end}}
+</table>
+<p></p>   
+
+<button onclick="location.href = '/wipestats'">Wipe Stats</button> &nbsp &nbsp &nbsp     
+<button onclick="location.href = '/rollauto'">Roll 100x</button>
+

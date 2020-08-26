@@ -1,9 +1,10 @@
 package random
 
 import (
-	"apexrand/data"
+	//"apexrand/data"
 	"log"
 	//"math/bits"
+	"apexrand/db"
 	"math"
 	"math/rand"
 	"sort"
@@ -27,6 +28,7 @@ type Player struct {
 	Tchals    []Teamchals
 	T1str     string //holds joined team chals
 	T2str     string
+	Vari      Vars //holds db vars data
 }
 
 //Loadouts holds pair of loadouts for html parsing
@@ -60,7 +62,24 @@ type Randints struct {
 	R4 [][]int
 }
 
-var rollcounter int = 0
+//Vars holds db vars call data
+type Vars struct {
+	Char      []string
+	Weapon    []string
+	ZonesK    []string
+	ZonesW    []string
+	Allcurses []apexdb.Curse
+}
+
+//Stats holds stat info
+type Stats struct {
+}
+
+//Rollcounter counts rolls
+var Rollcounter int = 0
+
+//Thresh is probability Threshold for challenges
+var Thresh int = 30
 
 //Rollnewload handler for rolling team 1 or 2
 func Rollnewload(res Player, mode int) Player {
@@ -72,28 +91,28 @@ func Rollnewload(res Player, mode int) Player {
 	res.Updhr = time.Now().UTC().In(loc).Hour()
 	res.Updmin = time.Now().UTC().Minute()
 	res.Updsec = time.Now().UTC().Second()
-
+	res.Vari = getdbvars(res.Vari)
 	res = fillplayernums(res)
 	r := rand.New(rand.NewSource(time.Now().UnixNano())) //set new rand seed, only once for each web call
 
 	switch mode {
 	case 1:
-		randlist1 := randomizelists(r)
+		randlist1 := randomizelists(res.Vari, r)
 		res = assignslots(randlist1, res, 1)
 		res = handlewhammies(res, 1, r)
 		res = numtchal(res, 1)
 		res = convstrings(res, 1)
 		res = equalizeslice(res)
 	case 2:
-		randlist2 := randomizelists(r)
+		randlist2 := randomizelists(res.Vari, r)
 		res = assignslots(randlist2, res, 2)
 		res = handlewhammies(res, 2, r)
 		res = numtchal(res, 2)
 		res = convstrings(res, 2)
 		res = equalizeslice(res)
 	case 3:
-		randlist1 := randomizelists(r)
-		randlist2 := randomizelists(r)
+		randlist1 := randomizelists(res.Vari, r)
+		randlist2 := randomizelists(res.Vari, r)
 		res = assignslots(randlist1, res, 1)
 		res = assignslots(randlist2, res, 2)
 		res = handlewhammies(res, 1, r)
@@ -104,8 +123,8 @@ func Rollnewload(res Player, mode int) Player {
 		res = convstrings(res, 2)
 		res = equalizeslice(res)
 	}
-	rollcounter++
-	log.Println("rollcounter: ", rollcounter)
+	Rollcounter++
+	log.Println("Rollcounter: ", Rollcounter)
 	//log.Println("res after reroll", res)
 	return res
 }
@@ -137,6 +156,22 @@ func convstrings(res Player, team int) Player {
 	return res
 }
 
+//Autoroller rolls n times
+func Autoroller(res Player) Player {
+	for i := 0; i < 100; i++ {
+		res = Rollnewload(res, 3)
+	}
+	return res
+}
+func getdbvars(v Vars) Vars {
+	v.Char = apexdb.Selvars("char")
+	v.Weapon = apexdb.Selvars("weapon")
+	v.ZonesK = apexdb.Selvars("kings")
+	v.ZonesW = apexdb.Selvars("worlds")
+	v.Allcurses = apexdb.Selcurse()
+	return v
+}
+
 //adds player nums to empty player sl
 func fillplayernums(res Player) Player {
 	for i := 0; i < 3; i++ {
@@ -147,13 +182,13 @@ func fillplayernums(res Player) Player {
 }
 
 //add randomized ints to lists for each roll
-func randomizelists(r *rand.Rand) Randints {
+func randomizelists(v Vars, r *rand.Rand) Randints {
 	var ri Randints
 
-	ri.R1 = fillrand(data.Chars, r)       //[][]string with random chars
-	ri.R2 = fillrand(data.Weapons, r)     //[][]string with random weapons
-	ri.R3 = fillrand(data.Zonesking, r)   //[][]string with random zonesking
-	ri.R4 = fillrand(data.Zonesworlds, r) //[][]string with random zonesworlds
+	ri.R1 = fillrand(v.Char, r)   //[][]string with random chars
+	ri.R2 = fillrand(v.Weapon, r) //[][]string with random weapons
+	ri.R3 = fillrand(v.ZonesK, r) //[][]string with random zoneskings
+	ri.R4 = fillrand(v.ZonesW, r) //[][]string with random zonesworlds
 	return ri
 }
 
@@ -191,14 +226,15 @@ func fillrand(sl []string, r *rand.Rand) [][]int {
 	return resSL
 }
 func assignchars(randSL [][]int, res Player, team int) Player {
+	//log.Println("char:", res.Vari.Char)
 	switch team {
 	case 1:
 		for i := 0; i < 3; i++ {
-			res.AllLoads[i].L1.Char = data.Chars[randSL[i][0]]
+			res.AllLoads[i].L1.Char = res.Vari.Char[randSL[i][0]]
 		}
 	case 2:
 		for i := 0; i < 3; i++ {
-			res.AllLoads[i].L2.Char = data.Chars[randSL[i][0]]
+			res.AllLoads[i].L2.Char = res.Vari.Char[randSL[i][0]]
 		}
 	}
 	return res
@@ -209,13 +245,13 @@ func assignweapons(randSL [][]int, res Player, team int) Player {
 	case 1:
 		//log.Println("beg ass weapons, case 1", len(randSL))
 		for i := 0; i < 3; i++ {
-			res.AllLoads[i].L1.W1 = data.Weapons[randSL[i][0]]
-			res.AllLoads[i].L1.W2 = data.Weapons[randSL[i+3][0]]
+			res.AllLoads[i].L1.W1 = res.Vari.Weapon[randSL[i][0]]
+			res.AllLoads[i].L1.W2 = res.Vari.Weapon[randSL[i+3][0]]
 		}
 	case 2:
 		for i := 0; i < 3; i++ {
-			res.AllLoads[i].L2.W1 = data.Weapons[randSL[i][0]]
-			res.AllLoads[i].L2.W2 = data.Weapons[randSL[i+3][0]]
+			res.AllLoads[i].L2.W1 = res.Vari.Weapon[randSL[i][0]]
+			res.AllLoads[i].L2.W2 = res.Vari.Weapon[randSL[i+3][0]]
 		}
 	}
 	return res
@@ -223,44 +259,36 @@ func assignweapons(randSL [][]int, res Player, team int) Player {
 func assignzones1(randSL [][]int, res Player, team int) Player {
 	switch team {
 	case 1:
-		res.Zones1[0] = data.Zonesking[randSL[0][0]]
+		res.Zones1[0] = res.Vari.ZonesK[randSL[0][0]]
 	case 2:
-		res.Zones2[0] = data.Zonesking[randSL[0][0]]
+		res.Zones2[0] = res.Vari.ZonesK[randSL[0][0]]
 	}
 	return res
 }
 func assignzones2(randSL [][]int, res Player, team int) Player {
 	switch team {
 	case 1:
-		res.Zones1[1] = data.Zonesworlds[randSL[0][0]]
+		res.Zones1[1] = res.Vari.ZonesW[randSL[0][0]]
 	case 2:
-		res.Zones2[1] = data.Zonesworlds[randSL[0][0]]
+		res.Zones2[1] = res.Vari.ZonesW[randSL[0][0]]
 	}
 	return res
 }
 func assignwhammies(res Player, team int, r *rand.Rand) Player {
-	threshold := 30 // team starting threshold
-	thresh := 10    //team starting threshold
+
 	var ichal []string
 	var tchal []string
 
 	//assign indv challenges here
 	for i := 0; i < 3; i++ {
 
-		if genrand(r) < thresh {
-			ichal = append(ichal, "Move between towns backward")
-		}
-		if genrand(r) < thresh {
-			ichal = append(ichal, "No Attachments")
-		}
-		if genrand(r) < thresh/2 {
-			ichal = append(ichal, "No Shields")
-		}
-		if genrand(r) < thresh/2 {
-			ichal = append(ichal, "No Backpack")
-		}
-		if genrand(r) < thresh/2 {
-			ichal = append(ichal, "Crouch only (entire game)")
+		for _, elem := range res.Vari.Allcurses {
+			if elem.Assigntype != "player" {
+				continue
+			} else if genrand(r) < int(float64(Thresh)*elem.Adj) {
+				ichal = append(ichal, elem.Descrip)
+				apexdb.Logcurse(elem.ID, i, team, "player", Rollcounter)
+			}
 		}
 		switch team {
 		case 1:
@@ -275,44 +303,13 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 	}
 	//assign team challenges here
 	for {
-		if genrand(r) < threshold {
-			tchal = append(tchal, "No Attachments")
-		}
-		if genrand(r) < threshold {
-			tchal = append(tchal, "No Shields")
-		}
-		if genrand(r) < threshold/10 {
-			tchal = append(tchal, "No Backpack")
-		}
-		if genrand(r) < threshold {
-			tchal = append(tchal, "A pirate's life (swap victim's box)")
-		}
-		if genrand(r) < threshold/10 {
-			tchal = append(tchal, "Crouch only (entire game)")
-		}
-		if genrand(r) < threshold {
-			tchal = append(tchal, "Can't open doors")
-		}
-		if genrand(r) < threshold+(threshold/4) {
-			tchal = append(tchal, "Land Blind (close eyes and ping map)")
-		}
-		if genrand(r) < threshold/10 {
-			tchal = append(tchal, "Heals Only (no guns/throwables)")
-		}
-		if genrand(r) < threshold/2 {
-			tchal = append(tchal, "Four corners (land in different corners)")
-		}
-		if genrand(r) < threshold {
-			tchal = append(tchal, "No jump balloons")
-		}
-		if genrand(r) < threshold {
-			tchal = append(tchal, "Musical boxes (rotate all inventory with squad)")
-		}
-		if genrand(r) < threshold {
-			tchal = append(tchal, "Your L1 buttons broke! (ult ok)")
-		}
-		if genrand(r) < threshold {
-			tchal = append(tchal, "Your R1 buttons broke!")
+		for _, elem := range res.Vari.Allcurses {
+			if elem.Assigntype != "team" {
+				continue
+			} else if genrand(r) < int(float64(Thresh)*elem.Adj) {
+				tchal = append(tchal, elem.Descrip)
+				apexdb.Logcurse(elem.ID, 1000, team, "team", Rollcounter)
+			}
 		}
 		if len(tchal) > 0 {
 			break
@@ -325,6 +322,7 @@ func assignwhammies(res Player, team int, r *rand.Rand) Player {
 	case 2:
 		res.T2tmpchal = tchal
 	}
+	tchal = nil
 	//log.Println(res)
 	return res
 }
