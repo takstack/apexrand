@@ -45,13 +45,13 @@ type Teamchals struct {
 
 //Loadout exported
 type Loadout struct {
-	Num  int      //player number
-	Char string   //player name
-	W1   string   //weapon 1
-	W2   string   //weapon 2
-	Chal []string //holds player chals
-	Cstr string   //holds joined player chals
-	Chct int      //challenge count
+	Playername string   //player name
+	Char       string   //char name
+	W1         string   //weapon 1
+	W2         string   //weapon 2
+	Chal       []string //holds player chals
+	Cstr       string   //holds joined player chals
+	Chct       int      //challenge count
 }
 
 //Randints holds int order for randomized lists
@@ -174,9 +174,21 @@ func getdbvars(v Vars) Vars {
 
 //adds player nums to empty player sl
 func fillplayernums(res Player) Player {
+	t1 := apexdb.Getteamassigns(1)
+	t2 := apexdb.Getteamassigns(2)
 	for i := 0; i < 3; i++ {
-		res.AllLoads[i].L1.Num = i + 1
-		res.AllLoads[i].L2.Num = i + 4
+		if len(t1) <= i {
+			res.AllLoads[i].L1.Playername = "Player " + strconv.Itoa(i+1)
+		} else {
+			res.AllLoads[i].L1.Playername = t1[i]
+		}
+		if len(t2) <= i {
+
+			res.AllLoads[i].L2.Playername = "Player " + strconv.Itoa(i+4)
+		} else {
+			res.AllLoads[i].L2.Playername = t2[i]
+		}
+
 	}
 	return res
 }

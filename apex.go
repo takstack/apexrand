@@ -34,6 +34,8 @@ func main() {
 	}
 	apexdb.Insvarfromfile()
 	apexdb.Inscursefromfile()
+	apexdb.Insuserfromfile()
+	apexdb.Delallsess()
 	http.HandleFunc("/current", handler1)
 	//http.HandleFunc("/testroll", testroll)
 	http.HandleFunc("/reroll1", reroll1)
@@ -44,6 +46,8 @@ func main() {
 	http.HandleFunc("/rollauto", rollauto)
 	http.HandleFunc("/apex", handler1)
 	http.HandleFunc("/login", login)
+	http.HandleFunc("/logout", logout)
+	http.HandleFunc("/teams", teams)
 	http.HandleFunc("/", helloServer)
 
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
@@ -79,16 +83,24 @@ func testroll(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func getstats(w http.ResponseWriter, r *http.Request) {
-	log.Println("stats started")
+	validsess := chkvalidsession(w, r)
+	if validsess {
+		log.Println("stats started")
+		ip, ips, err := fromRequest(r)
+		_ = ips
+		if err != nil {
+			log.Println("Error - IP Parse: ", err)
+		}
+		log.Printf("request ip: %v \n\n", ip)
 
-	var st apexdb.Stats
-	st.Cursecount = apexdb.Selcursestats()
-	st.Playercount = apexdb.Selplayerstats()
-	st.Totalrolls = random.Rollcounter
-
-	tmpl := template.Must(template.ParseFiles("stats.html"))
-	tmpl.Execute(w, st)
-
+		var st apexdb.Stats
+		st.Cursecount = apexdb.Selcursestats()
+		st.Playercount = apexdb.Selplayerstats()
+		st.Totalrolls = random.Rollcounter
+		st.Thresh = random.Thresh
+		tmpl := template.Must(template.ParseFiles("stats.html"))
+		tmpl.Execute(w, st)
+	}
 	return
 }
 func rollauto(w http.ResponseWriter, r *http.Request) {
@@ -100,72 +112,118 @@ func rollauto(w http.ResponseWriter, r *http.Request) {
 	return
 }
 func wipestats(w http.ResponseWriter, r *http.Request) {
-	log.Println("stats wiped")
+	validsess := chkvalidsession(w, r)
+	if validsess {
+		log.Println("stats wiped")
 
-	apexdb.Wipestats()
-	random.Rollcounter = 0
-	http.Redirect(w, r, "/stats", 302)
+		apexdb.Wipestats()
+		random.Rollcounter = 0
+		http.Redirect(w, r, "/stats", 302)
+	}
 	return
+
+}
+func teams(w http.ResponseWriter, r *http.Request) {
+	validsess := chkvalidsession(w, r)
+	if validsess {
+		log.Println("teams started")
+		ip, ips, err := fromRequest(r)
+		_ = ips
+		if err != nil {
+			log.Println("Error - IP Parse: ", err)
+		}
+		log.Printf("request ip: %v \n\n", ip)
+		tmpl := template.Must(template.ParseFiles("teams.html"))
+
+		var user apexdb.User
+		user.Teams = apexdb.Getbothteams()
+		user.Activeuser = apexdb.Getactiveusers()
+
+		if r.Method != http.MethodPost {
+			tmpl.Execute(w, user)
+			return
+		}
+		sw := r.FormValue("switch")
+		rem := r.FormValue("remove")
+		addu := r.FormValue("adduser")
+		log.Println("form action received sw/rem/addu:", sw, rem, addu)
+
+		if len(sw) > 1 {
+			err := apexdb.Switchteams(sw)
+			if err != nil {
+				log.Println("switch teams error:", err)
+			}
+		} else if len(rem) > 1 {
+			apexdb.Removeplayer(rem)
+		} else if len(addu) > 1 {
+			addplayertoteam(addu)
+		}
+
+		user.Teams = apexdb.Getbothteams()
+		user.Activeuser = apexdb.Getactiveusers()
+
+		//log.Println("teams:", user)
+		//tmpl := template.Must(template.ParseFiles("teams.html"))
+		tmpl.Execute(w, user)
+	}
+	return
+
 }
 func reroll1(w http.ResponseWriter, r *http.Request) {
-	log.Println("reroll1 started")
-	Res = random.Rollnewload(Res, 1)
-	_ = Res
-	//log.Println("reroll res:", Res)
-	//log.Println("reroll1 res:", Res)
-	http.Redirect(w, r, "/current", 302)
+	validsess := chkvalidsession(w, r)
+	if validsess {
+		log.Println("reroll1 started")
+		Res = random.Rollnewload(Res, 1)
+		_ = Res
+		//log.Println("reroll res:", Res)
+		//log.Println("reroll1 res:", Res)
+		http.Redirect(w, r, "/current", 302)
+	}
 	return
 }
 func reroll2(w http.ResponseWriter, r *http.Request) {
-	log.Println("reroll2 started")
-	Res = random.Rollnewload(Res, 2)
-	_ = Res
-	//log.Println("reroll res:", Res)
-	http.Redirect(w, r, "/current", 302)
+	validsess := chkvalidsession(w, r)
+	if validsess {
+		log.Println("reroll2 started")
+		Res = random.Rollnewload(Res, 2)
+		_ = Res
+		//log.Println("reroll res:", Res)
+		http.Redirect(w, r, "/current", 302)
+	}
 	return
 }
 func reroll3(w http.ResponseWriter, r *http.Request) {
-	log.Println("reroll3 started")
-	Res = random.Rollnewload(Res, 3)
-	_ = Res
-	//log.Printf("reroll res:%+v", Res.Tchals)
-	http.Redirect(w, r, "/current", 302)
+	validsess := chkvalidsession(w, r)
+	if validsess {
+		log.Println("reroll3 started")
+		Res = random.Rollnewload(Res, 3)
+		_ = Res
+		//log.Printf("reroll res:%+v", Res.Tchals)
+		http.Redirect(w, r, "/current", 302)
+	}
 	return
 }
-func login(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("login.html"))
-	if r.Method != http.MethodPost {
-		tmpl.Execute(w, nil)
-		return
-	}
-	det := Credentials{
-		Username: r.FormValue("fielduser"),
-		Password: r.FormValue("fieldpass"),
-	}
-	log.Printf("login:%+v", det)
-	http.Redirect(w, r, "/current", 302)
-	return
-}
+
 func handler1(w http.ResponseWriter, r *http.Request) {
-	//r.Host = "sheldonconn.ddns.net" //attempt to eliminate hanging issue
-	viewcounter++
-	ip, ips, err := fromRequest(r)
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
+	validsess := chkvalidsession(w, r)
+	if validsess {
+		viewcounter++
+		ip, ips, err := fromRequest(r)
+		_ = ips
+		if err != nil {
+			log.Println("Error - IP Parse: ", err)
+		}
+		//log.Println(r.Header)
+		//log.Println("Read cookie:", r.Header.Get("Cookie"))
+		log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
+		log.Printf("Request executed \n\n")
+
+		tmpl := template.Must(template.ParseFiles("forms.html"))
+		tmpl.Execute(w, Res)
 	}
-	log.Println(r.Header)
-	//log.Println("Read cookie:", r.Header.Get("Cookie"))
-	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
-	log.Printf("Request executed \n\n")
-
-	expiration := time.Now().Add(1 * time.Hour)
-	cookie := http.Cookie{Name: "CSRFtoken", Value: ips, Expires: expiration, SameSite: http.SameSiteStrictMode}
-	http.SetCookie(w, &cookie)
-
-	tmpl := template.Must(template.ParseFiles("forms.html"))
-	tmpl.Execute(w, Res)
 	return
 }
+
 func helloServer(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "The server you were connecting to was disconnected or no longer in use.  Please try your request again or leave a message below")
 	return
@@ -183,7 +241,7 @@ func fromRequest(req *http.Request) (net.IP, string, error) {
 		return nil, "", fmt.Errorf("userip: %q is not IP:port", req.RemoteAddr)
 	}
 
-	//create bogus csrf val based on ip
+	//create bogus csrf val based on ip--this val not used anymore
 	IPsplit := strings.Split(ip, ".") //split ip into slice
 	IPcalc := 0
 	for _, elem := range IPsplit {

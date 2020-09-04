@@ -74,10 +74,10 @@
 {{range $l:= .AllLoads}}
 <tr>
     <td class="col1">
-        <u><i><b>Player: {{$l.L1.Num}} - {{$l.L1.Char}}</b></i></u>
+        <u><i><b>{{$l.L1.Playername}} - {{$l.L1.Char}}</b></i></u>
     </td>
     <td class="col2">
-        <u><i><b>Player: {{$l.L2.Num}} - {{$l.L2.Char}}</b></i></u>
+        <u><i><b>{{$l.L2.Playername}} - {{$l.L2.Char}}</b></i></u>
     </td>
 </tr>  
 
@@ -131,10 +131,12 @@
 </table>
 <p></p>
 <button onclick="location.href = '/stats'">Stats</button> &nbsp &nbsp &nbsp     
-
+<button onclick="location.href = '/teams'">Teams</button>
 
 <p><br><br><u>Guidelines for harmonious living</u><br><br>
 1. Break a rule? Drop shield (if no shield, drop weapon)<br>
 2. Don't pick your character? Don't pick up any mags either<br>
 3. Break the spirit of the game? Drop all your stuff, homie<br>
 </p>
+
+<button onclick="location.href = '/logout'">Logout</button>
