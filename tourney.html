@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<style type="text/css">
+    
+    table{
+        border: 1px solid black;
+        border-spacing: 0px;
+        border-collapse: collapse; 
+        width: 300px;
+    }
+    .smallrow{
+        line-height: 12px;
+    }
+    .rowborder{
+        border-bottom:1px solid black;
+    }
+    .col1{
+        border:1px solid black;
+        /*background-color: rgba(51,113,255,.6);*/
+        width: 60px;
+        padding: 10px 5px;
+        
+        
+    }
+    .col3{
+        border:1px solid black;
+        /*background-color: rgba(51,113,255,.6);*/
+        width: 20;
+        padding: 10px 5px;
+    }
+    .col2{
+        /*background-color: rgba(255,51,51,.6);*/
+        border: 1px solid black;
+        width: 30%;
+        padding: 10px 5px;
+    }
+</style>
+</head>
+
+<h1>Tournament</h1>
+    
+<button onclick="location.href = '/apex'">Back to roulette</button> &nbsp &nbsp &nbsp     
+
+<p></p>
+
+
+<table>
+<tr>
+    <td class="col1">
+        Player
+    </td>
+    <td class="col1">
+        NumGames
+    </td>
+    <td class="col1">
+        Avg Damage
+    </td>
+    <td class="col1">
+        Total Damage
+    </td>
+    
+</tr>
+{{range .T}}
+<tr>
+    
+    <td class="col1">
+        {{.Player}}
+    </td>
+    <td class="col1">
+        {{.Numgames}}
+    </td>
+    <td class="col1">
+        {{.Avgdmg}}
+    </td>
+    <td class="col1">
+        {{.Sumdmg}}
+    </td>
+    <td class="col1">
+        <form method="POST"><button type="submit" name="showdata" value="{{.Player}}">Entries</button></form>
+    </td>
+    
+</tr>
+{{end}}
+
+</table>
+
+<br>
+<br>
+<br>
+
+<table>
+<tr>
+    <td class="col3">
+        ID
+    </td>
+    <td class="col3">
+        Player
+    </td>
+    <td class="col3">
+        Dmg
+    </td>
+    <td class="col3">
+        Place
+    </td>
+    <td class="col3">
+        Placedmg
+    </td>
+    <td class="col3">
+        Totdmg
+    </td>
+    <td class="col2">
+        Gametime
+    </td>
+</tr>
+{{range .G}}
+<tr>
+    <td class="col3">
+        {{.ID}}
+    </td>
+    <td class="col3">
+        {{$.P}}
+    </td>
+    <td class="col3">
+        {{.Dmg}}
+    </td>
+    <td class="col3">
+        {{.Place}}
+    </td>
+    <td class="col3">
+        {{.Placedmg}}
+    </td>
+    <td class="col3">
+        {{.Totdmg}}
+    </td>
+    <td class="col2">
+        {{.Gametime.Format "06-01-02 T15:04:05"}}
+    </td>
+</tr>
+{{end}}
+</table>
+<br>
+<br>
+<br>
+<button onclick="location.href = '/wipetourn'">Wipe my games</button>

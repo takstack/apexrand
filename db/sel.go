@@ -45,6 +45,7 @@ type Creds struct {
 type User struct {
 	Activeuser []string
 	Teams      []Team
+	Errcode    string
 }
 
 //Team is list of players assigned to each team
@@ -109,6 +110,16 @@ func Wipestats() {
 	} else {
 		fmt.Println("foreign constraint check = 1", res)
 	}
+}
+
+//Wipetourn will wipe game table
+func Wipetourn(sessid string) {
+	username := Getuserfromsess(sessid)
+	_, err := db.Exec("DELETE FROM games WHERE username=?;", username)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
 }
 
 //Selcurse will return []string of mode requested
@@ -231,6 +242,15 @@ func getvarqry(mode string) string {
 	return qry
 }
 
+//Updpropername allows users to update their own name
+func Updpropername(sessid string, newname string) {
+	form, err := db.Prepare("UPDATE user SET propername = ? WHERE sess_id = ?;")
+	handleError(err)
+	_, err = form.Exec(newname, sessid)
+	handleError(err)
+	return
+}
+
 //Getteamassigns will get the team assignments
 func Getteamassigns(teamassign int) []string {
 	now := time.Now()
@@ -342,6 +362,26 @@ func Getbothteams() []Team {
 func Getuser(propername string) string {
 	var res string
 	qry := fmt.Sprintf("select username from user where propername = '%s';", propername)
+	err := db.QueryRow(qry).Scan(&res)
+	handleError(err)
+
+	return res
+}
+
+//Getuserfromsess returns the actual username for a players proper name
+func Getuserfromsess(sessid string) string {
+	var res string
+	qry := fmt.Sprintf("select username from user where sess_id = '%s';", sessid)
+	err := db.QueryRow(qry).Scan(&res)
+	handleError(err)
+
+	return res
+}
+
+//Getproper returns the actual username for a players proper name
+func Getproper(username string) string {
+	var res string
+	qry := fmt.Sprintf("select propername from user where username = '%s';", username)
 	err := db.QueryRow(qry).Scan(&res)
 	handleError(err)
 

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 <style type="text/css">
@@ -7,6 +8,8 @@
         border: 1px solid black;
         border-spacing: 0px;
         border-collapse: collapse; 
+        width: 320px;
+        
     }
     .smallrow{
         line-height: 12px;
@@ -17,14 +20,16 @@
     .col1{
         border:1px solid black;
         /*background-color: rgba(51,113,255,.6);*/
-        width: 25%;
-        padding: 5px 5px;
+        width: 60px;
+        padding: 10px 5px;
+        
+        
     }
     .col2{
         /*background-color: rgba(255,51,51,.6);*/
         border: 1px solid black;
         width: 30%;
-        padding: 5px 5px;
+        padding: 10px 5px;
     }
 </style>
 </head>
@@ -51,11 +56,54 @@ Teams
         <form method="POST"><button type="submit" name="switch" value="{{.Team2}}">Switch</button></form>
     </td>
 </tr>
-</table>
 {{end}}
+</table>
+
 
 <p></p>
 <p></p>
+<br>
+<br>
+<br>
+
+Reporting
+
+<table>
+<tr>
+    <td class="col1">
+        Player
+    </td>
+    <td class="col1">
+        Damage
+    </td>
+    <td class="col1">
+        Place
+    </td>
+
+</tr>
+{{range .Activeuser}}
+<tr>
+    <td class="col1">
+        {{.}}
+    </td>
+    <td class="col1">
+        <form method="POST"><input type="text" name="dmg" size="5"> 
+    </td>
+    <td class="col1">
+        <input type="text" name="place" size="5"> 
+    </td>
+    <td class="col1">
+        <button type="submit" name="player" value="{{.}}">Enter</button></form>
+        
+    </td>
+</tr>
+{{end}}
+</table>
+Note: Place must be between 1-30.  Damage cannot be negative.<br>
+Errorcode: {{.Errcode}}
+<br>
+<br>
+<br>
 
 Users
 {{range .Activeuser}}
@@ -71,5 +119,11 @@ Users
         <form method="POST"><button type="submit" name="adduser" value="{{.}}">Add</button></form>
     </td>
 </tr>
-</table>
 {{end}}
+</table>
+
+<br>
+<br>
+<br>
+Change Name (20 char limit) <form method="POST"><input type="text" name="chgname"> <input type="submit"></form>
+

@@ -48,6 +48,8 @@ func main() {
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/teams", teams)
+	http.HandleFunc("/tournament", tourney)
+	http.HandleFunc("/wipetourn", wipetourn)
 	http.HandleFunc("/", helloServer)
 
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
@@ -123,6 +125,61 @@ func wipestats(w http.ResponseWriter, r *http.Request) {
 	return
 
 }
+func wipetourn(w http.ResponseWriter, r *http.Request) {
+	validsess := chkvalidsession(w, r)
+	if validsess {
+		log.Println("games wiped")
+		cookie, err := r.Cookie("apextoken")
+		if err != nil {
+			log.Println("error retrieving cookie")
+			http.Redirect(w, r, "/login", 302)
+			return
+		}
+		sessid := cookie.Value
+		apexdb.Wipetourn(sessid)
+
+		http.Redirect(w, r, "/tournament", 302)
+	}
+	return
+
+}
+func tourney(w http.ResponseWriter, r *http.Request) {
+	validsess := chkvalidsession(w, r)
+	if validsess {
+		log.Println("tourney started")
+		tmpl := template.Must(template.ParseFiles("tourney.html"))
+		ip, ips, err := fromRequest(r)
+		_ = ips
+		if err != nil {
+			log.Println("Error - IP Parse: ", err)
+		}
+		log.Printf("request ip: %v \n\n", ip)
+
+		var Tourney apexdb.Tourney
+		Tourney.T = apexdb.Seltourngames()
+		Tourney.G = Tourney.T[0].Games
+		Tourney.P = Tourney.T[0].Player
+
+		if r.Method != http.MethodPost {
+			tmpl.Execute(w, Tourney)
+			return
+		}
+		showdata := r.FormValue("showdata")
+		log.Println("form action received showdata:", showdata)
+
+		if len(showdata) > 1 {
+			Tourney.P = showdata
+			for _, elem := range Tourney.T {
+				if elem.Player == showdata {
+					Tourney.G = elem.Games
+				}
+			}
+		}
+
+		tmpl.Execute(w, Tourney)
+	}
+	return
+}
 func teams(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
@@ -146,7 +203,13 @@ func teams(w http.ResponseWriter, r *http.Request) {
 		sw := r.FormValue("switch")
 		rem := r.FormValue("remove")
 		addu := r.FormValue("adduser")
-		log.Println("form action received sw/rem/addu:", sw, rem, addu)
+		chgnm := r.FormValue("chgname")
+		player := r.FormValue("player")
+		dmg := r.FormValue("dmg")
+		place := r.FormValue("place")
+
+		log.Println("form action received sw/rem/addu/chgnm:", sw, rem, addu, chgnm, player)
+		log.Println("dmg,place:", dmg, place)
 
 		if len(sw) > 1 {
 			err := apexdb.Switchteams(sw)
@@ -157,8 +220,17 @@ func teams(w http.ResponseWriter, r *http.Request) {
 			apexdb.Removeplayer(rem)
 		} else if len(addu) > 1 {
 			addplayertoteam(addu)
-		}
+		} else if len(chgnm) > 1 {
+			chgname(w, r, chgnm)
+		} else if len(player) > 1 {
+			err = apexdb.Loggame(player, dmg, place)
+			if err != nil {
+				user.Errcode = err.Error()
+			} else {
+				user.Errcode = ""
+			}
 
+		}
 		user.Teams = apexdb.Getbothteams()
 		user.Activeuser = apexdb.Getactiveusers()
 

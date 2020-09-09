@@ -92,6 +92,22 @@ func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
 	return false
 
 }
+func chgname(w http.ResponseWriter, r *http.Request, newname string) {
+	if len(newname) > 20 {
+		log.Println("error: new name too long")
+		//fmt.Fprintf(w, "error: name too long")
+		return
+	}
+	cookie, err := r.Cookie("apextoken")
+	if err != nil {
+		log.Println("error retrieving cookie")
+		http.Redirect(w, r, "/login", 302)
+		return
+	}
+	sessid := cookie.Value
+	apexdb.Updpropername(sessid, newname)
+	return
+}
 func addplayertoteam(propername string) {
 	num, err := assignteams()
 	if err != nil {
