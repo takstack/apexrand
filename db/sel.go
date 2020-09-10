@@ -160,6 +160,21 @@ func Selsess(sessid string) Creds {
 	return res
 }
 
+//Updlogin updates user/pass for given sessid
+func Updlogin(username string, pass string, sessid string) {
+	form, err := db.Prepare("UPDATE user SET username = ? WHERE sess_id = ?;")
+	handleError(err)
+	_, err = form.Exec(username, sessid)
+	handleError(err)
+
+	form, err = db.Prepare("UPDATE user SET pass = ? WHERE sess_id = ?;")
+	handleError(err)
+	_, err = form.Exec(pass, sessid)
+	handleError(err)
+	log.Println("user/pass updated:", username, pass)
+	return
+}
+
 //Updsessid updates sessid for given user
 func Updsessid(username string, sessid string) {
 	form, err := db.Prepare("UPDATE user SET sess_id = ? WHERE username = ?;")

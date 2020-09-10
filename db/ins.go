@@ -82,7 +82,7 @@ func Insuserfromfile() {
 	for _, elem := range sl {
 		now := time.Now()
 		oldexp := now.AddDate(0, -1, 0)
-		_, err = stmt.Exec(elem[0], elem[1], "", oldexp, elem[2], 0, elem[0], elem[1], elem[2])
+		_, err = stmt.Exec(elem[3], elem[0], elem[1], "", oldexp, elem[2], 0, elem[0], elem[1], elem[2])
 
 		if err != nil {
 			log.Println("DB Error on this row: ", elem)
@@ -224,7 +224,7 @@ func qryins(mode string) string {
 		s = "INSERT INTO curse (id,descrip,adjfactor,assigntype) VALUES(?,?,?,?) ON DUPLICATE KEY UPDATE adjfactor=?"
 		return s
 	case "user":
-		s = "INSERT INTO user (username,pass,sess_id,sess_exp,propername,teamassign) VALUES(?,?,?,?,?,?) ON DUPLICATE KEY UPDATE username=?, pass=?, propername=?"
+		s = "INSERT INTO user (eaddr, username,pass,sess_id,sess_exp,propername,teamassign) VALUES(?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE username=?, pass=?, propername=?"
 		return s
 	}
 	return s

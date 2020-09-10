@@ -190,6 +190,13 @@ func teams(w http.ResponseWriter, r *http.Request) {
 			log.Println("Error - IP Parse: ", err)
 		}
 		log.Printf("request ip: %v \n\n", ip)
+		cookie, err := r.Cookie("apextoken")
+		if err != nil {
+			log.Println("error retrieving cookie")
+			http.Redirect(w, r, "/login", 302)
+			return
+		}
+		sessid := cookie.Value
 		tmpl := template.Must(template.ParseFiles("teams.html"))
 
 		var user apexdb.User
@@ -207,9 +214,11 @@ func teams(w http.ResponseWriter, r *http.Request) {
 		player := r.FormValue("player")
 		dmg := r.FormValue("dmg")
 		place := r.FormValue("place")
+		username := r.FormValue("username")
+		pass := r.FormValue("pass")
 
 		log.Println("form action received sw/rem/addu/chgnm:", sw, rem, addu, chgnm, player)
-		log.Println("dmg,place:", dmg, place)
+		//log.Println("dmg,place:", dmg, place)
 
 		if len(sw) > 1 {
 			err := apexdb.Switchteams(sw)
@@ -222,7 +231,10 @@ func teams(w http.ResponseWriter, r *http.Request) {
 			addplayertoteam(addu)
 		} else if len(chgnm) > 1 {
 			chgname(w, r, chgnm)
+		} else if len(username) > 1 {
+			apexdb.Updlogin(username, pass, sessid)
 		} else if len(player) > 1 {
+			log.Println("userform player >1")
 			err = apexdb.Loggame(player, dmg, place)
 			if err != nil {
 				user.Errcode = err.Error()

@@ -20,7 +20,7 @@
     .col1{
         border:1px solid black;
         /*background-color: rgba(51,113,255,.6);*/
-        width: 60px;
+        width:25%;
         padding: 10px 5px;
         
         
@@ -70,15 +70,15 @@ Reporting
 
 <table>
 <tr>
-    <td class="col1">
+    <th class="col1">
         Player
-    </td>
-    <td class="col1">
+    </th>
+    <th class="col1">
         Damage
-    </td>
-    <td class="col1">
+    </th>
+    <th class="col1">
         Place
-    </td>
+    </th>
 
 </tr>
 {{range .Activeuser}}
@@ -100,7 +100,8 @@ Reporting
 {{end}}
 </table>
 Note: Place must be between 1-30.  Damage cannot be negative.<br>
-Errorcode: {{.Errcode}}
+<br>
+{{.Errcode}}
 <br>
 <br>
 <br>
@@ -125,5 +126,18 @@ Users
 <br>
 <br>
 <br>
-Change Name (20 char limit) <form method="POST"><input type="text" name="chgname"> <input type="submit"></form>
+Change Player Name (20 char limit) 
+<form method="POST"><input type="text" name="chgname"> <input type="submit"></form>
 
+<br>
+<br>
+<br>
+Change Username and Password (must enter both)
+<form method="POST">
+    <input type="text" name="username"> 
+    <input type="text" name="pass" > 
+    <button type="submit" name="userchg" value="">Submit</button>
+</form>
+<br>
+<br>
+<br>
