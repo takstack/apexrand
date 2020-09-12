@@ -157,26 +157,49 @@ func tourney(w http.ResponseWriter, r *http.Request) {
 
 		var Tourney apexdb.Tourney
 		Tourney.T = apexdb.Seltourngames()
-		Tourney.G = Tourney.T[0].Games
-		Tourney.P = Tourney.T[0].Player
+		Tourney.Activeusers = apexdb.Getactiveusers()
 
 		if r.Method != http.MethodPost {
+			Tourney.G = Tourney.T[0].Games
+			Tourney.P = Tourney.T[0].Player
 			tmpl.Execute(w, Tourney)
 			return
 		}
 		showdata := r.FormValue("showdata")
-		log.Println("form action received showdata:", showdata)
+		player := r.FormValue("player")
+		dmg := r.FormValue("dmg")
+		place := r.FormValue("place")
+		log.Println("form action received tourney:", showdata, player)
+		log.Println("dmg,place:", dmg, place)
 
-		if len(showdata) > 1 {
-			Tourney.P = showdata
-			for _, elem := range Tourney.T {
-				if elem.Player == showdata {
-					Tourney.G = elem.Games
-				}
+		var focusname string
+		focusname = showdata
+		Tourney.P = focusname
+
+		if len(player) > 0 {
+
+			log.Println("userform player >0")
+			focusname = player
+			err := apexdb.Loggame(player, dmg, place)
+			if err != nil {
+				Tourney.Errcode = err.Error()
+			} else {
+				Tourney.Errcode = ""
+				Tourney.T = apexdb.Seltourngames()
+				http.Redirect(w, r, "/tournament", 302) //redirect instead of executing template directly
+
+			}
+
+		}
+
+		for _, elem := range Tourney.T {
+			if elem.Player == focusname {
+				Tourney.G = elem.Games
 			}
 		}
 
 		tmpl.Execute(w, Tourney)
+
 	}
 	return
 }
@@ -190,6 +213,7 @@ func teams(w http.ResponseWriter, r *http.Request) {
 			log.Println("Error - IP Parse: ", err)
 		}
 		log.Printf("request ip: %v \n\n", ip)
+
 		cookie, err := r.Cookie("apextoken")
 		if err != nil {
 			log.Println("error retrieving cookie")
@@ -207,42 +231,31 @@ func teams(w http.ResponseWriter, r *http.Request) {
 			tmpl.Execute(w, user)
 			return
 		}
+
 		sw := r.FormValue("switch")
 		rem := r.FormValue("remove")
 		addu := r.FormValue("adduser")
 		chgnm := r.FormValue("chgname")
-		player := r.FormValue("player")
-		dmg := r.FormValue("dmg")
-		place := r.FormValue("place")
 		username := r.FormValue("username")
 		pass := r.FormValue("pass")
 
-		log.Println("form action received sw/rem/addu/chgnm:", sw, rem, addu, chgnm, player)
-		//log.Println("dmg,place:", dmg, place)
+		log.Println("form action received sw/rem/addu/chgnm:", sw, rem, addu, chgnm)
 
 		if len(sw) > 1 {
 			err := apexdb.Switchteams(sw)
 			if err != nil {
 				log.Println("switch teams error:", err)
 			}
-		} else if len(rem) > 1 {
+		} else if len(rem) > 0 {
 			apexdb.Removeplayer(rem)
-		} else if len(addu) > 1 {
+		} else if len(addu) > 0 {
 			addplayertoteam(addu)
-		} else if len(chgnm) > 1 {
+		} else if len(chgnm) > 0 {
 			chgname(w, r, chgnm)
-		} else if len(username) > 1 {
+		} else if len(username) > 0 {
 			apexdb.Updlogin(username, pass, sessid)
-		} else if len(player) > 1 {
-			log.Println("userform player >1")
-			err = apexdb.Loggame(player, dmg, place)
-			if err != nil {
-				user.Errcode = err.Error()
-			} else {
-				user.Errcode = ""
-			}
-
 		}
+
 		user.Teams = apexdb.Getbothteams()
 		user.Activeuser = apexdb.Getactiveusers()
 

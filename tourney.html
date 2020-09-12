@@ -44,8 +44,47 @@
 <button onclick="location.href = '/apex'">Back to roulette</button> &nbsp &nbsp &nbsp     
 
 <p></p>
+Reporting
 
+<table>
+<tr>
+    <th class="col1">
+        Player
+    </th>
+    <th class="col1">
+        Damage
+    </th>
+    <th class="col1">
+        Place
+    </th>
 
+</tr>
+{{range .Activeusers}}
+<tr>
+    <td class="col1">
+        {{.}}
+    </td>
+    <td class="col1">
+        <form method="POST"><input type="text" name="dmg" size="5"> 
+    </td>
+    <td class="col1">
+        <input type="text" name="place" size="5"> 
+    </td>
+    <td class="col1">
+        <button type="submit" name="player" value="{{.}}">Enter</button></form>
+        
+    </td>
+</tr>
+{{end}}
+</table>
+Note: Place must be between 1-30.  Damage cannot be negative.<br>
+<br>
+<p style="color:red">{{.Errcode}}</p>
+<br>
+<br>
+<br>
+
+Standings
 <table>
 <tr>
     <th class="col1">
@@ -89,7 +128,7 @@
 <br>
 <br>
 <br>
-
+Games
 <table>
 <tr>
     <th class="col3">

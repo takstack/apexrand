@@ -9,6 +9,9 @@
         border-spacing: 0px;
         border-collapse: collapse; 
         width: 320px;
+        padding: 0;
+        table-layout: fixed;
+        
         
     }
     .smallrow{
@@ -20,16 +23,24 @@
     .col1{
         border:1px solid black;
         /*background-color: rgba(51,113,255,.6);*/
-        width:25%;
-        padding: 10px 5px;
+        width:30%;
+        padding: 10px 0px 10px 5px;
+        margin: 0px;
+        word-wrap: break-word;
         
-        
+    }
+    .col3{
+        border:1px solid black;
+        /*background-color: rgba(51,113,255,.6);*/
+        width:20%;
+        padding: 10px 0px 10px 0px;
     }
     .col2{
         /*background-color: rgba(255,51,51,.6);*/
         border: 1px solid black;
         width: 30%;
         padding: 10px 5px;
+        
     }
 </style>
 </head>
@@ -43,7 +54,7 @@ Teams
 {{range .Teams}}
 <table>
 <tr>
-    <td class="col1">
+    <td class="col3">
        <form method="POST"><button type="submit" name="switch" value="{{.Team1}}">Switch</button></form>
     </td>
     <td class="col1">
@@ -52,7 +63,7 @@ Teams
     <td class="col1">
         {{.Team2}}
     </td>
-    <td class="col1">
+    <td class="col3">
         <form method="POST"><button type="submit" name="switch" value="{{.Team2}}">Switch</button></form>
     </td>
 </tr>
@@ -66,45 +77,6 @@ Teams
 <br>
 <br>
 
-Reporting
-
-<table>
-<tr>
-    <th class="col1">
-        Player
-    </th>
-    <th class="col1">
-        Damage
-    </th>
-    <th class="col1">
-        Place
-    </th>
-
-</tr>
-{{range .Activeuser}}
-<tr>
-    <td class="col1">
-        {{.}}
-    </td>
-    <td class="col1">
-        <form method="POST"><input type="text" name="dmg" size="5"> 
-    </td>
-    <td class="col1">
-        <input type="text" name="place" size="5"> 
-    </td>
-    <td class="col1">
-        <button type="submit" name="player" value="{{.}}">Enter</button></form>
-        
-    </td>
-</tr>
-{{end}}
-</table>
-Note: Place must be between 1-30.  Damage cannot be negative.<br>
-<br>
-{{.Errcode}}
-<br>
-<br>
-<br>
 
 Users
 {{range .Activeuser}}
