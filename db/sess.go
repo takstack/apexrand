@@ -50,6 +50,7 @@ func Checkallvalidsess() {
 //Delsess removes sess_id for all expired sessions
 func Delsess(sessid string) {
 	//delete sess exp
+	log.Println("logout: ", Getuserfromsess(sessid))
 	now := time.Now()
 	oldexp := now.AddDate(0, -1, 0)
 	form, err := db.Prepare("UPDATE user SET sess_exp = ?,sess_id='',teamassign=0 WHERE sess_id=?")
@@ -63,6 +64,7 @@ func Delsess(sessid string) {
 		_, err = form.Exec(sessid)
 		handleError(err)
 	*/
+
 	return
 }
 

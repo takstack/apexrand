@@ -62,7 +62,7 @@ Reporting
 {{range .Activeusers}}
 <tr>
     <td class="col1">
-        {{.}}
+        {{.Username}}
     </td>
     <td class="col1">
         <form method="POST"><input type="text" name="dmg" size="5"> 
@@ -71,7 +71,7 @@ Reporting
         <input type="text" name="place" size="5"> 
     </td>
     <td class="col1">
-        <button type="submit" name="player" value="{{.}}">Enter</button></form>
+        <button type="submit" name="player" value="{{.Username}}">Enter</button></form>
         
     </td>
 </tr>

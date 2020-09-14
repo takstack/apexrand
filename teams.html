@@ -79,17 +79,20 @@ Teams
 
 
 Users
-{{range .Activeuser}}
+{{range .Activeusers}}
 <table>
 <tr>
     <td class="col2">
-        {{.}}
+        {{.Username}}
     </td>
     <td class="col2">
-        <form method="POST"><button type="submit" name="remove" value="{{.}}">Remove</button></form>
+        <form method="POST"><button type="submit" name="remove" value="{{.Username}}">Remove</button></form>
     </td>
     <td class="col2">
-        <form method="POST"><button type="submit" name="adduser" value="{{.}}">Add</button></form>
+        <form method="POST"><button type="submit" name="adduser" value="{{.Username}}">Add</button></form>
+    </td>
+    <td class="col2">
+        {{.Online}}
     </td>
 </tr>
 {{end}}

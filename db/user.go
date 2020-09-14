@@ -19,8 +19,14 @@ type Creds struct {
 
 //User holds display info for user status
 type User struct {
-	Activeuser []string
-	Teams      []Team
+	Activeusers []Onlineuser
+	Teams       []Team
+}
+
+//Onlineuser holds pairs of users
+type Onlineuser struct {
+	Username string
+	Online   string
 }
 
 //Insuserfromfile imports the curses
@@ -93,22 +99,37 @@ func Getproper(username string) string {
 }
 
 //Getactiveusers will return []string of mode requested
-func Getactiveusers() []string {
+func Getactiveusers() []Onlineuser {
 	now := time.Now()
-	qry := "select propername from user where sess_exp > ? and CHAR_LENGTH(sess_id)>5 "
+	qry := "select propername,sess_exp from user where sess_exp > ? and CHAR_LENGTH(sess_id)>5 "
 	res, err := db.Query(qry, now)
 	handleError(err)
-	var sl []string
+	var sl []Onlineuser
 	for res.Next() {
-		var s string
+		var u Onlineuser
+		var t time.Time
 		// for each row, scan the result into our tag composite object
-		err := res.Scan(&s)
+		err := res.Scan(&u.Username, &t)
 		handleError(err)
 
-		sl = append(sl, s)
+		u.Online = isonline(t)
+		if u.Online == "" {
+			Assignteam(Getuser(u.Username), 0) //remove from team assignment if offline
+		}
+		sl = append(sl, u)
 	}
 	res.Close()
 	return sl
+}
+func isonline(exp time.Time) string {
+	now := time.Now()
+	d1 := now.AddDate(0, 1, 0)
+	d1 = d1.Add(-time.Hour / 2)
+
+	if exp.After(d1) {
+		return "Online"
+	}
+	return ""
 }
 
 //Seluser will return user session info

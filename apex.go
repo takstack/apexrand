@@ -35,7 +35,8 @@ func main() {
 	apexdb.Insvarfromfile()
 	apexdb.Inscursefromfile()
 	apexdb.Insuserfromfile()
-	apexdb.Delallsess()
+	//apexdb.Delallsess() leave all sessions open for now
+
 	http.HandleFunc("/current", handler1)
 	//http.HandleFunc("/testroll", testroll)
 	http.HandleFunc("/reroll1", reroll1)
@@ -225,7 +226,7 @@ func teams(w http.ResponseWriter, r *http.Request) {
 
 		var user apexdb.User
 		user.Teams = apexdb.Getbothteams()
-		user.Activeuser = apexdb.Getactiveusers()
+		user.Activeusers = apexdb.Getactiveusers()
 
 		if r.Method != http.MethodPost {
 			tmpl.Execute(w, user)
@@ -257,7 +258,7 @@ func teams(w http.ResponseWriter, r *http.Request) {
 		}
 
 		user.Teams = apexdb.Getbothteams()
-		user.Activeuser = apexdb.Getactiveusers()
+		user.Activeusers = apexdb.Getactiveusers()
 
 		//log.Println("teams:", user)
 		//tmpl := template.Must(template.ParseFiles("teams.html"))

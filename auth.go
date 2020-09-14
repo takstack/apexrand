@@ -139,7 +139,7 @@ func setnewapexcookie(w http.ResponseWriter, r *http.Request, sessid string) {
 }
 func newexpire() time.Time {
 	now := time.Now()
-	newexp := now.Add(time.Hour)
+	newexp := now.AddDate(0, 1, 0)
 	//log.Println("generated new exp time", newexp)
 	return newexp
 }

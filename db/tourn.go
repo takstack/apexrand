@@ -15,7 +15,7 @@ type Tourney struct {
 	T           []Tourn
 	P           string
 	G           []Game
-	Activeusers []string
+	Activeusers []Onlineuser
 	Errcode     string
 }
 
