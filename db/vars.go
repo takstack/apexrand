@@ -6,12 +6,12 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql" //comment
 	"io"
-	"keys"
+	//"keys"
+	"apexrand/qrw"
 	"log"
-	"qrw"
 	//LOG "logger"
 	"os"
-	"strings"
+	//"strings"
 	//"quotes/format"
 	"time"
 )
@@ -19,14 +19,25 @@ import (
 var db *sql.DB
 
 func init() {
-	str := key.Getkeys("Mysql")
 	var err error
-	db, err = sql.Open("mysql", strings.Join([]string{str[1], ":", str[2], str[3], "/apexdb?parseTime=true"}, ""))
-	handleError(err)
+	db, err = sql.Open("mysql", "ran:MysqlRand1@tcp(mysql_apex:3306)/apexdb?parseTime=true")
+	if err == nil {
+		log.Println("Database Opened")
+
+	}
 	db.SetMaxOpenConns(11)
 	db.SetMaxIdleConns(11)
 	db.SetConnMaxLifetime(time.Second * 11 * 3)
-	log.Println("Database Opened")
+
+	for i := 0; i < 30; i++ {
+		err = db.Ping()
+		if err != nil {
+			log.Println("DB not ready, trying again: ", err)
+			time.Sleep(time.Second * 5)
+		} else {
+			break
+		}
+	}
 	f, err := os.OpenFile("file/sqlerr.log",
 		os.O_APPEND|os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 	if err != nil {
@@ -34,6 +45,34 @@ func init() {
 	}
 	f.Close()
 
+	log.Println("DB init completed")
+
+}
+
+//Opendb will open db
+func Opendb() (*sql.DB, error) {
+	//str := key.Getkeys("Mysql")
+	var err error
+	db, err = sql.Open("mysql", "ran:MysqlRand1@tcp(mysql_apex:3306)/apexdb?parseTime=true")
+	if err == nil {
+		log.Println("Database Opened")
+
+	}
+	handleError(err)
+
+	for i := 0; i < 10; i++ {
+		err = db.Ping()
+		if err != nil {
+			log.Println("DB not ready, trying again")
+			time.Sleep(time.Second * 5)
+		} else {
+			break
+		}
+	}
+	db.SetMaxOpenConns(11)
+	db.SetMaxIdleConns(11)
+	db.SetConnMaxLifetime(time.Second * 11 * 3)
+	return db, nil
 }
 
 //Insvarfromfile imports the current game vars

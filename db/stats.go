@@ -60,3 +60,16 @@ func Wipestats() {
 		fmt.Println("foreign constraint check = 1", res)
 	}
 }
+
+//Getnumrolls gets total number or rolls
+func Getnumrolls() int {
+	var res int
+	qry := "select ifnull(max(roll),0) from assign;"
+	err := db.QueryRow(qry).Scan(&res)
+	handleError(err)
+	if res == 0 {
+		return res
+	}
+	res++
+	return res
+}

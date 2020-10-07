@@ -78,6 +78,10 @@ type Stats struct {
 //Rollcounter counts rolls
 var Rollcounter int = 0
 
+func init() {
+	Rollcounter = apexdb.Getnumrolls()
+}
+
 //Thresh is probability Threshold for challenges
 var Thresh int = 30
 
@@ -183,7 +187,6 @@ func fillplayernums(res Player) Player {
 			res.AllLoads[i].L1.Playername = t1[i]
 		}
 		if len(t2) <= i {
-
 			res.AllLoads[i].L2.Playername = "Player " + strconv.Itoa(i+4)
 		} else {
 			res.AllLoads[i].L2.Playername = t2[i]

@@ -13,6 +13,7 @@ import (
 	"net"
 	"net/http"
 	_ "net/http/pprof"
+	"net/url"
 	"strconv"
 	"strings"
 	"time"
@@ -24,6 +25,7 @@ var Res random.Player
 var viewcounter int = 0
 
 func main() {
+
 	srv := &http.Server{
 		ReadTimeout:       5 * time.Second,
 		ReadHeaderTimeout: 5 * time.Second,
@@ -32,11 +34,15 @@ func main() {
 
 		Addr: ":9999",
 	}
+	//apexdb.Opendb()
 	apexdb.Insvarfromfile()
 	apexdb.Inscursefromfile()
 	apexdb.Insuserfromfile()
+	//apexdb.Sethandicap() //set new handicaps based on closed tourney
+	apexdb.Writetourngamescsv2()
 	//apexdb.Delallsess() leave all sessions open for now
 
+	log.Println("reminder: set tournament time if in tournament")
 	http.HandleFunc("/current", handler1)
 	//http.HandleFunc("/testroll", testroll)
 	http.HandleFunc("/reroll1", reroll1)
@@ -51,6 +57,7 @@ func main() {
 	http.HandleFunc("/teams", teams)
 	http.HandleFunc("/tournament", tourney)
 	http.HandleFunc("/wipetourn", wipetourn)
+	http.HandleFunc("/redirtourn", redirtourn)
 	http.HandleFunc("/", helloServer)
 
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
@@ -99,7 +106,7 @@ func getstats(w http.ResponseWriter, r *http.Request) {
 		var st apexdb.Stats
 		st.Cursecount = apexdb.Selcursestats()
 		st.Playercount = apexdb.Selplayerstats()
-		st.Totalrolls = random.Rollcounter
+		st.Totalrolls = apexdb.Getnumrolls()
 		st.Thresh = random.Thresh
 		tmpl := template.Must(template.ParseFiles("stats.html"))
 		tmpl.Execute(w, st)
@@ -161,8 +168,20 @@ func tourney(w http.ResponseWriter, r *http.Request) {
 		Tourney.Activeusers = apexdb.Getactiveusers()
 
 		if r.Method != http.MethodPost {
-			Tourney.G = Tourney.T[0].Games
-			Tourney.P = Tourney.T[0].Player
+			//Tourney.G = Tourney.T[0].Games
+			//Tourney.P = Tourney.T[0].Player
+
+			focus := r.URL.Query().Get("focus")
+			//r.URL.Query().Del("focus")
+
+			log.Println("after redir web param:", focus)
+			Tourney.P = focus
+			for _, elem := range Tourney.T {
+				if elem.Player == focus {
+					//log.Println(elem.Games)
+					Tourney.G = elem.Games
+				}
+			}
 			tmpl.Execute(w, Tourney)
 			return
 		}
@@ -187,20 +206,45 @@ func tourney(w http.ResponseWriter, r *http.Request) {
 			} else {
 				Tourney.Errcode = ""
 				Tourney.T = apexdb.Seltourngames()
-				http.Redirect(w, r, "/tournament", 302) //redirect instead of executing template directly
+				//http.Redirect(w, r, "/redir", 302) //redirect instead of executing template directly
 
 			}
-
+			focus := r.URL.Query().Get("focus")
+			http.Redirect(w, r, "/redirtourn?focus="+focus, 302) //redirect instead of executing template directly
+			return
+		} else if len(showdata) > 0 {
+			log.Println("showdata in else if:", showdata)
+			/*
+				log.Println("r.URL.Path", r.URL.Path)
+				u, err := url.Parse(r.URL.Path)
+				if err != nil {
+					log.Println("URL Parse failed: ", err)
+				}
+				q := u.Query()
+				q.Del("focus")
+				u.RawQuery = q.Encode()
+			*/
+			http.Redirect(w, r, "/redirtourn?focus="+showdata, 302) //redirect instead of executing template directly
+			return
 		}
+		//log.Println("after redir showdata:", showdata, "focusname:", focusname)
 
-		for _, elem := range Tourney.T {
-			if elem.Player == focusname {
-				Tourney.G = elem.Games
+		/*
+			not executed if methodpost chk exists above
+			focus := r.URL.Query().Get("focus")
+			r.URL.Query().Del("focus")
+
+			log.Println("after redir web param:", focus)
+
+			for _, elem := range Tourney.T {
+				if elem.Player == focus {
+					log.Println(elem.Games)
+					Tourney.G = elem.Games
+				}
 			}
-		}
-
-		tmpl.Execute(w, Tourney)
-
+			log.Println("before execute")
+			tmpl.Execute(w, Tourney)
+		*/
 	}
 	return
 }
@@ -299,6 +343,19 @@ func reroll3(w http.ResponseWriter, r *http.Request) {
 		//log.Printf("reroll res:%+v", Res.Tchals)
 		http.Redirect(w, r, "/current", 302)
 	}
+	return
+}
+func redirtourn(w http.ResponseWriter, r *http.Request) {
+	focus := r.URL.Query().Get("focus")
+
+	u, err := url.Parse(r.Header.Get("Referer"))
+	if err != nil {
+		log.Println("URL Parse failed: ", err)
+	}
+	q := u.Query()
+	q.Del("focus")
+	u.RawQuery = q.Encode()
+	http.Redirect(w, r, u.String()+"?focus="+focus, 302)
 	return
 }
 

@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"time"
@@ -38,6 +39,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sessid := createsessid()
+	delcookie(w, r, sessid)
 	setnewapexcookie(w, r, sessid)
 
 	log.Println("sessid", sessid)
@@ -67,13 +69,16 @@ func auth(l formlogin) error {
 	return nil
 }
 func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
-	cookie, err := r.Cookie("apextoken")
+
+	cookie, err := getcookie(w, r, "apextoken")
 	if err != nil {
-		log.Println("error retrieving cookie")
+		log.Println("chkvalidsess - no cookie")
 		http.Redirect(w, r, "/login", 302)
 		return false
 	}
+
 	sessid := cookie.Value
+
 	//log.Println("before chkvalid db call")
 	c := apexdb.Selsess(sessid)
 	//log.Println("token expire time:", c.Exp)
@@ -92,19 +97,22 @@ func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
 	return false
 
 }
+
 func chgname(w http.ResponseWriter, r *http.Request, newname string) {
 	if len(newname) > 20 {
 		log.Println("error: new name too long")
 		//fmt.Fprintf(w, "error: name too long")
 		return
 	}
-	cookie, err := r.Cookie("apextoken")
+	log.Println("in chgname")
+	cookie, err := getcookie(w, r, "apextoken")
 	if err != nil {
-		log.Println("error retrieving cookie")
+		log.Println("chkvalidsess - no cookie")
 		http.Redirect(w, r, "/login", 302)
 		return
 	}
 	sessid := cookie.Value
+
 	apexdb.Updpropername(sessid, newname)
 	return
 }
@@ -128,15 +136,49 @@ func assignteams() (int, error) {
 	}
 	return 2, nil
 }
+func getcookie(w http.ResponseWriter, r *http.Request, s string) (*http.Cookie, error) {
+	ip, ips, err := fromRequest(r)
+	_ = ips
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	log.Printf("request ip-getcookie: %v \n", ip)
+	//log.Println("r.header:", r.Header)
+	cookie, err := r.Cookie(s)
+	if err != nil {
+		for _, c := range r.Cookies() {
+			log.Println("range cookies:", c)
+		}
+		log.Println("r.header:", r.Header)
+		body, err1 := ioutil.ReadAll(r.Body)
+		if err1 != nil {
+			log.Printf("Error reading body: %v", err)
+		}
+		log.Println("r.body:", string(body))
+		log.Println("error retrieving cookie-getcookie", err)
+		return cookie, err
+	}
+
+	return cookie, nil
+}
 
 func setnewapexcookie(w http.ResponseWriter, r *http.Request, sessid string) {
 
 	newexp := newexpire() //create new expiration
 
-	cookie := http.Cookie{Name: "apextoken", Value: sessid, Expires: newexp, SameSite: http.SameSiteStrictMode}
+	cookie := http.Cookie{Name: "apextoken", Value: sessid, Path: "/", HttpOnly: true, Secure: false, Expires: newexp, SameSite: http.SameSiteLaxMode}
 	http.SetCookie(w, &cookie)
 
 }
+func delcookie(w http.ResponseWriter, r *http.Request, sessid string) {
+
+	//newexp := newexpire() //create new expiration
+	log.Println("deleting cookie")
+	cookie := http.Cookie{Name: "apextoken", Value: "", Path: "/", MaxAge: -1, SameSite: http.SameSiteLaxMode}
+	http.SetCookie(w, &cookie)
+
+}
+
 func newexpire() time.Time {
 	now := time.Now()
 	newexp := now.AddDate(0, 1, 0)

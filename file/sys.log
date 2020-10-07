@@ -1,1 +1,2 @@
-LOG:	2020/09/13 23:28:09 keys.go:60: Got Keys for:  Mysql
+LOG:	2020/10/05 17:30:45 keys.go:60: Got Keys for:  Mysql
+LOG:	2020/10/05 17:30:45 qwrite.go:24: CSV writer started

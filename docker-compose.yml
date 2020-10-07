@@ -1,0 +1,58 @@
+version: '3.8'
+services:
+  mysql_apex:
+    #image: "mysql:8.0.19"
+    #command: --default-authentication-plugin=mysql_native_password
+    
+    command: --default-authentication-plugin=mysql_native_password --lower_case_table_names=2
+    container_name: mysql_apex
+    build:
+      context: ./mysql
+    restart: always
+    volumes:
+      - ./mysql/apexdump201006.sql:/docker-entrypoint-initdb.d/init.sql
+      #- /C/ProgramData/MySQL/MySQL Server 8.0/Data/dockertest:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
+      #volumes_from:
+      #  - data
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_USER: ran
+      MYSQL_PASSWORD: MysqlRand1
+      MYSQL_DATABASE: apexdb
+      DATA_PATH_HOST: ./mysql
+      #MYSQL_ROOT_PASSWORD: ${ROOTPASS}
+      #MYSQL_USER: ${USERNAME}
+      #MYSQL_PASSWORD: ${USERPASS}
+      #MYSQL_DATABASE: dockertest
+    ports:
+      - "3306:3306"
+    #expose:
+    #  - 3307
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
+    tty: true
+    
+
+  apexrand:
+    build: .
+    image: "hotelmotel/apexrand:latest"
+    container_name: apexrand
+    ports:
+      - "9999:9999"
+    restart: always
+    depends_on:
+      - mysql_apex
+    #command: ["./wait-for-mysql.sh", "mysql_apex:3306", "--", "python", "app.py"]
+    #command: sh -c "/wait && /sayhello"
+    environment:
+      - WAIT_HOSTS=mysql_apex:3306
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+    tty: true
+    #healthcheck:
+    #  test: curl --fail -s mysql_apex:3306/ || exit 1
+    #  interval: 30s
+    #  timeout: 10s
+    #  retries: 5

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql" //comment
 	"log"
+	//"math"
 	"time"
 )
 
@@ -27,11 +28,13 @@ type User struct {
 type Onlineuser struct {
 	Username string
 	Online   string
+	Handiflt float64
+	Handiint int
 }
 
 //Insuserfromfile imports the curses
 func Insuserfromfile() {
-	sl := readsecurefile("impapexusers.csv")
+	sl := readsecurefile("apexrand/file/impapexusers.csv")
 	//log.Println(sl)
 	tx, err := db.Begin() //get connection
 	handleError(err)
@@ -88,6 +91,27 @@ func Getuserfromsess(sessid string) string {
 	return res
 }
 
+//Gethandifromuser returns the handicap for actual username
+func Gethandifromuser(username string) int {
+	var res int
+	qry := fmt.Sprintf("select handicap from user where username = '%s';", username)
+	err := db.QueryRow(qry).Scan(&res)
+	handleError(err)
+
+	return res
+}
+
+//Sethandifromuser returns the handicap for actual username
+func Sethandifromuser(username string, handicap int) {
+	form, err := db.Prepare("UPDATE user SET handicap= ? WHERE username =?;")
+	handleError(err)
+	_, err = form.Exec(handicap, username)
+	handleError(err)
+	log.Println("set handicap for:", username)
+	return
+
+}
+
 //Getproper returns the actual username for a players proper name
 func Getproper(username string) string {
 	var res string
@@ -101,7 +125,7 @@ func Getproper(username string) string {
 //Getactiveusers will return []string of mode requested
 func Getactiveusers() []Onlineuser {
 	now := time.Now()
-	qry := "select propername,sess_exp from user where sess_exp > ? and CHAR_LENGTH(sess_id)>5 "
+	qry := "select propername,sess_exp,handicap from user where sess_exp > ? and CHAR_LENGTH(sess_id)>5 "
 	res, err := db.Query(qry, now)
 	handleError(err)
 	var sl []Onlineuser
@@ -109,13 +133,19 @@ func Getactiveusers() []Onlineuser {
 		var u Onlineuser
 		var t time.Time
 		// for each row, scan the result into our tag composite object
-		err := res.Scan(&u.Username, &t)
+		err := res.Scan(&u.Username, &t, &u.Handiint)
 		handleError(err)
 
 		u.Online = isonline(t)
 		if u.Online == "" {
 			Assignteam(Getuser(u.Username), 0) //remove from team assignment if offline
 		}
+		if u.Handiint == 0 {
+			u.Handiflt = float64(0)
+		} else {
+			u.Handiflt = float64(u.Handiint) / 100
+		}
+
 		sl = append(sl, u)
 	}
 	res.Close()

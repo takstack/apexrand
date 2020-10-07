@@ -52,6 +52,9 @@ Reporting
         Player
     </th>
     <th class="col1">
+        Handicap
+    </th>
+    <th class="col1">
         Damage
     </th>
     <th class="col1">
@@ -63,6 +66,9 @@ Reporting
 <tr>
     <td class="col1">
         {{.Username}}
+    </td>
+    <td class="col1">
+        {{.Handiflt}}
     </td>
     <td class="col1">
         <form method="POST"><input type="text" name="dmg" size="5"> 
@@ -91,7 +97,7 @@ Standings
         Player
     </th>
     <th class="col1">
-        NumGames
+        Num
     </th>
     <th class="col1">
         Avg Damage
@@ -99,13 +105,19 @@ Standings
     <th class="col1">
         Total Damage
     </th>
+    <th class="col1">
+        Adj Avg
+    </th>
+    <th class="col1">
+        Adj Total
+    </th>
     
 </tr>
 {{range .T}}
 <tr>
     
     <td class="col1">
-        {{.Player}}
+        <form method="POST"><button type="submit" name="showdata" value="{{.Player}}">{{.Player}}</button></form>
     </td>
     <td class="col1">
         {{.Numgames}}
@@ -117,9 +129,11 @@ Standings
         {{.Sumdmg}}
     </td>
     <td class="col1">
-        <form method="POST"><button type="submit" name="showdata" value="{{.Player}}">Entries</button></form>
+        {{.Adjavg}}
     </td>
-    
+    <td class="col1">
+        {{.Adjsum}}
+    </td>
 </tr>
 {{end}}
 
@@ -132,9 +146,6 @@ Games
 <table>
 <tr>
     <th class="col3">
-        ID
-    </th>
-    <th class="col3">
         Player
     </th>
     <th class="col3">
@@ -144,10 +155,13 @@ Games
         Place
     </th>
     <th class="col3">
-        Placedmg
+        Place Dmg
     </th>
     <th class="col3">
-        Totdmg
+        Tot Dmg
+    </th>
+    <th class="col3">
+        Adj Dmg
     </th>
     <th class="col2">
         Gametime
@@ -155,9 +169,6 @@ Games
 </tr>
 {{range .G}}
 <tr>
-    <td class="col3">
-        {{.ID}}
-    </td>
     <td class="col3">
         {{$.P}}
     </td>
@@ -173,8 +184,12 @@ Games
     <td class="col3">
         {{.Totdmg}}
     </td>
+    <td class="col3">
+        {{.Adjdmg}}
+    </td>
     <td class="col2">
-        {{.Gametime.Format "06-01-02 T15:04:05"}}
+        ID: {{.ID}},<br>
+        {{.Gametime.Format "01-02 T15:04"}}
     </td>
 </tr>
 {{end}}
