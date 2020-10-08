@@ -40,6 +40,7 @@ services:
     container_name: apexrand
     ports:
       - "9999:9999"
+    #network_mode: host #to allow incoming socket ip but containers can't communicate
     restart: always
     depends_on:
       - mysql_apex
