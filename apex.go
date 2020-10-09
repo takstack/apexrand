@@ -32,7 +32,7 @@ func main() {
 		WriteTimeout:      5 * time.Second,
 		IdleTimeout:       10 * time.Second,
 
-		Addr: ":9999",
+		Addr: ":80",
 	}
 	//apexdb.Opendb()
 	apexdb.Insvarfromfile()
@@ -380,7 +380,8 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 }
 
 func helloServer(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "The server you were connecting to was disconnected or no longer in use.  Please try your request again or leave a message below")
+	//fmt.Fprintf(w, "The server you were connecting to was disconnected or no longer in use.  Please try your request again or leave a message below")
+	http.Redirect(w, r, "/apex", 302)
 	return
 }
 

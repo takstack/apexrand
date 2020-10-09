@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'  #downgraded for compatibility with digitalocean
 services:
   mysql_apex:
     #image: "mysql:8.0.19"
@@ -10,7 +10,7 @@ services:
       context: ./mysql
     restart: always
     volumes:
-      - ./mysql/apexdump201006.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./mysql/apexdump201008init.sql:/docker-entrypoint-initdb.d/init.sql
       #- /C/ProgramData/MySQL/MySQL Server 8.0/Data/dockertest:/var/lib/mysql
       - ./mysql/data:/var/lib/mysql
       #volumes_from:
@@ -39,7 +39,7 @@ services:
     image: "hotelmotel/apexrand:latest"
     container_name: apexrand
     ports:
-      - "9999:9999"
+      - "80:80"
     #network_mode: host #to allow incoming socket ip but containers can't communicate
     restart: always
     depends_on:

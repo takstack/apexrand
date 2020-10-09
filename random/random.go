@@ -162,7 +162,7 @@ func convstrings(res Player, team int) Player {
 
 //Autoroller rolls n times
 func Autoroller(res Player) Player {
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 10; i++ {
 		res = Rollnewload(res, 3)
 	}
 	return res
