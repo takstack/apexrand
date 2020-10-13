@@ -86,7 +86,16 @@ func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
 
 	sessid := cookie.Value
 
-	//log.Println("before chkvalid db call")
+	ip, ips, err := fromRequest(r)
+	_ = ips
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	log.Printf("login ip: %v, %s\n", ip, apexdb.Getuserfromip(ips))
+
+	apexdb.Logip(sessid, ips)
+
+	////log.Println("before chkvalid db call")
 	c := apexdb.Selsess(sessid)
 	//log.Println("token expire time:", c.Exp)
 
@@ -149,6 +158,7 @@ func getcookie(w http.ResponseWriter, r *http.Request, s string) (*http.Cookie, 
 	if err != nil {
 		log.Println("Error - IP Parse: ", err)
 	}
+
 	log.Printf("request ip-getcookie: %v, %s\n", ip, apexdb.Getuserfromip(ips))
 	//log.Println("r.header:", r.Header)
 	cookie, err := r.Cookie(s)
