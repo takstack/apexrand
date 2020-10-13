@@ -160,7 +160,7 @@ func getcookie(w http.ResponseWriter, r *http.Request, s string) (*http.Cookie, 
 		log.Println("Error - IP Parse: ", err)
 	}
 
-	log.Printf("request ip-getcookie: %v, %s\n", ip, apexdb.Getuserfromip(ips))
+	log.Printf("request ip-getcookie: %v\n", ip)
 	//log.Println("r.header:", r.Header)
 	cookie, err := r.Cookie(s)
 	if err != nil {
