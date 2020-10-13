@@ -28,10 +28,10 @@ services:
       #MYSQL_USER: ${USERNAME}
       #MYSQL_PASSWORD: ${USERPASS}
       #MYSQL_DATABASE: dockertest
-    #ports:
-    #  - "3306:3306"
-    expose:
-      - 3306
+    ports:
+      - "3306:3306"
+    #expose:  #using expose only will open port for only other containers, not host
+    #  - 3306
     cap_add:
       - SYS_NICE  # CAP_SYS_NICE
     tty: true

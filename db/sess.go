@@ -19,6 +19,25 @@ func Selsess(sessid string) Creds {
 	return res
 }
 
+//Logip will record successful ip addresses
+func Logip(username string, ip string) {
+	form, err := db.Prepare("UPDATE user SET ip = ? WHERE username = ?;")
+	handleError(err)
+	_, err = form.Exec(ip, username)
+	handleError(err)
+	return
+}
+
+//Getuserfromip will return username for an ip address
+func Getuserfromip(ip string) string {
+	var res string
+	qry := fmt.Sprintf("select username from user where ip = '%s';", ip)
+	err := db.QueryRow(qry).Scan(&res)
+	handleError(err)
+
+	return res
+}
+
 //Updsessid updates sessid for given user
 func Updsessid(username string, sessid string) {
 	form, err := db.Prepare("UPDATE user SET sess_id = ? WHERE username = ?;")
