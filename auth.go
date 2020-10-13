@@ -51,6 +51,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	log.Println("sessid", sessid)
 	apexdb.Updsessid(det.user, sessid)
 	apexdb.Logip(sessid, ips)
+	log.Println("entered user ip: ", sessid, ips)
 	apexdb.Updsessexp(sessid, newexpire())
 
 	teamassignment, err := assignteams()
@@ -94,7 +95,7 @@ func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
 	log.Printf("login ip: %v, %s\n", ip, apexdb.Getuserfromip(ips))
 
 	apexdb.Logip(sessid, ips)
-
+	log.Println("entered user ip: ", sessid, ips)
 	////log.Println("before chkvalid db call")
 	c := apexdb.Selsess(sessid)
 	//log.Println("token expire time:", c.Exp)
