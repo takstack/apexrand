@@ -38,11 +38,11 @@ func login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ip, ips, err := fromRequest(r)
-	_ = ips
+	_ = ip
 	if err != nil {
 		log.Println("Error - IP Parse: ", err)
 	}
-	log.Printf("login ip: %v, %s\n", ip, apexdb.Getuserfromip(ips))
+	//log.Printf("login ip: %v\n", ip)
 
 	sessid := createsessid()
 	delcookie(w, r, sessid)
@@ -92,7 +92,7 @@ func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
 	if err != nil {
 		log.Println("Error - IP Parse: ", err)
 	}
-	log.Printf("login ip: %v, %s\n", ip, apexdb.Getuserfromip(ips))
+	log.Printf("user ip: %v, %s\n", ip, apexdb.Getuserfromsess(sessid))
 
 	apexdb.Logip(sessid, ips)
 	log.Println("entered user ip: ", sessid, ips)
