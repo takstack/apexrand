@@ -174,7 +174,7 @@ func tourney(w http.ResponseWriter, r *http.Request) {
 			focus := r.URL.Query().Get("focus")
 			//r.URL.Query().Del("focus")
 
-			log.Println("after redir web param:", focus)
+			log.Printf("after redir web param: %s \n\n", focus)
 			Tourney.P = focus
 			for _, elem := range Tourney.T {
 				if elem.Player == focus {
