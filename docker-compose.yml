@@ -5,6 +5,8 @@ services:
     #command: --default-authentication-plugin=mysql_native_password
     
     command: --default-authentication-plugin=mysql_native_password --lower_case_table_names=2
+    command: mysqld --general-log=1 --general-log-file=/var/log/mysql/general-log.log  #check if 2nd command executed
+
     container_name: mysql_apex
     build:
       context: ./mysql
@@ -13,6 +15,7 @@ services:
       - ./mysql/apexdump201008init.sql:/docker-entrypoint-initdb.d/init.sql
       #- /C/ProgramData/MySQL/MySQL Server 8.0/Data/dockertest:/var/lib/mysql
       - ./mysql/data:/var/lib/mysql
+      - ./logs/mysql.log:/var/log/mysql/general-log.log
       #volumes_from:
       #  - data
     environment:

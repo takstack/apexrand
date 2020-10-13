@@ -72,7 +72,7 @@ func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
 
 	cookie, err := getcookie(w, r, "apextoken")
 	if err != nil {
-		log.Println("chkvalidsess - no cookie")
+		log.Printf("chkvalidsess - no cookie\n\n")
 		http.Redirect(w, r, "/login", 302)
 		return false
 	}
