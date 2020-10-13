@@ -21,7 +21,7 @@ func Selsess(sessid string) Creds {
 
 //Logip will record successful ip addresses
 func Logip(sessid string, ip string) {
-	form, err := db.Prepare("UPDATE user SET ip = ? WHERE username = ?;")
+	form, err := db.Prepare("UPDATE user SET ip = ? WHERE sessid = ?;")
 	handleError(err)
 	_, err = form.Exec(ip, sessid)
 	handleError(err)
