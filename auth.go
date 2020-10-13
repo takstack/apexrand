@@ -37,6 +37,12 @@ func login(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "login failed")
 		return
 	}
+	ip, ips, err := fromRequest(r)
+	_ = ips
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	log.Printf("login ip: %v, %s\n", ip, apexdb.Getuserfromip(ips))
 
 	sessid := createsessid()
 	delcookie(w, r, sessid)
@@ -44,6 +50,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("sessid", sessid)
 	apexdb.Updsessid(det.user, sessid)
+	apexdb.Logip(sessid, ips)
 	apexdb.Updsessexp(sessid, newexpire())
 
 	teamassignment, err := assignteams()
@@ -142,7 +149,7 @@ func getcookie(w http.ResponseWriter, r *http.Request, s string) (*http.Cookie, 
 	if err != nil {
 		log.Println("Error - IP Parse: ", err)
 	}
-	log.Printf("request ip-getcookie: %v \n", ip)
+	log.Printf("request ip-getcookie: %v, %s\n", ip, apexdb.Getuserfromip(ips))
 	//log.Println("r.header:", r.Header)
 	cookie, err := r.Cookie(s)
 	if err != nil {
