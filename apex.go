@@ -409,10 +409,11 @@ func fromRequest(req *http.Request) (net.IP, string, error) {
 		}
 	}
 	userIPs := strconv.Itoa(IPcalc)
+	_ = userIPs
 	if err != nil {
 		return nil, "", fmt.Errorf("userip: %q did not convert to str", req.RemoteAddr)
 	}
 	//log.Println("ip parsed")
 	//log.Println(userIP, userIPs)
-	return userIP, userIPs, nil
+	return userIP, ip, nil
 }
