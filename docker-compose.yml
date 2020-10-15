@@ -5,7 +5,7 @@ services:
     #command: --default-authentication-plugin=mysql_native_password
     
     command: --default-authentication-plugin=mysql_native_password --lower_case_table_names=2
-    command: mysqld --general-log=1 --general-log-file=/var/log/mysql/general-log.log  #check if 2nd command executed
+    #command: mysqld --general-log=1 --general-log-file=/var/log/mysql/general-log.log  #check if 2nd command executed
 
     container_name: mysql_apex
     build:
