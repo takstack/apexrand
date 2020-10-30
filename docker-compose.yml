@@ -47,6 +47,8 @@ services:
     restart: always
     depends_on:
       - mysql_apex
+    volumes:
+      - .:/root/apexrand
     #command: ["./wait-for-mysql.sh", "mysql_apex:3306", "--", "python", "app.py"]
     #command: sh -c "/wait && /sayhello"
     environment:

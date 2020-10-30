@@ -42,7 +42,7 @@ func main() {
 	apexdb.Writetourngamescsv2()
 	//apexdb.Delallsess() leave all sessions open for now
 
-	log.Println("reminder: set tournament time if in tournament")
+	log.Println("reminder: set tournament time in loggame if in tournament")
 	http.HandleFunc("/current", handler1)
 	//http.HandleFunc("/testroll", testroll)
 	http.HandleFunc("/reroll1", reroll1)
