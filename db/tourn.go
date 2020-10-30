@@ -155,7 +155,7 @@ func getplayersgames(player string) []Game {
 }
 func getplayersgamesspecdate(player string, tourndate time.Time) [][]string {
 
-	qry := "select username, totaldmg, tourn from games where username=? and tourn>? order by totaldmg desc limit 10"
+	qry := "select username, totaldmg, tourn from games where username=? and tourn>? order by totaldmg desc limit 20"
 	res, err := db.Query(qry, player, tourndate)
 	handleError(err)
 	var sl [][]string
@@ -255,19 +255,20 @@ func Writetourngamescsv2() {
 			cw.Flush()
 		}
 	}
+	/*
+		tourndate = time.Date(2020, time.Month(9), 11, 0, 0, 0, 0, time.UTC)
 
-	tourndate = time.Date(2020, time.Month(9), 11, 0, 0, 0, 0, time.UTC)
-
-	for _, elem := range playerlist {
-		sl := getplayersgamesspecdate(elem, tourndate)
-		for _, game := range sl {
-			g := []string{game[0], game[1], game[2]}
-			log.Printf("sl: %v", g)
-			err := cw.Write(g)
-			if err != nil {
-				log.Println("csv write error:", err)
+		for _, elem := range playerlist {
+			sl := getplayersgamesspecdate(elem, tourndate)
+			for _, game := range sl {
+				g := []string{game[0], game[1], game[2]}
+				log.Printf("sl: %v", g)
+				err := cw.Write(g)
+				if err != nil {
+					log.Println("csv write error:", err)
+				}
+				cw.Flush()
 			}
-			cw.Flush()
 		}
-	}
+	*/
 }
