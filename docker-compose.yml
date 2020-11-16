@@ -48,7 +48,7 @@ services:
     depends_on:
       - mysql_apex
     volumes:
-      - .:/root/apexrand
+      - /var/lib/api/apikey:/var/lib/api/apikey
     #command: ["./wait-for-mysql.sh", "mysql_apex:3306", "--", "python", "app.py"]
     #command: sh -c "/wait && /sayhello"
     environment:
