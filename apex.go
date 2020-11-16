@@ -76,7 +76,7 @@ func testfileopen() {
 	if err != nil {
 		log.Println("file open error:", err)
 	}
-	log.Println("apikey:", r)
+	log.Println("apikey:", string(r))
 }
 
 //not working
