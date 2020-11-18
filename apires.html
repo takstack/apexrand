@@ -24,6 +24,14 @@
         
         
     }
+    .col4{
+        border:1px solid black;
+        /*background-color: rgba(51,113,255,.6);*/
+        width: 80px;
+        padding: 10px 5px;
+        
+        
+    }
     .col3{
         border:1px solid black;
         /*background-color: rgba(51,113,255,.6);*/
@@ -51,7 +59,7 @@ Reporting
     <th class="col1">
         Player
     </th>
-    <th class="col1">
+    <th class="col4">
         Time
     </th>
     <th class="col1">
@@ -76,8 +84,8 @@ Reporting
     <td class="col1">
         {{.Player}}
     </td>
-    <td class="col1">
-        {{.Stampconv}}
+    <td class="col4">
+        {{.Stampconv.Format "01-02 T15:04"}}
     </td>
     <td class="col1">
         {{.Legend}}

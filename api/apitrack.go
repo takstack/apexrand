@@ -15,31 +15,31 @@ import (
 //Apipull main process to pull down api data
 func Apipull() {
 	apikey := getapikey()
-	//for{
-	sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone", "lildongmanisme", "kringo506", "hochilinh"}
-	for _, p := range sl {
-		s := fmt.Sprintf("file/matchlist-%s", p)
-		f, err := os.Create(s)
-		if err != nil {
-			log.Fatalln(err)
+	for {
+		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone", "lildongmanisme", "kringo506", "hochilinh"}
+		for _, p := range sl {
+			s := fmt.Sprintf("file/matchlist-%s", p)
+			f, err := os.Create(s)
+			if err != nil {
+				log.Fatalln(err)
+			}
+			defer f.Close()
+			getmatches(p, f, apikey)
 		}
-		defer f.Close()
-		getmatches(p, f, apikey)
+
+		/*
+			f, err := os.Create("file/matchlist")
+			if err != nil {
+				log.Fatalln(err)
+			}
+			getmatches("full_send_deez", f)
+		*/
+		//readjson()
+
+		//log.Println(Reqtopapimatches())
+		//Reqtopapimatches()
+		time.Sleep(time.Second * 30)
 	}
-
-	/*
-		f, err := os.Create("file/matchlist")
-		if err != nil {
-			log.Fatalln(err)
-		}
-		getmatches("full_send_deez", f)
-	*/
-	//readjson()
-
-	//log.Println(Reqtopapimatches())
-	//Reqtopapimatches()
-	//time.Sleep(time.Second * 240)
-	//}
 }
 
 func getmatches(p string, f *os.File, apikey string) {
@@ -197,9 +197,6 @@ func Reqtopapimatches() apexdb.Apimain {
 		}
 		log.Println("request p:", p)
 		matchlist.Apiseries[i].Seltrackers = p
-	}
-	for _, elem := range matchlist.Apiseries {
-		log.Println("in request seltracker", elem.Seltrackers.Val1, elem.Seltrackers.Val2, elem.Seltrackers.Val3)
 	}
 	return matchlist
 }
