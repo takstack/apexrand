@@ -181,7 +181,9 @@ func Reqtopapimatches() apexdb.Apimain {
 		var p = apexdb.Pulltracker{Val1: "0", Val2: "0", Val3: "0"}
 		tracked := apexdb.Seltrackers(match.Userid, match.Timestamp)
 		for _, elem := range tracked {
+			log.Println("request elem.Key == apexdb.Cat.Cat1", elem.Key, apexdb.Cat.Cat1)
 			if elem.Key == apexdb.Cat.Cat1 {
+				log.Println("request in cat1")
 				p.Val1 = strconv.Itoa(elem.Val)
 			}
 			if elem.Key == apexdb.Cat.Cat2 {
