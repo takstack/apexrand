@@ -112,7 +112,7 @@ func SeltopAPImatches() Apimain {
 //Seltrackers gets trackers for corresponding game
 func Seltrackers(u int, t time.Time) []Apitracker {
 	log.Println("in db seltrackers, time:", t)
-	qry := fmt.Sprintf("select val,keyid,nameid from apitracker where uid=%d and tstamp=%v;", u, t)
+	qry := fmt.Sprintf("select val,keyid,nameid from apitracker where uid='%d' and tstamp='%v';", u, t)
 	res, err := db.Query(qry)
 	handleError(err)
 
