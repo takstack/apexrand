@@ -37,6 +37,7 @@ func Apipull() {
 		//readjson()
 
 		//log.Println(Reqtopapimatches())
+		Reqtopapimatches()
 		time.Sleep(time.Second * 30)
 	}
 }
