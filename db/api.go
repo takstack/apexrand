@@ -92,7 +92,7 @@ func Logtracker(g Apigames, tracker Apitracker) error {
 
 //SeltopAPImatches gets most recent match list for any user from api
 func SeltopAPImatches() Apimain {
-	qry := "select uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,importdate from apigames order by tstamp desc limit 20;"
+	qry := "select uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,importdate from apigames order by tstamp desc limit 10;"
 	res, err := db.Query(qry)
 	handleError(err)
 
