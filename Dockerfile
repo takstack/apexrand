@@ -5,6 +5,7 @@ RUN mkdir /app
 ADD . /app
 ADD ./db /go/src/apexrand/db
 ADD ./random /go/src/apexrand/random
+ADD ./api /go/src/apexrand/api
 ADD ./qrw /go/src/apexrand/qrw
 ADD ./file /go/src/apexrand/file
 ADD ./images /go/src/apexrand/images
