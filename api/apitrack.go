@@ -36,7 +36,7 @@ func Apipull() {
 		*/
 		//readjson()
 
-		log.Println(Reqtopapimatches())
+		//log.Println(Reqtopapimatches())
 		time.Sleep(time.Second * 30)
 	}
 }
@@ -179,6 +179,7 @@ func Reqtopapimatches() apexdb.Apimain {
 	matchlist := apexdb.SeltopAPImatches()
 	for _, match := range matchlist.Apiseries {
 		var p = apexdb.Pulltracker{Val1: "0", Val2: "0", Val3: "0"}
+		log.Println("match to find trackers for:", match.Userid, match.Timestamp)
 		tracked := apexdb.Seltrackers(match.Userid, match.Timestamp)
 		for _, elem := range tracked {
 			log.Println("request elem.Key == apexdb.Cat.Cat1", elem.Key, apexdb.Cat.Cat1)
