@@ -179,7 +179,7 @@ func Reqtopapimatches() apexdb.Apimain {
 	matchlist := apexdb.SeltopAPImatches()
 	for _, match := range matchlist.Apiseries {
 		var p = apexdb.Pulltracker{Val1: "0", Val2: "0", Val3: "0"}
-		tracked := apexdb.Seltrackers(match.Userid, match.Stampconv)
+		tracked := apexdb.Seltrackers(match.Userid, match.Timestamp)
 		for _, elem := range tracked {
 			if elem.Key == apexdb.Cat.Cat1 {
 				p.Val1 = strconv.Itoa(elem.Val)
