@@ -180,10 +180,10 @@ func Reqtopapimatches() apexdb.Apimain {
 	matchlist := apexdb.SeltopAPImatches()
 	for _, match := range matchlist.Apiseries {
 		var p = apexdb.Pulltracker{Val1: "0", Val2: "0", Val3: "0"}
-		log.Println("match to find trackers for:", match.Userid, match.Stampconv)
+		//log.Println("match to find trackers for:", match.Userid, match.Stampconv)
 		tracked := apexdb.Seltrackers(match.Userid, match.Stampconv)
 		for _, elem := range tracked {
-			log.Println("request elem.Key == apexdb.Cat.Cat1", elem.Key, apexdb.Cat.Cat1)
+			//log.Println("request elem.Key == apexdb.Cat.Cat1", elem.Key, apexdb.Cat.Cat1)
 			if elem.Key == apexdb.Cat.Cat1 {
 				log.Println("request in cat1")
 				p.Val1 = strconv.Itoa(elem.Val)
@@ -197,6 +197,9 @@ func Reqtopapimatches() apexdb.Apimain {
 		}
 		log.Println("request p:", p)
 		match.Seltrackers = p
+	}
+	for _, elem := range matchlist.Apiseries {
+		log.Println("in request seltracker", elem.Seltrackers.Val1, elem.Seltrackers.Val2, elem.Seltrackers.Val3)
 	}
 	return matchlist
 }
