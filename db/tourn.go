@@ -74,9 +74,9 @@ func Loggame(player string, dmg string, place string) error {
 	}
 	tdmg := pdmg + d
 	adjdmg := int(float64(tdmg) * ((10000 - float64(handi)) / 10000))
-	tourndate := time.Date(2020, time.Month(10), 30, 0, 0, 0, 0, time.UTC)
+	tourndate := time.Date(2011, time.Month(1), 1, 0, 0, 0, 0, time.UTC)
 
-	form, err := db.Prepare("INSERT INTO games(username,dmg,place,placedmg,totaldmg,handicap, adj_dmg,inc_tourn,tourn,gametime) VALUES (?,?,?,?,?,?,?,?,?,?)")
+	form, err := db.Prepare("INSERT INTO games(username,dmg,place,placedmg,totaldmg,handicap,adj_dmg,inc_tourn,tourn,gametime) VALUES (?,?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		panic(err.Error())
 	}

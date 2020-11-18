@@ -15,7 +15,8 @@ import (
 	//"quotes/format"
 	"time"
 )
-
+//Cat is global var for 3 tracker categories currently in use
+var Cat Cats
 var db *sql.DB
 
 func init() {
@@ -46,7 +47,7 @@ func init() {
 	f.Close()
 
 	log.Println("DB init completed")
-
+	Cat = Cats{"kills", "damage", "revives"}
 }
 
 //Opendb will open db

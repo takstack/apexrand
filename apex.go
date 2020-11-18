@@ -2,6 +2,7 @@ package main
 
 import (
 	//"logger"
+	"apexrand/api"
 	"apexrand/db"
 	"apexrand/random"
 	"bytes"
@@ -14,7 +15,6 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"net/url"
-	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -42,9 +42,10 @@ func main() {
 	//apexdb.Sethandicap() //set new handicaps based on closed tourney
 	apexdb.Writetourngamescsv2()
 	//apexdb.Delallsess() leave all sessions open for now
-	testfileopen()
+	go api.Apipull()
 
 	log.Println("reminder: set tournament time in loggame if in tournament")
+
 	http.HandleFunc("/current", handler1)
 	//http.HandleFunc("/testroll", testroll)
 	http.HandleFunc("/reroll1", reroll1)
@@ -66,17 +67,6 @@ func main() {
 	srv.SetKeepAlivesEnabled(false)
 	log.Fatalln(srv.ListenAndServe())
 
-}
-func testfileopen() {
-	f, err := os.Open("/var/lib/api/apikey")
-	if err != nil {
-		log.Println("file open error:", err)
-	}
-	r, err := ioutil.ReadAll(f)
-	if err != nil {
-		log.Println("file open error:", err)
-	}
-	log.Println("apikey:", string(r))
 }
 
 //not working
