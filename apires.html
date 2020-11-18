@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<style type="text/css">
+    
+    table{
+        border: 1px solid black;
+        border-spacing: 0px;
+        border-collapse: collapse; 
+        width: 320px;
+    }
+    .smallrow{
+        line-height: 12px;
+    }
+    .rowborder{
+        border-bottom:1px solid black;
+    }
+    .col1{
+        border:1px solid black;
+        /*background-color: rgba(51,113,255,.6);*/
+        width: 60px;
+        padding: 10px 5px;
+        
+        
+    }
+    .col3{
+        border:1px solid black;
+        /*background-color: rgba(51,113,255,.6);*/
+        width: 20;
+        padding: 10px 5px;
+    }
+    .col2{
+        /*background-color: rgba(255,51,51,.6);*/
+        border: 1px solid black;
+        width: 30%;
+        padding: 10px 5px;
+    }
+</style>
+</head>
+
+<h1>API Results</h1>
+    
+<button onclick="location.href = '/tournament'">Back to tournament</button> &nbsp &nbsp &nbsp     
+
+<p></p>
+Reporting
+
+<table>
+<tr>
+    <th class="col1">
+        Player
+    </th>
+    <th class="col1">
+        Time
+    </th>
+    <th class="col1">
+        Legend
+    </th>
+    <th class="col1">
+        Totdmg
+    </th>
+    <th class="col1">
+        Kills
+    </th>
+    <th class="col1">
+        Damage
+    </th>
+    <th class="col1">
+        Revives
+    </th>
+
+</tr>
+{{range .Apiseries}}
+<tr>
+    <td class="col1">
+        {{.Player}}
+    </td>
+    <td class="col1">
+        {{.Stampconv}}
+    </td>
+    <td class="col1">
+        {{.Legend}}
+    </td>
+    <td class="col1">
+        {{.Totdmg}}
+    </td>
+    <td class="col1">
+        {{.Seltrackers.Val1}}
+    </td>
+    <td class="col1">
+        {{.Seltrackers.Val2}}
+    </td>
+    <td class="col1">
+        {{.Seltrackers.Val3}}
+    </td>
+    
+</tr>
+{{end}}
+</table>

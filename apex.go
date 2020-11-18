@@ -61,6 +61,7 @@ func main() {
 	http.HandleFunc("/tournament", tourney)
 	http.HandleFunc("/wipetourn", wipetourn)
 	http.HandleFunc("/redirtourn", redirtourn)
+	http.HandleFunc("/apires", apires)
 	http.HandleFunc("/", helloServer)
 
 	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
@@ -361,7 +362,25 @@ func redirtourn(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, u.String()+"?focus="+focus, 302)
 	return
 }
+func apires(w http.ResponseWriter, r *http.Request) {
+	validsess := chkvalidsession(w, r)
+	if validsess {
+		Apimain := api.Reqtopapimatches()
+		ip, ips, err := fromRequest(r)
+		_ = ips
+		if err != nil {
+			log.Println("Error - IP Parse: ", err)
+		}
+		//log.Println(r.Header)
+		//log.Println("Read cookie:", r.Header.Get("Cookie"))
+		log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
+		log.Printf("Request executed \n\n")
 
+		tmpl := template.Must(template.ParseFiles("apires.html"))
+		tmpl.Execute(w, Apimain)
+	}
+	return
+}
 func handler1(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
