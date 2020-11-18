@@ -110,8 +110,8 @@ func SeltopAPImatches() Apimain {
 }
 
 //Seltrackers gets trackers for corresponding game
-func Seltrackers(u int, t int) []Apitracker {
-	qry := fmt.Sprintf("select val,keyid,nameid from apitracker where uid=%d and tstamp=%d;", u, t)
+func Seltrackers(u int, t time.Time) []Apitracker {
+	qry := fmt.Sprintf("select val,keyid,nameid from apitracker where uid=%d and tstamp=%v;", u, t)
 	res, err := db.Query(qry)
 	handleError(err)
 
