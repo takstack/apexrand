@@ -144,7 +144,7 @@ func getplayersgames(player string) []Game {
 		var g Game
 		// for each row, scan the result into our tag composite object
 		err := res.Scan(&g.ID, &g.Username, &g.Dmg, &g.Place, &g.Placedmg, &g.Totdmg, &g.Handicap, &g.Adjdmg, &g.Gametime)
-		g.Gametime = convertutc(g.Gametime)
+		g.Gametime = Convertutc(g.Gametime)
 		handleError(err)
 
 		sl = append(sl, g)
@@ -175,7 +175,9 @@ func getplayersgamesspecdate(player string, tourndate time.Time) [][]string {
 
 	return sl
 }
-func convertutc(t time.Time) time.Time {
+
+//Convertutc exp
+func Convertutc(t time.Time) time.Time {
 	var local time.Time
 	location, err := time.LoadLocation("America/Los_Angeles")
 	if err == nil {
