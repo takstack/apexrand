@@ -366,6 +366,10 @@ func apires(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
 		Apimain := api.Reqtopapimatches()
+		for _, elem := range Apimain.Apiseries {
+			log.Println("Seltrackers", elem.Seltrackers)
+		}
+
 		ip, ips, err := fromRequest(r)
 		_ = ips
 		if err != nil {

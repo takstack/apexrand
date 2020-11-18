@@ -15,31 +15,31 @@ import (
 //Apipull main process to pull down api data
 func Apipull() {
 	apikey := getapikey()
-	for {
-		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone", "lildongmanisme", "kringo506", "hochilinh"}
-		for _, p := range sl {
-			s := fmt.Sprintf("file/matchlist-%s", p)
-			f, err := os.Create(s)
-			if err != nil {
-				log.Fatalln(err)
-			}
-			defer f.Close()
-			getmatches(p, f, apikey)
+	//for{
+	sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone", "lildongmanisme", "kringo506", "hochilinh"}
+	for _, p := range sl {
+		s := fmt.Sprintf("file/matchlist-%s", p)
+		f, err := os.Create(s)
+		if err != nil {
+			log.Fatalln(err)
 		}
-
-		/*
-			f, err := os.Create("file/matchlist")
-			if err != nil {
-				log.Fatalln(err)
-			}
-			getmatches("full_send_deez", f)
-		*/
-		//readjson()
-
-		//log.Println(Reqtopapimatches())
-		Reqtopapimatches()
-		time.Sleep(time.Second * 30)
+		defer f.Close()
+		getmatches(p, f, apikey)
 	}
+
+	/*
+		f, err := os.Create("file/matchlist")
+		if err != nil {
+			log.Fatalln(err)
+		}
+		getmatches("full_send_deez", f)
+	*/
+	//readjson()
+
+	//log.Println(Reqtopapimatches())
+	//Reqtopapimatches()
+	//time.Sleep(time.Second * 240)
+	//}
 }
 
 func getmatches(p string, f *os.File, apikey string) {
