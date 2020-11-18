@@ -197,6 +197,7 @@ func Reqtopapimatches() apexdb.Apimain {
 		}
 		log.Println("request p:", p)
 		matchlist.Apiseries[i].Seltrackers = p
+		matchlist.Apiseries[i].Stampconv = convertutc(matchlist.Apiseries[i].Stampconv)
 	}
 	return matchlist
 }

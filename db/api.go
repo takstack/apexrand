@@ -102,7 +102,7 @@ func SeltopAPImatches() Apimain {
 		// for each row, scan the result into our tag composite object
 		err := res.Scan(&game.Userid, &game.Username, &game.Player, &game.Stampconv, &game.Legend, &game.Totdmg, &game.Handi, &game.Adjdmg, &game.Importdate)
 		handleError(err)
-		game.Stampconv = convertutc(game.Stampconv)
+
 		sl.Apiseries = append(sl.Apiseries, game)
 	}
 	res.Close()
