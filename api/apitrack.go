@@ -103,7 +103,7 @@ func sendapitodb(a apexdb.Apimain) {
 			//log.Println("len(elem.Throwaway)", len(elem.Throwaway))
 			err = apexdb.Logapigame(elem)
 		} else {
-			log.Println("len(elem.Throwaway)too long", len(elem.Throwaway))
+			//log.Println("len(elem.Throwaway)too long", len(elem.Throwaway))
 		}
 		if err != nil {
 			log.Println("json err:", err)
