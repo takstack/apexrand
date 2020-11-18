@@ -36,8 +36,8 @@ func Apipull() {
 		*/
 		//readjson()
 
-		time.Sleep(time.Second * 30)
 		log.Println(Reqtopapimatches())
+		time.Sleep(time.Second * 30)
 	}
 }
 
@@ -191,6 +191,7 @@ func Reqtopapimatches() apexdb.Apimain {
 				p.Val3 = strconv.Itoa(elem.Val)
 			}
 		}
+		log.Println("request p:", p)
 		match.Seltrackers = p
 	}
 	return matchlist
