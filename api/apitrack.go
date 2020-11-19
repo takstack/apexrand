@@ -66,7 +66,10 @@ func getmatches(p string, f *os.File, apikey string) {
 
 	n2, err := f.Write(body)
 	sendapitodb(unmarjson(body))
-
+	if err != nil {
+		log.Fatalln(err)
+	}
+	_ = n2
 	//log.Println(string(body))
 	//log.Println("wrote num bytes:", n2, p)
 }
