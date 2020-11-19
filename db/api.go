@@ -64,6 +64,13 @@ type Apievent struct {
 	A1 string `json:"action"`
 }
 
+//Cat is global var for 3 tracker categories currently in use
+var Cat Cats
+
+func initcats() {
+	Cat = Cats{"kills", "damage", "top_3"}
+}
+
 //Logapigame will enter data from games
 func Logapigame(g Apigames) error {
 	form, err := db.Prepare("INSERT INTO apigames(uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,importdate) VALUES (?,?,?,?,?,?,?,?,?) on DUPLICATE KEY UPDATE uid=?")
@@ -92,7 +99,7 @@ func Logtracker(g Apigames, tracker Apitracker) error {
 
 //SeltopAPImatches gets most recent match list for any user from api
 func SeltopAPImatches() Apimain {
-	qry := "select uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,importdate from apigames order by tstamp desc limit 10;"
+	qry := "select uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,importdate from apigames order by tstamp desc limit 50;"
 	res, err := db.Query(qry)
 	handleError(err)
 
