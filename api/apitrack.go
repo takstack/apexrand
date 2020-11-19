@@ -38,6 +38,7 @@ func Apipull() {
 
 		//log.Println(Reqtopapimatches())
 		//Reqtopapimatches()
+		log.Println("pulled data")
 		time.Sleep(time.Second * 30)
 	}
 }
@@ -67,7 +68,7 @@ func getmatches(p string, f *os.File, apikey string) {
 	sendapitodb(unmarjson(body))
 
 	//log.Println(string(body))
-	log.Println("wrote num bytes:", n2, p)
+	//log.Println("wrote num bytes:", n2, p)
 }
 func sendapitodb(a apexdb.Apimain) {
 
@@ -185,7 +186,7 @@ func Reqtopapimatches() apexdb.Apimain {
 		for _, elem := range tracked {
 			//log.Println("request elem.Key == apexdb.Cat.Cat1", elem.Key, apexdb.Cat.Cat1)
 			if elem.Key == apexdb.Cat.Cat1 {
-				log.Println("request in cat1")
+				//log.Println("request in cat1")
 				p.Val1 = strconv.Itoa(elem.Val)
 			}
 			if elem.Key == apexdb.Cat.Cat2 {
@@ -195,7 +196,7 @@ func Reqtopapimatches() apexdb.Apimain {
 				p.Val3 = strconv.Itoa(elem.Val)
 			}
 		}
-		log.Println("request p:", p)
+		//log.Println("request p:", p)
 		matchlist.Apiseries[i].Seltrackers = p
 		matchlist.Apiseries[i].Stampconv = apexdb.Convertutc(matchlist.Apiseries[i].Stampconv)
 	}
