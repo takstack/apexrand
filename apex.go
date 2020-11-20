@@ -365,14 +365,24 @@ func redirtourn(w http.ResponseWriter, r *http.Request) {
 func apires(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
-		Apimain := api.Reqtopapimatches()
+
 		ip, ips, err := fromRequest(r)
 		_ = ips
 		if err != nil {
 			log.Println("Error - IP Parse: ", err)
 		}
+		cookie, err := r.Cookie("apextoken")
+		if err != nil {
+			log.Println("error retrieving cookie")
+			http.Redirect(w, r, "/login", 302)
+			return
+		}
+		sessid := cookie.Value
+		username := apexdb.Getuserfromsess(sessid)
 		//log.Println(r.Header)
 		//log.Println("Read cookie:", r.Header.Get("Cookie"))
+
+		Apimain := api.Reqtopapimatches(username)
 		log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
 		log.Printf("Request executed \n\n")
 

@@ -102,8 +102,8 @@ func Logtracker(g Apigames, tracker Apitracker) error {
 }
 
 //SeltopAPImatches gets most recent match list for any user from api
-func SeltopAPImatches() Apimain {
-	qry := "select uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,importdate from apigames order by tstamp desc limit 12;"
+func SeltopAPImatches(username string) Apimain {
+	qry := fmt.Sprintf("select uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,importdate from apigames where user='%s' order by tstamp desc limit 3;", username)
 	res, err := db.Query(qry)
 	handleError(err)
 

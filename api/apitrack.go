@@ -221,8 +221,8 @@ func readjson() {
 }
 
 //Reqtopapimatches exp
-func Reqtopapimatches() apexdb.Apimain {
-	matchlist := apexdb.SeltopAPImatches()
+func Reqtopapimatches(username string) apexdb.Apimain {
+	matchlist := apexdb.SeltopAPImatches(username)
 	for i := range matchlist.Apiseries {
 		var p = apexdb.Pulltracker{Val1: "0", Val2: "0", Val3: "0"}
 		//log.Println("match to find trackers for:", match.Userid, match.Stampconv)
