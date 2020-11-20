@@ -30,6 +30,7 @@ func Apipull() {
 			err = getmatches(p, f, apikey)
 			if err != nil {
 				log.Println(err)
+				f.Close()
 				continue
 			}
 		}
@@ -60,6 +61,7 @@ func Apipull() {
 }
 
 func getmatches(p string, f *os.File, apikey string) error {
+	now := time.Now()
 	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?player=%s&platform=PS4&auth=%s&history=1&action=get", p, apikey)
 	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
 	req, err := http.NewRequest("GET", s, nil)
@@ -81,18 +83,19 @@ func getmatches(p string, f *os.File, apikey string) error {
 		log.Println(err)
 		return errors.New("Non-200 http response")
 	}
-
+	log.Printf("API access took: %v", time.Since(now))
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Println(err)
 		return err
 	}
-
-	n2, err := f.Write(body)
-	if err != nil {
-		log.Println(err)
-		return err
-	}
+	/*
+		n2, err := f.Write(body)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
+	*/
 	var a apexdb.Apimain
 	a, err = unmarjson(body)
 	if err != nil {
@@ -104,7 +107,7 @@ func getmatches(p string, f *os.File, apikey string) error {
 		log.Println(err)
 		return err
 	}
-	_ = n2
+	//_ = n2
 	return nil
 	//log.Println(string(body))
 	//log.Println("wrote num bytes:", n2, p)
