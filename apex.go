@@ -15,7 +15,7 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"net/url"
-	"runtime"
+	//"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -386,7 +386,7 @@ func apires(w http.ResponseWriter, r *http.Request) {
 		Apimain := api.Reqtopapimatches(username)
 		log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
 		log.Printf("Request executed \n\n")
-		log.Println("runtime heap allocation: ", runtime.ReadMemStats())
+		//log.Println("runtime heap allocation: ", runtime.ReadMemStats())
 
 		tmpl := template.Must(template.ParseFiles("apires.html"))
 		tmpl.Execute(w, Apimain)
