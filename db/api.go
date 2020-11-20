@@ -75,11 +75,13 @@ func initcats() {
 func Logapigame(g Apigames) error {
 	form, err := db.Prepare("INSERT INTO apigames(uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,importdate) VALUES (?,?,?,?,?,?,?,?,?) on DUPLICATE KEY UPDATE uid=?")
 	if err != nil {
-		panic(err.Error())
+		log.Println("logapigame err:", err.Error())
+		return err
 	}
 	_, err = form.Exec(g.Userid, g.Username, g.Player, g.Stampconv, g.Legend, g.Totdmg, g.Handi, g.Adjdmg, g.Importdate, g.Userid)
 	if err != nil {
 		log.Println("logapigame err:", err.Error())
+		return err
 	}
 	return nil
 }
@@ -88,18 +90,20 @@ func Logapigame(g Apigames) error {
 func Logtracker(g Apigames, tracker Apitracker) error {
 	form, err := db.Prepare("INSERT INTO apitracker(uid,tstamp,val,keyid,nameid) VALUES (?,?,?,?,?) on DUPLICATE KEY UPDATE uid=?")
 	if err != nil {
-		panic(err.Error())
+		log.Println("logtracker prep err:", err.Error())
+		return err
 	}
 	_, err = form.Exec(g.Userid, g.Stampconv, tracker.Val, tracker.Key, tracker.Name, g.Userid)
 	if err != nil {
-		panic(err.Error())
+		log.Println("logtracker exec err:", err.Error())
+		return err
 	}
 	return nil
 }
 
 //SeltopAPImatches gets most recent match list for any user from api
 func SeltopAPImatches() Apimain {
-	qry := "select uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,importdate from apigames order by tstamp desc limit 10;"
+	qry := "select uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,importdate from apigames order by tstamp desc limit 12;"
 	res, err := db.Query(qry)
 	handleError(err)
 
@@ -137,6 +141,6 @@ func Seltrackers(u int, t time.Time) []Apitracker {
 }
 func he(err error) {
 	if err != nil {
-		log.Fatalln("error:", err)
+		log.Println("error:", err)
 	}
 }

@@ -21,16 +21,21 @@ func Apipull() {
 			s := fmt.Sprintf("file/matchlist-%s", p)
 			f, err := os.Create(s)
 			if err != nil {
-				log.Fatalln(err)
+				log.Println(err)
+				continue
 			}
 			defer f.Close()
-			getmatches(p, f, apikey)
+			err = getmatches(p, f, apikey)
+			if err != nil {
+				log.Println(err)
+				continue
+			}
 		}
 
 		/*
 			f, err := os.Create("file/matchlist")
 			if err != nil {
-				log.Fatalln(err)
+				log.Println(err)
 			}
 			getmatches("full_send_deez", f)
 		*/
@@ -43,33 +48,48 @@ func Apipull() {
 	}
 }
 
-func getmatches(p string, f *os.File, apikey string) {
+func getmatches(p string, f *os.File, apikey string) error {
 	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?player=%s&platform=PS4&auth=%s&history=1&action=get", p, apikey)
 	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
 	req, err := http.NewRequest("GET", s, nil)
 	//_ = s
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
+		return err
 	}
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
+		return err
 	}
 	defer resp.Body.Close()
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
+		return err
 	}
 
 	n2, err := f.Write(body)
-	sendapitodb(unmarjson(body))
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
+		return err
+	}
+	var a apexdb.Apimain
+	a, err = unmarjson(body)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	sendapitodb(a)
+	if err != nil {
+		log.Println(err)
+		return err
 	}
 	_ = n2
+	return nil
 	//log.Println(string(body))
 	//log.Println("wrote num bytes:", n2, p)
 }
@@ -83,7 +103,8 @@ func sendapitodb(a apexdb.Apimain) {
 
 		n, err := strconv.Atoi(elem.UID[len(elem.UID)-6:])
 		if err != nil {
-			log.Fatalln("strconv err:", err)
+			log.Println("strconv err:", err)
+			continue
 		}
 		elem.Userid = n
 
@@ -99,7 +120,12 @@ func sendapitodb(a apexdb.Apimain) {
 			}
 			err = apexdb.Logtracker(elem, tracker)
 			if err != nil {
-				log.Fatalln("json err:", err)
+				log.Println("db ins err:", err)
+				time.Sleep(time.Second * 1)
+				err = apexdb.Logtracker(elem, tracker)
+				if err != nil {
+					break
+				}
 			}
 		}
 		elem.Handi = apexdb.Gethandifromuser(elem.Username)
@@ -107,20 +133,23 @@ func sendapitodb(a apexdb.Apimain) {
 		if len(elem.Throwaway) == 0 {
 			//log.Println("len(elem.Throwaway)", len(elem.Throwaway))
 			err = apexdb.Logapigame(elem)
+			if err != nil {
+				log.Println("db ins err:", err)
+				continue
+			}
 		} else {
 			//log.Println("len(elem.Throwaway)too long", len(elem.Throwaway))
 		}
-		if err != nil {
-			log.Println("json err:", err)
-		}
+
 	}
 }
 
-func unmarjson(body []byte) apexdb.Apimain {
+func unmarjson(body []byte) (apexdb.Apimain, error) {
 	var a apexdb.Apimain
 	err := json.Unmarshal(body, &a.Apiseries)
 	if err != nil {
-		log.Fatalln("json err:", err)
+		log.Println("json err:", err)
+		return a, err
 	}
 
 	for i := range a.Apiseries {
@@ -134,7 +163,8 @@ func unmarjson(body []byte) apexdb.Apimain {
 				var c apexdb.Apievent
 				if err := json.Unmarshal(li.Rawtracker, &c); err != nil {
 					if err != nil {
-						log.Fatalln("json err:", err)
+						log.Println("json err:", err)
+						return a, err
 					}
 				}
 				a.Apiseries[i].Throwaway = c.A1
@@ -143,7 +173,8 @@ func unmarjson(body []byte) apexdb.Apimain {
 				var b []apexdb.Apitracker
 				if err := json.Unmarshal(li.Rawtracker, &b); err != nil {
 					if err != nil {
-						log.Fatalln("json err:", err)
+						log.Println("json err:", err)
+						return a, err
 					}
 				}
 				//log.Println("t,n:", a.Apiseries[i].Player, t, n)
@@ -155,25 +186,25 @@ func unmarjson(body []byte) apexdb.Apimain {
 		}
 	}
 	//log.Printf("%+v\n", a)
-	return a
+	return a, nil
 }
 
 func jparse(body []byte) {
 	var a apexdb.Apimain
 	err := json.Unmarshal(body, &a.Apiseries)
 	if err != nil {
-		log.Fatalln("json err:", err)
+		log.Println("json err:", err)
 	}
 	log.Printf("%+v\n", a)
 }
 func readjson() {
 	f, err := os.Open("file/matchlist-turbles")
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 	body, err := ioutil.ReadAll(f)
 	if err != nil {
-		log.Fatalln(err)
+		log.Println(err)
 	}
 
 	unmarjson(body)
