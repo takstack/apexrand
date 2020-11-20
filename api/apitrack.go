@@ -49,10 +49,10 @@ func Apipull() {
 
 		t := apexdb.Sellatestimport()
 		if now.Sub(t) < time.Minute*30 {
-			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), now.Sub(t).Round(time.Minute), 10)
+			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), now.Sub(t).Round(time.Second), 10)
 			time.Sleep(time.Second * 10)
 		} else {
-			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), now.Sub(t).Round(time.Minute), 30)
+			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), now.Sub(t).Round(time.Second), 30)
 			time.Sleep(time.Second * 30)
 		}
 	}
@@ -222,6 +222,7 @@ func readjson() {
 
 //Reqtopapimatches exp
 func Reqtopapimatches(username string) apexdb.Apimain {
+	now := time.Now()
 	matchlist := apexdb.SeltopAPImatches(username)
 	for i := range matchlist.Apiseries {
 		var p = apexdb.Pulltracker{Val1: "0", Val2: "0", Val3: "0"}
@@ -244,6 +245,7 @@ func Reqtopapimatches(username string) apexdb.Apimain {
 		matchlist.Apiseries[i].Seltrackers = p
 		matchlist.Apiseries[i].Stampconv = apexdb.Convertutc(matchlist.Apiseries[i].Stampconv)
 	}
+	log.Println("req top matches in: ", time.Since(now))
 	return matchlist
 }
 func getapikey() string {
