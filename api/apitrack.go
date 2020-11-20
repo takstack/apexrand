@@ -45,17 +45,15 @@ func Apipull() {
 		//log.Println(Reqtopapimatches())
 		//Reqtopapimatches()
 
-		log.Println("pulled data in: ", time.Since(now))
+		//log.Println("pulled data in: ", time.Since(now))
 
 		t := apexdb.Sellatestimport()
 		if now.Sub(t) < time.Minute*30 {
-
-			time.Sleep(time.Second * 10)
 			log.Printf("pulled data in: %v, sleeping: %d secs ", time.Since(now), 10)
+			time.Sleep(time.Second * 10)
 		} else {
-
-			time.Sleep(time.Second * 30)
 			log.Printf("pulled data in: %v, sleeping: %d secs ", time.Since(now), 30)
+			time.Sleep(time.Second * 30)
 		}
 	}
 }
