@@ -67,26 +67,22 @@ func getmatches(p string, f *os.File, apikey string) error {
 	req, err := http.NewRequest("GET", s, nil)
 	//_ = s
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		log.Println(err)
 		return errors.New("Non-200 http response")
 	}
 	log.Printf("API access took: %v", time.Since(now))
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 	/*
@@ -99,12 +95,10 @@ func getmatches(p string, f *os.File, apikey string) error {
 	var a apexdb.Apimain
 	a, err = unmarjson(body)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 	sendapitodb(a)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 	//_ = n2
