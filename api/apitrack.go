@@ -16,6 +16,7 @@ import (
 func Apipull() {
 	apikey := getapikey()
 	for {
+		now := time.Now()
 		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone", "lildongmanisme", "kringo506", "hochilinh"}
 		for _, p := range sl {
 			s := fmt.Sprintf("file/matchlist-%s", p)
@@ -43,8 +44,19 @@ func Apipull() {
 
 		//log.Println(Reqtopapimatches())
 		//Reqtopapimatches()
-		log.Println("pulled data")
-		time.Sleep(time.Second * 30)
+
+		log.Println("pulled data in: ", time.Since(now))
+
+		t := apexdb.Sellatestimport()
+		if now.Sub(t) < time.Minute*30 {
+
+			time.Sleep(time.Second * 10)
+			log.Printf("pulled data in: %v, sleeping: %d secs ", time.Since(now), 10)
+		} else {
+
+			time.Sleep(time.Second * 30)
+			log.Printf("pulled data in: %v, sleeping: %d secs ", time.Since(now), 30)
+		}
 	}
 }
 

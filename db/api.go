@@ -120,6 +120,15 @@ func SeltopAPImatches() Apimain {
 	return sl
 }
 
+//Sellatestimport gets most recent match list for any user from api
+func Sellatestimport() time.Time {
+	var t time.Time
+	qry := "select max(importdate) from apigames;"
+	err := db.QueryRow(qry).Scan(&t)
+	handleError(err)
+	return t
+}
+
 //Seltrackers gets trackers for corresponding game
 func Seltrackers(u int, t time.Time) []Apitracker {
 	//log.Println("in db seltrackers, time:", t)
