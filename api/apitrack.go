@@ -3,6 +3,7 @@ package api
 import (
 	"apexrand/db"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -75,6 +76,11 @@ func getmatches(p string, f *os.File, apikey string) error {
 		return err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		log.Println(err)
+		return errors.New("Non-200 http response")
+	}
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
