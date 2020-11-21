@@ -41,8 +41,8 @@ type Apigames struct {
 	Totdmg      int
 	Handi       int
 	Adjdmg      int
-	Importdate  time.Time
 	Rawtracker  json.RawMessage `json:"event"`
+	Importdate  time.Time
 }
 
 //Pulltracker exp

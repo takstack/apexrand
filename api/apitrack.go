@@ -26,11 +26,11 @@ func Apipull() {
 				log.Println(err)
 				continue
 			}
-			defer f.Close()
+
 			err = getmatches(p, f, apikey)
+			f.Close()
 			if err != nil {
 				log.Println(err)
-				f.Close()
 				continue
 			}
 		}
@@ -72,15 +72,16 @@ func getmatches(p string, f *os.File, apikey string) error {
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
+
 	if err != nil {
 		return err
 	}
 	defer resp.Body.Close()
-
+	
 	if resp.StatusCode != 200 {
 		return errors.New("Non-200 http response")
 	}
-	log.Printf("API access took: %v", time.Since(now))
+	log.Printf("API access took: %v, %s", time.Since(now), p)
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
