@@ -51,7 +51,7 @@ func Apipull() {
 
 		t := apexdb.Sellatestimport()
 		if now.Sub(t) < time.Minute*30 {
-			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), now.Sub(t).Round(time.Second), 10)
+			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), now.Sub(t).Round(time.Second), 5)
 			time.Sleep(time.Second * 10)
 		} else {
 			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), now.Sub(t).Round(time.Second), 30)
@@ -77,7 +77,7 @@ func getmatches(p string, f *os.File, apikey string) error {
 		return err
 	}
 	defer resp.Body.Close()
-	
+
 	if resp.StatusCode != 200 {
 		return errors.New("Non-200 http response")
 	}
