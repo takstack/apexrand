@@ -28,21 +28,23 @@ type Apimain struct {
 
 //Apigames exp
 type Apigames struct {
-	UID         string `json:"uid"`
-	Userid      int
-	Username    string
-	Player      string `json:"player"`
-	Timestamp   int    `json:"timestamp"`
-	Stampconv   time.Time
-	Legend      string       `json:"legendPlayed"`
-	Tracker     []Apitracker `json:"-"`
-	Seltrackers Pulltracker
-	Throwaway   string
-	Totdmg      int
-	Handi       int
-	Adjdmg      int
-	Rawtracker  json.RawMessage `json:"event"`
-	Importdate  time.Time
+	UID           string `json:"uid"`
+	Userid        int
+	Username      string
+	Player        string `json:"player"`
+	Timestamp     int    `json:"timestamp"`
+	Stampconv     time.Time
+	Legend        string       `json:"legendPlayed"`
+	Tracker       []Apitracker `json:"-"`
+	Seltrackers   Pulltracker
+	Throwaway     string
+	Totdmg        int
+	Handi         int
+	Adjdmg        int
+	Rawtracker    json.RawMessage `json:"event"`
+	Importdate    time.Time
+	Timesincepull time.Duration
+	Timeselect    time.Duration
 }
 
 //Pulltracker exp

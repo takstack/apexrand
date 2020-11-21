@@ -13,9 +13,12 @@ import (
 	"time"
 )
 
+var lastpull time.Time
+
 //Apipull main process to pull down api data
 func Apipull() {
 	apikey := getapikey()
+	lastpull = time.Now()
 	for {
 		now := time.Now()
 		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone", "lildongmanisme", "kringo506", "hochilinh"}
@@ -28,6 +31,7 @@ func Apipull() {
 			}
 
 			err = getmatches(p, f, apikey)
+			lastpull = time.Now()
 			f.Close()
 			if err != nil {
 				log.Println(err)
@@ -248,7 +252,10 @@ func Reqtopapimatches(username string) apexdb.Apimain {
 		//log.Println("request p:", p)
 		matchlist.Apiseries[i].Seltrackers = p
 		matchlist.Apiseries[i].Stampconv = apexdb.Convertutc(matchlist.Apiseries[i].Stampconv)
+		matchlist.Apiseries[i].Timesincepull = time.Since(lastpull).Round(time.Second / 100)
+		matchlist.Apiseries[i].Timeselect = time.Since(now).Round(time.Millisecond / 10)
 	}
+
 	log.Println("req top matches in: ", time.Since(now))
 	return matchlist
 }
