@@ -31,7 +31,7 @@ func Apipull() {
 			}
 
 			err = getmatches(p, f, apikey)
-			lastpull = time.Now()
+
 			f.Close()
 			if err != nil {
 				log.Println(err)
@@ -52,7 +52,7 @@ func Apipull() {
 		//Reqtopapimatches()
 
 		//log.Println("pulled data in: ", time.Since(now))
-
+		lastpull = time.Now()
 		t := apexdb.Sellatestimport()
 		if now.Sub(t) < time.Minute*30 {
 			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), now.Sub(t).Round(time.Second), 5)
