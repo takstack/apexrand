@@ -255,7 +255,7 @@ func Reqtopapimatches(username string) apexdb.Apimain {
 
 	}
 	matchlist.Timesincepull = time.Since(lastpull).Round(time.Second / 100)
-	matchlist.Timeselect = time.Since(now).Round(time.Millisecond / 10)
+	matchlist.Timeselect = time.Since(now).Round(time.Millisecond / 100)
 	log.Println("req top matches in: ", time.Since(now))
 	return matchlist
 }
