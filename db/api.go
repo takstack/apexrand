@@ -24,6 +24,8 @@ type Cats struct {
 //Apimain exp
 type Apimain struct {
 	Apiseries []Apigames
+	Timesincepull time.Duration
+	Timeselect    time.Duration
 }
 
 //Apigames exp
@@ -43,8 +45,6 @@ type Apigames struct {
 	Adjdmg        int
 	Rawtracker    json.RawMessage `json:"event"`
 	Importdate    time.Time
-	Timesincepull time.Duration
-	Timeselect    time.Duration
 }
 
 //Pulltracker exp

@@ -252,10 +252,10 @@ func Reqtopapimatches(username string) apexdb.Apimain {
 		//log.Println("request p:", p)
 		matchlist.Apiseries[i].Seltrackers = p
 		matchlist.Apiseries[i].Stampconv = apexdb.Convertutc(matchlist.Apiseries[i].Stampconv)
-		matchlist.Apiseries[i].Timesincepull = time.Since(lastpull).Round(time.Second / 100)
-		matchlist.Apiseries[i].Timeselect = time.Since(now).Round(time.Millisecond / 10)
-	}
 
+	}
+	matchlist.Timesincepull = time.Since(lastpull).Round(time.Second / 100)
+	matchlist.Timeselect = time.Since(now).Round(time.Millisecond / 10)
 	log.Println("req top matches in: ", time.Since(now))
 	return matchlist
 }
