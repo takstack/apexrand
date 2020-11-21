@@ -83,7 +83,9 @@ func Logapigame(g Apigames) error {
 		log.Println("logapigame err:", err.Error())
 		return err
 	}
+	form.Close()
 	return nil
+
 }
 
 //Logtracker exp
@@ -98,6 +100,7 @@ func Logtracker(g Apigames, tracker Apitracker) error {
 		log.Println("logtracker exec err:", err.Error())
 		return err
 	}
+	form.Close()
 	return nil
 }
 

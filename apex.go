@@ -43,7 +43,7 @@ func main() {
 	//apexdb.Sethandicap() //set new handicaps based on closed tourney
 	apexdb.Writetourngamescsv2()
 	//apexdb.Delallsess() leave all sessions open for now
-	//go api.Apipull()
+	go api.Apipull()
 
 	log.Println("reminder: set tournament time in loggame if in tournament")
 
