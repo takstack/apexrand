@@ -135,7 +135,7 @@ func sendapitodb(a apexdb.Apimain) {
 			}
 			if tracker.Key == apexdb.Cat.Cat3 {
 				if elem.Username == "Ran" {
-					log.Println("tracker.Key == apexdb.Cat.Cat3", tracker.Key, apexdb.Cat.Cat3)
+					log.Println("tracker.Key == apexdb.Cat.Cat3", tracker.Key, elem.Stampconv)
 				}
 				elem.Totdmg += tracker.Val * 200
 			}
