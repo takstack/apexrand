@@ -134,7 +134,7 @@ func sendapitodb(a apexdb.Apimain) {
 				elem.Totdmg += tracker.Val * 100
 			}
 			if tracker.Key == apexdb.Cat.Cat3 {
-				log.Println("tracker.Key == apexdb.Cat.Cat3", tracker.Key == apexdb.Cat.Cat3)
+				log.Println("tracker.Key == apexdb.Cat.Cat3", tracker.Key, apexdb.Cat.Cat3)
 				elem.Totdmg += tracker.Val * 200
 			}
 			err = apexdb.Logtracker(elem, tracker)
