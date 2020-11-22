@@ -85,7 +85,7 @@ func getmatches(p string, f *os.File, apikey string) error {
 	if resp.StatusCode != 200 {
 		return errors.New("Non-200 http response")
 	}
-	log.Printf("API access: %v, %s", time.Since(now), p)
+	//log.Printf("API access: %v, %s", time.Since(now), p)
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
