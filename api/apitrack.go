@@ -85,7 +85,7 @@ func getmatches(p string, f *os.File, apikey string) error {
 	if resp.StatusCode != 200 {
 		return errors.New("Non-200 http response")
 	}
-	log.Printf("API access took: %v, %s", time.Since(now), p)
+	log.Printf("API access: %v, %s", time.Since(now), p)
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return err
@@ -134,6 +134,7 @@ func sendapitodb(a apexdb.Apimain) {
 				elem.Totdmg += tracker.Val * 100
 			}
 			if tracker.Key == apexdb.Cat.Cat3 {
+				log.Println("tracker.Key == apexdb.Cat.Cat3", tracker.Key == apexdb.Cat.Cat3)
 				elem.Totdmg += tracker.Val * 200
 			}
 			err = apexdb.Logtracker(elem, tracker)
