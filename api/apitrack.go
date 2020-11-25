@@ -191,6 +191,7 @@ func unmarjson(body []byte) (apexdb.Apimain, error) {
 						return a, err
 					}
 				}
+				//log.Println(li.Rawtracker)
 				a.Apiseries[i].Throwaway = "abc" //c.A1
 			case '[':
 				//log.Println("in [")
