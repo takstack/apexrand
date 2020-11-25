@@ -58,13 +58,13 @@ func Apipull() {
 		//log.Println("pulled data in: ", time.Since(now))
 		lastpull = time.Now()
 		t := apexdb.Sellatestimport()
-		log.Println("sellatestimport: ", t)
+		//log.Println("sellatestimport, now: ", t,now)
 		if now.Sub(t) < time.Minute*30 {
-			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), now.Sub(t).Round(time.Second), 5)
+			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(lastpull).Round(time.Second/10), now.Sub(t).Round(time.Second), 5)
 			//time.Sleep(time.Second * 5)
-			sleeptime = 5000
+			sleeptime = 5
 		} else {
-			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), now.Sub(t).Round(time.Second), 30)
+			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(lastpull).Round(time.Second/10), now.Sub(t).Round(time.Second), 30)
 			//time.Sleep(time.Second * 30)
 			sleeptime = 30
 		}
@@ -158,7 +158,7 @@ func sendapitodb(a apexdb.Apimain) {
 		elem.Adjdmg = int(float64(elem.Totdmg) * ((10000 - float64(elem.Handi)) / 10000))
 		if len(elem.Throwaway) == 0 {
 			//log.Println("len(elem.Throwaway)", len(elem.Throwaway))
-			log.Println("elem.Importdate", elem.Importdate)
+			//log.Println("elem.Importdate", elem.Importdate)
 			err = apexdb.Logapigame(elem)
 			if err != nil {
 				log.Println("db ins err:", err)
