@@ -60,11 +60,11 @@ func Apipull() {
 		t := apexdb.Sellatestimport()
 		//log.Println("sellatestimport, now: ", t,now)
 		if now.Sub(t) < time.Minute*30 {
-			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(lastpull).Round(time.Second/10), now.Sub(t).Round(time.Second), 5)
+			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), lastpull.Sub(t).Round(time.Second), 5)
 			//time.Sleep(time.Second * 5)
 			sleeptime = 5
 		} else {
-			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(lastpull).Round(time.Second/10), now.Sub(t).Round(time.Second), 30)
+			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), lastpull.Sub(t).Round(time.Second), 30)
 			//time.Sleep(time.Second * 30)
 			sleeptime = 30
 		}
