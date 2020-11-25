@@ -58,10 +58,11 @@ func Apipull() {
 		//log.Println("pulled data in: ", time.Since(now))
 		lastpull = time.Now()
 		t := apexdb.Sellatestimport()
+		log.Println("sellatestimport: ", t)
 		if now.Sub(t) < time.Minute*30 {
 			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), now.Sub(t).Round(time.Second), 5)
 			//time.Sleep(time.Second * 5)
-			sleeptime = 5
+			sleeptime = 5000
 		} else {
 			log.Printf("pulled data in: %v, time diff: %v, sleeping: %d secs ", time.Since(now).Round(time.Second/10), now.Sub(t).Round(time.Second), 30)
 			//time.Sleep(time.Second * 30)
@@ -157,6 +158,7 @@ func sendapitodb(a apexdb.Apimain) {
 		elem.Adjdmg = int(float64(elem.Totdmg) * ((10000 - float64(elem.Handi)) / 10000))
 		if len(elem.Throwaway) == 0 {
 			//log.Println("len(elem.Throwaway)", len(elem.Throwaway))
+			log.Println("elem.Importdate", elem.Importdate)
 			err = apexdb.Logapigame(elem)
 			if err != nil {
 				log.Println("db ins err:", err)
@@ -193,7 +195,7 @@ func unmarjson(body []byte) (apexdb.Apimain, error) {
 						return a, err
 					}
 				}
-				log.Println("rawtracker", string(li.Rawtracker))
+				//log.Println("rawtracker", string(li.Rawtracker))
 				a.Apiseries[i].Throwaway = "abc" //c.A1
 			case '[':
 				//log.Println("in [")
