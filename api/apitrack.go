@@ -24,8 +24,8 @@ func Apipull() {
 		<-time.After(time.Second * time.Duration(sleeptime))
 
 		now := time.Now()
-		//sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone", "lildongmanisme", "kringo506", "hochilinh"}
-		sl := []string{"lildongmanisme"}
+		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone", "lildongmanisme", "kringo506", "hochilinh"}
+		//sl := []string{"lildongmanisme"}
 		for _, p := range sl {
 			s := fmt.Sprintf("file/matchlist-%s", p)
 			f, err := os.Create(s)
