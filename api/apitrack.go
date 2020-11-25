@@ -189,6 +189,7 @@ func unmarjson(body []byte) (apexdb.Apimain, error) {
 				if err := json.Unmarshal(li.Rawtracker, &c); err != nil {
 					if err != nil {
 						log.Println("json err:", err)
+						a.Apiseries[i].Throwaway = "abc" //c.A1
 						return a, err
 					}
 				}
