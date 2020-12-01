@@ -1,7 +1,7 @@
 package api
 
 import (
-	"apexrand/db"
+	apexdb "apexrand/db"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -24,7 +24,9 @@ func Apipull() {
 		<-time.After(time.Second * time.Duration(sleeptime))
 
 		now := time.Now()
-		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone", "lildongmanisme", "kringo506", "hochilinh"}
+		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone",
+			"lildongmanisme", "kringo506", "hochilinh", "linh4tw"}
+
 		//sl := []string{"lildongmanisme"}
 		for _, p := range sl {
 			s := fmt.Sprintf("file/matchlist-%s", p)
@@ -33,8 +35,13 @@ func Apipull() {
 				log.Println(err)
 				continue
 			}
-
-			err = getmatches(p, f, apikey)
+			var platform string
+			if p == "linh4tw" {
+				platform = "X1"
+			} else {
+				platform = "PS4"
+			}
+			err = getmatches(p, platform, f, apikey)
 
 			f.Close()
 			if err != nil {
@@ -71,9 +78,9 @@ func Apipull() {
 	}
 }
 
-func getmatches(p string, f *os.File, apikey string) error {
+func getmatches(p string, platform string, f *os.File, apikey string) error {
 	now := time.Now()
-	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?player=%s&platform=PS4&auth=%s&history=1&action=get", p, apikey)
+	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?player=%s&platform=%s&auth=%s&history=1&action=get", p, platform, apikey)
 	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
 	req, err := http.NewRequest("GET", s, nil)
 	//_ = s
