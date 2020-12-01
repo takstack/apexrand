@@ -47,6 +47,7 @@ func Insuserfromfile() {
 	for _, elem := range sl {
 		now := time.Now()
 		oldexp := now.AddDate(0, -1, 0)
+		log.Println("insuser elem[5]:", elem[5])
 		_, err = stmt.Exec(elem[3], elem[0], elem[1], "", oldexp, elem[2], 0, elem[4], elem[5], elem[0], elem[1], elem[2], elem[4])
 
 		if err != nil {
