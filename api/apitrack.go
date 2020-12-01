@@ -120,6 +120,7 @@ func getmatches(p string, platform string, f *os.File, apikey string) error {
 	if err != nil {
 		return err
 	}
+	log.Println("getmatches a:", a)
 	sendapitodb(a)
 	if err != nil {
 		return err
