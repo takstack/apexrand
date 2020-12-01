@@ -35,12 +35,15 @@ func Apipull() {
 				log.Println(err)
 				continue
 			}
-			var platform string
-			if p == "linh4tw" {
-				platform = "X1"
-			} else {
-				platform = "PS4"
-			}
+			/*
+				var platform string
+				if p == "linh4tw" {
+					platform = "X1"
+				} else {
+					platform = "PS4"
+				}
+			*/
+			platform := apexdb.Getplatfrompsn(p)
 			err = getmatches(p, platform, f, apikey)
 
 			f.Close()
