@@ -95,6 +95,7 @@ func Logapigame(g Apigames) error {
 		log.Println("logapigame err:", err.Error())
 		return err
 	}
+	log.Println("inctourn in logapigame: ", g.Inctourn)
 	_, err = form.Exec(g.Userid, g.Username, g.Player, g.Stampconv, g.Legend, g.Totdmg, g.Handi, g.Adjdmg, g.Importdate, g.Inctourn, g.Userid)
 	if err != nil {
 		log.Println("logapigame err:", err.Error())
