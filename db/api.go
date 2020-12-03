@@ -53,7 +53,7 @@ type Apigames struct {
 	Totdmg      int
 	Handi       int
 	Adjdmg      int
-	Inctourn    int
+	Inctourn    bool
 	Rawtracker  json.RawMessage `json:"event"`
 	Importdate  time.Time
 }
@@ -95,7 +95,7 @@ func Logapigame(g Apigames) error {
 		log.Println("logapigame err:", err.Error())
 		return err
 	}
-	log.Println("inctourn in logapigame: ", g.Inctourn)
+	//log.Println("inctourn in logapigame: ", g.Inctourn)
 	_, err = form.Exec(g.Userid, g.Username, g.Player, g.Stampconv, g.Legend, g.Totdmg, g.Handi, g.Adjdmg, g.Importdate, g.Inctourn, g.Userid)
 	if err != nil {
 		log.Println("logapigame err:", err.Error())

@@ -229,14 +229,14 @@ func unmarjson(body []byte) (apexdb.Apimain, error) {
 	//log.Printf("%+v\n", a)
 	return a, nil
 }
-func checkchar(c string) int {
+func checkchar(c string) bool {
 
 	for _, elem := range apexdb.Char {
 		if elem == c {
-			return 1
+			return true
 		}
 	}
-	return 0
+	return false
 }
 func jparse(body []byte) {
 	var a apexdb.Apimain
