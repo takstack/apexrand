@@ -233,7 +233,7 @@ func checkchar(c string) bool {
 
 	for _, elem := range apexdb.Char {
 		if elem == c {
-			log.Println("character match ", c)
+			//log.Println("character match ", c)
 			return true
 		}
 	}
