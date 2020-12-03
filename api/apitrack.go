@@ -147,13 +147,13 @@ func sendapitodb(a apexdb.Apimain) {
 
 		for _, tracker := range elem.Tracker {
 			if tracker.Key == apexdb.Cat.Cat2 {
-				elem.Totdmg += tracker.Val
+				elem.Totdmg += tracker.Val * 10
 			}
 			if tracker.Key == apexdb.Cat.Cat1 {
-				elem.Totdmg += tracker.Val * 100
+				elem.Totdmg += tracker.Val * 10
 			}
 			if tracker.Key == apexdb.Cat.Cat3 {
-				elem.Totdmg += tracker.Val * 200
+				elem.Totdmg += tracker.Val * 5
 			}
 			err = apexdb.Logtracker(elem, tracker)
 			if err != nil {
@@ -167,6 +167,7 @@ func sendapitodb(a apexdb.Apimain) {
 		}
 		elem.Handi = apexdb.Gethandifromuser(elem.Username)
 		elem.Adjdmg = int(float64(elem.Totdmg) * ((10000 - float64(elem.Handi)) / 10000))
+		elem.Inctourn = checkchar(elem.Legend)
 		if len(elem.Throwaway) == 0 {
 			//log.Println("len(elem.Throwaway)", len(elem.Throwaway))
 			//log.Println("elem.Importdate", elem.Importdate)
@@ -228,7 +229,15 @@ func unmarjson(body []byte) (apexdb.Apimain, error) {
 	//log.Printf("%+v\n", a)
 	return a, nil
 }
+func checkchar(c string) int {
 
+	for _, elem := range apexdb.Char {
+		if elem == c {
+			return 1
+		}
+	}
+	return 0
+}
 func jparse(body []byte) {
 	var a apexdb.Apimain
 	err := json.Unmarshal(body, &a.Apiseries)

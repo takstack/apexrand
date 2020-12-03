@@ -14,37 +14,48 @@ import (
 	"time"
 )
 
-//Cats are tracker categories,initialized in init
+//Cats are tracker categories, initialized in init
 type Cats struct {
 	Cat1 string
 	Cat2 string
 	Cat3 string
 }
 
+/*
+//Chars are allowed characters, initialized in init
+type Chars struct {
+	Char1 string
+	Char2 string
+	Char3 string
+	Char4 string
+}
+*/
+
 //Apimain exp
 type Apimain struct {
-	Apiseries []Apigames
+	Apiseries     []Apigames
 	Timesincepull time.Duration
 	Timeselect    time.Duration
 }
 
 //Apigames exp
 type Apigames struct {
-	UID           string `json:"uid"`
-	Userid        int
-	Username      string
-	Player        string `json:"player"`
-	Timestamp     int    `json:"timestamp"`
-	Stampconv     time.Time
-	Legend        string       `json:"legendPlayed"`
-	Tracker       []Apitracker `json:"-"`
-	Seltrackers   Pulltracker
-	Throwaway     string
-	Totdmg        int
-	Handi         int
-	Adjdmg        int
-	Rawtracker    json.RawMessage `json:"event"`
-	Importdate    time.Time
+	UID         string `json:"uid"`
+	Userid      int
+	Username    string
+	Player      string `json:"player"`
+	Timestamp   int    `json:"timestamp"`
+	Stampconv   time.Time
+	Legend      string       `json:"legendPlayed"`
+	Tracker     []Apitracker `json:"-"`
+	Seltrackers Pulltracker
+	Throwaway   string
+	Totdmg      int
+	Handi       int
+	Adjdmg      int
+	Inctourn    int
+	Rawtracker  json.RawMessage `json:"event"`
+	Importdate  time.Time
 }
 
 //Pulltracker exp
@@ -69,18 +80,22 @@ type Apievent struct {
 //Cat is global var for 3 tracker categories currently in use
 var Cat Cats
 
+//Char is global var for characters currently allowed
+var Char []string
+
 func initcats() {
-	Cat = Cats{"kills", "damage", "top_3"}
+	Cat = Cats{"smg_kills", "shotgun_kills", "top_3"}
+	Char = []string{"Gibraltar", "Caustic", "Wattson", "Rampart"}
 }
 
 //Logapigame will enter data from games
 func Logapigame(g Apigames) error {
-	form, err := db.Prepare("INSERT INTO apigames(uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,importdate) VALUES (?,?,?,?,?,?,?,?,?) on DUPLICATE KEY UPDATE uid=?")
+	form, err := db.Prepare("INSERT INTO apigames(uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,inctourn,importdate) VALUES (?,?,?,?,?,?,?,?,?,?) on DUPLICATE KEY UPDATE uid=?")
 	if err != nil {
 		log.Println("logapigame err:", err.Error())
 		return err
 	}
-	_, err = form.Exec(g.Userid, g.Username, g.Player, g.Stampconv, g.Legend, g.Totdmg, g.Handi, g.Adjdmg, g.Importdate, g.Userid)
+	_, err = form.Exec(g.Userid, g.Username, g.Player, g.Stampconv, g.Legend, g.Totdmg, g.Handi, g.Adjdmg, g.Importdate, g.Inctourn, g.Userid)
 	if err != nil {
 		log.Println("logapigame err:", err.Error())
 		return err
