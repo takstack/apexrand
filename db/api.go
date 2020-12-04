@@ -150,6 +150,25 @@ func Sellatestimport() time.Time {
 	return t
 }
 
+//Selustamps selects all unix timestamps for a user id
+func Selustamps(uid int) []int {
+	qry := fmt.Sprintf("select ustamp from apigames where uid='%d';", uid)
+	res, err := db.Query(qry)
+	handleError(err)
+
+	var sl []int
+	for res.Next() {
+		var i int
+		// for each row, scan the result into our tag composite object
+		err := res.Scan(&i)
+		handleError(err)
+
+		sl = append(sl, i)
+	}
+	res.Close()
+	return sl
+}
+
 //Seltrackers gets trackers for corresponding game
 func Seltrackers(u int, t time.Time) []Apitracker {
 	//log.Println("in db seltrackers, time:", t)

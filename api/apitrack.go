@@ -131,55 +131,61 @@ func getmatches(p string, platform string, f *os.File, apikey string) error {
 	//log.Println("wrote num bytes:", n2, p)
 }
 func sendapitodb(a apexdb.Apimain) {
+	uid, err := strconv.Atoi(a.Apiseries[0].UID)
+	if err != nil {
+		log.Println("strconv err:", err)
+	}
 
+	stamplist := apexdb.Selustamps(uid)
 	for _, elem := range a.Apiseries {
 
-		elem.Username = apexdb.Getuserfrompsn(elem.Player)
-		elem.Importdate = time.Now()
-		elem.Stampconv = time.Unix(int64(elem.Timestamp), 0)
+		if notindb(stamplist, elem.Timestamp) {
+			elem.Username = apexdb.Getuserfrompsn(elem.Player)
+			elem.Importdate = time.Now()
+			elem.Stampconv = time.Unix(int64(elem.Timestamp), 0)
 
-		n, err := strconv.Atoi(elem.UID[len(elem.UID)-6:])
-		if err != nil {
-			log.Println("strconv err:", err)
-			continue
-		}
-		elem.Userid = n
-
-		for _, tracker := range elem.Tracker {
-			if tracker.Key == apexdb.Cat.Cat2 {
-				elem.Totdmg += tracker.Val * 1000
-			}
-			if tracker.Key == apexdb.Cat.Cat1 {
-				elem.Totdmg += tracker.Val * 1000
-			}
-			if tracker.Key == apexdb.Cat.Cat3 {
-				elem.Totdmg += tracker.Val * 500
-			}
-			err = apexdb.Logtracker(elem, tracker)
+			n, err := strconv.Atoi(elem.UID[len(elem.UID)-6:])
 			if err != nil {
-				log.Println("db ins err:", err)
-				time.Sleep(time.Second * 1)
-				err = apexdb.Logtracker(elem, tracker)
-				if err != nil {
-					break
-				}
-			}
-		}
-		elem.Handi = apexdb.Gethandifromuser(elem.Username)
-		elem.Adjdmg = int(float64(elem.Totdmg) * ((10000 - float64(elem.Handi)) / 10000))
-		elem.Inctourn = checkchar(elem.Legend)
-		if len(elem.Throwaway) == 0 {
-			//log.Println("len(elem.Throwaway)", len(elem.Throwaway))
-			//log.Println("elem.Importdate", elem.Importdate)
-			err = apexdb.Logapigame(elem)
-			if err != nil {
-				log.Println("db ins err:", err)
+				log.Println("strconv err:", err)
 				continue
 			}
-		} else {
-			//log.Println("len(elem.Throwaway)too long", len(elem.Throwaway))
-		}
+			elem.Userid = n
 
+			for _, tracker := range elem.Tracker {
+				if tracker.Key == apexdb.Cat.Cat2 {
+					elem.Totdmg += tracker.Val * 1000
+				}
+				if tracker.Key == apexdb.Cat.Cat1 {
+					elem.Totdmg += tracker.Val * 1000
+				}
+				if tracker.Key == apexdb.Cat.Cat3 {
+					elem.Totdmg += tracker.Val * 500
+				}
+				err = apexdb.Logtracker(elem, tracker)
+				if err != nil {
+					log.Println("db ins err:", err)
+					time.Sleep(time.Second * 1)
+					err = apexdb.Logtracker(elem, tracker)
+					if err != nil {
+						break
+					}
+				}
+			}
+			elem.Handi = apexdb.Gethandifromuser(elem.Username)
+			elem.Adjdmg = int(float64(elem.Totdmg) * ((10000 - float64(elem.Handi)) / 10000))
+			elem.Inctourn = checkchar(elem.Legend)
+			if len(elem.Throwaway) == 0 {
+				//log.Println("len(elem.Throwaway)", len(elem.Throwaway))
+				//log.Println("elem.Importdate", elem.Importdate)
+				err = apexdb.Logapigame(elem)
+				if err != nil {
+					log.Println("db ins err:", err)
+					continue
+				}
+			} else {
+				//log.Println("len(elem.Throwaway)too long", len(elem.Throwaway))
+			}
+		}
 	}
 }
 
@@ -228,6 +234,14 @@ func unmarjson(body []byte) (apexdb.Apimain, error) {
 	}
 	//log.Printf("%+v\n", a)
 	return a, nil
+}
+func notindb(stamplist []int, ts int) bool {
+	for _, elem := range stamplist {
+		if elem == ts {
+			return false
+		}
+	}
+	return true
 }
 func checkchar(c string) bool {
 
