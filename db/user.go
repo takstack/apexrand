@@ -39,7 +39,7 @@ func Insuserfromfile() {
 	tx, err := db.Begin() //get connection
 	handleError(err)
 	//LOG.GL.Println("in batch insert after tx begin")
-	qry := "INSERT INTO user (eaddr, username,pass,sess_id,sess_exp,propername,teamassign,psnid,platform) VALUES(?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE username=?, pass=?, propername=?, psnid=?, platform=?"
+	qry := "INSERT INTO user (eaddr, username,pass,sess_id,sess_exp,propername,teamassign,psnid,platform,handicap,tournpart) VALUES(?,?,?,?,?,?,?,?,?,?,?) ON DUPLICATE KEY UPDATE username=?, pass=?, propername=?, psnid=?, platform=?,handicap=?,tournpart=?"
 	//LOG.GL.Println("in batch insert after qry gotten", qry)
 	stmt, err := tx.Prepare(qry)
 	handleError(err)
@@ -48,7 +48,7 @@ func Insuserfromfile() {
 		now := time.Now()
 		oldexp := now.AddDate(0, -1, 0)
 		//log.Println("insuser elem[5]:", elem[5])
-		_, err = stmt.Exec(elem[3], elem[0], elem[1], "", oldexp, elem[2], 0, elem[4], elem[5], elem[0], elem[1], elem[2], elem[4], elem[5])
+		_, err = stmt.Exec(elem[3], elem[0], elem[1], "", oldexp, elem[2], 0, elem[4], elem[5], elem[6], elem[7], elem[0], elem[1], elem[2], elem[4], elem[5], elem[6], elem[7])
 
 		if err != nil {
 			log.Println("DB Error on this row: ", elem)

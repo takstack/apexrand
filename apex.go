@@ -40,8 +40,9 @@ func main() {
 	apexdb.Insvarfromfile()
 	apexdb.Inscursefromfile()
 	apexdb.Insuserfromfile()
+
 	//apexdb.Sethandicap() //set new handicaps based on closed tourney
-	apexdb.Writetourngamescsv2()
+	//apexdb.Writetourngamescsv2()
 	//apexdb.Delallsess() leave all sessions open for now
 	go api.Apipull()
 
@@ -59,7 +60,7 @@ func main() {
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/teams", teams)
-	http.HandleFunc("/tournament", tourney)
+	http.HandleFunc("/tournament", tourneyapi)
 	http.HandleFunc("/wipetourn", wipetourn)
 	http.HandleFunc("/redirtourn", redirtourn)
 	http.HandleFunc("/apires", apires)
@@ -155,6 +156,82 @@ func wipetourn(w http.ResponseWriter, r *http.Request) {
 	}
 	return
 
+}
+func tourneyapi(w http.ResponseWriter, r *http.Request) {
+	validsess := chkvalidsession(w, r)
+	if validsess {
+		log.Println("tourney started")
+		tmpl := template.Must(template.ParseFiles("tourneyapi.html"))
+		ip, ips, err := fromRequest(r)
+		_ = ips
+		if err != nil {
+			log.Println("Error - IP Parse: ", err)
+		}
+		log.Printf("request ip: %v \n\n", ip)
+
+		var Tourney apexdb.Tourney
+		Tourney.T = apexdb.Seltourngames()
+		Tourney.Activeusers = apexdb.Getactiveusers()
+
+		if r.Method != http.MethodPost {
+			//Tourney.G = Tourney.T[0].Games
+			//Tourney.P = Tourney.T[0].Player
+
+			focus := r.URL.Query().Get("focus")
+			//r.URL.Query().Del("focus")
+
+			log.Printf("after redir web param: %s \n\n", focus)
+			Tourney.P = focus
+			for _, elem := range Tourney.T {
+				if elem.Player == focus {
+					//log.Println(elem.Games)
+					Tourney.G = elem.Games
+				}
+			}
+			tmpl.Execute(w, Tourney)
+			return
+		}
+		showdata := r.FormValue("showdata")
+
+		var focusname string
+		focusname = showdata
+		Tourney.P = focusname
+
+		if len(showdata) > 0 {
+			log.Println("showdata in else if:", showdata)
+			/*
+				log.Println("r.URL.Path", r.URL.Path)
+				u, err := url.Parse(r.URL.Path)
+				if err != nil {
+					log.Println("URL Parse failed: ", err)
+				}
+				q := u.Query()
+				q.Del("focus")
+				u.RawQuery = q.Encode()
+			*/
+			http.Redirect(w, r, "/redirtourn?focus="+showdata, 302) //redirect instead of executing template directly
+			return
+		}
+		//log.Println("after redir showdata:", showdata, "focusname:", focusname)
+
+		/*
+			not executed if methodpost chk exists above
+			focus := r.URL.Query().Get("focus")
+			r.URL.Query().Del("focus")
+
+			log.Println("after redir web param:", focus)
+
+			for _, elem := range Tourney.T {
+				if elem.Player == focus {
+					log.Println(elem.Games)
+					Tourney.G = elem.Games
+				}
+			}
+			log.Println("before execute")
+			tmpl.Execute(w, Tourney)
+		*/
+	}
+	return
 }
 func tourney(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)

@@ -99,13 +99,13 @@ func Wipetourn(sessid string) {
 
 //Seltourngames will get game data
 func Seltourngames() []Tourn {
-	playerlist := getlistoftournplayers()
+	playerlist := apigetlistoftournplayers()
 	var pSL []Tourn
 
 	for _, player := range playerlist {
 		var p Tourn
 		p.Player = Getproper(player)
-		p.Games = getplayersgames(player)
+		p.Games = apigetplayersgames(player)
 
 		for _, g := range p.Games {
 			p.Sumdmg = p.Sumdmg + g.Totdmg
@@ -153,6 +153,26 @@ func getplayersgames(player string) []Game {
 
 	return sl
 }
+func apigetplayersgames(player string) []Game {
+	starttime := time.Date(2020, time.Month(12), 1, 0, 0, 0, 0, time.UTC)
+	endtime := time.Date(2011, time.Month(12), 5, 0, 0, 0, 0, time.UTC)
+	qry := "select gameid, username,totaldmg, handicap, adjdmg, tstamp from apigames where username=? and tstamp > '?' and tstamp < '?' order by totaldmg desc limit 15"
+	res, err := db.Query(qry, player, starttime, endtime)
+	handleError(err)
+	var sl []Game
+	for res.Next() {
+		var g Game
+		// for each row, scan the result into our tag composite object
+		err := res.Scan(&g.ID, &g.Username, &g.Totdmg, &g.Handicap, &g.Adjdmg, &g.Gametime)
+		g.Gametime = Convertutc(g.Gametime)
+		handleError(err)
+
+		sl = append(sl, g)
+	}
+	res.Close()
+
+	return sl
+}
 func getplayersgamesspecdate(player string, tourndate time.Time) [][]string {
 
 	qry := "select username, totaldmg, tourn from games where username=? and tourn>? order by totaldmg desc limit 20"
@@ -189,6 +209,23 @@ func Convertutc(t time.Time) time.Time {
 }
 func getlistoftournplayers() []string {
 	qry := "select username from games group by username"
+	res, err := db.Query(qry)
+	handleError(err)
+
+	var sl []string
+	for res.Next() {
+		var s string
+		// for each row, scan the result into our tag composite object
+		err := res.Scan(&s)
+		handleError(err)
+
+		sl = append(sl, s)
+	}
+	res.Close()
+	return sl
+}
+func apigetlistoftournplayers() []string {
+	qry := "select username from user where tournpart='1'"
 	res, err := db.Query(qry)
 	handleError(err)
 
