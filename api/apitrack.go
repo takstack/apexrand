@@ -147,13 +147,13 @@ func sendapitodb(a apexdb.Apimain) {
 
 		for _, tracker := range elem.Tracker {
 			if tracker.Key == apexdb.Cat.Cat2 {
-				elem.Totdmg += tracker.Val * 10
+				elem.Totdmg += tracker.Val * 100
 			}
 			if tracker.Key == apexdb.Cat.Cat1 {
-				elem.Totdmg += tracker.Val * 10
+				elem.Totdmg += tracker.Val * 100
 			}
 			if tracker.Key == apexdb.Cat.Cat3 {
-				elem.Totdmg += tracker.Val * 5
+				elem.Totdmg += tracker.Val * 50
 			}
 			err = apexdb.Logtracker(elem, tracker)
 			if err != nil {
