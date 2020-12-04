@@ -106,7 +106,7 @@ func Seltourngames() []Tourn {
 		var p Tourn
 		p.Player = Getproper(player)
 		p.Games = apigetplayersgames(player)
-
+		p.Handicap = Gethandifromuser(player)
 		for _, g := range p.Games {
 			p.Sumdmg = p.Sumdmg + g.Totdmg
 			p.Adjsum = p.Adjsum + g.Adjdmg
