@@ -90,13 +90,13 @@ func initcats() {
 
 //Logapigame will enter data from games
 func Logapigame(g Apigames) error {
-	form, err := db.Prepare("INSERT INTO apigames(uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,inctourn,importdate) VALUES (?,?,?,?,?,?,?,?,?,?) on DUPLICATE KEY UPDATE uid=?")
+	form, err := db.Prepare("INSERT INTO apigames(uid,username,psnid,ustamp,tstamp,legend,totaldmg,handicap,adjdmg,inctourn,importdate) VALUES (?,?,?,?,?,?,?,?,?,?,?) on DUPLICATE KEY UPDATE uid=?")
 	if err != nil {
 		log.Println("logapigame err:", err.Error())
 		return err
 	}
 	//log.Println("inctourn in logapigame: ", g.Inctourn)
-	_, err = form.Exec(g.Userid, g.Username, g.Player, g.Stampconv, g.Legend, g.Totdmg, g.Handi, g.Adjdmg, g.Inctourn, g.Importdate, g.Userid)
+	_, err = form.Exec(g.Userid, g.Username, g.Player, g.Timestamp, g.Stampconv, g.Legend, g.Totdmg, g.Handi, g.Adjdmg, g.Inctourn, g.Importdate, g.Userid)
 	if err != nil {
 		log.Println("logapigame err:", err.Error())
 		return err

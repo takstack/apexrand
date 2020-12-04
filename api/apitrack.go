@@ -143,6 +143,7 @@ func sendapitodb(a apexdb.Apimain) {
 	for _, elem := range a.Apiseries {
 
 		if notindb(stamplist, elem.Timestamp) {
+			log.Println("in sendapitodb, notindb succeeded", elem.Username, elem.Timestamp)
 			elem.Username = apexdb.Getuserfrompsn(elem.Player)
 			elem.Importdate = time.Now()
 			elem.Stampconv = time.Unix(int64(elem.Timestamp), 0)
