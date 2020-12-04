@@ -131,6 +131,8 @@ func getmatches(p string, platform string, f *os.File, apikey string) error {
 	//log.Println("wrote num bytes:", n2, p)
 }
 func sendapitodb(a apexdb.Apimain) {
+
+	//getting list of all unix timestamps for user
 	var uid int
 	if len(a.Apiseries) > 0 {
 		var err error
@@ -141,13 +143,16 @@ func sendapitodb(a apexdb.Apimain) {
 
 	}
 	stamplist := apexdb.Selustamps(uid)
+
+	//looping through each item in api results
 	for _, elem := range a.Apiseries {
 
+		//if the timestamp exists already or this api item is not a tracker, skip logging
 		if !notindb(stamplist, elem.Timestamp) || len(elem.Throwaway) != 0 {
 			continue
 		}
 		elem.Username = apexdb.Getuserfrompsn(elem.Player)
-		log.Println("in sendapitodb, notindb succeeded", elem.Username, elem.Timestamp)
+		//log.Println("in sendapitodb, notindb succeeded", elem.Username, elem.Timestamp)
 		elem.Importdate = time.Now()
 		elem.Stampconv = time.Unix(int64(elem.Timestamp), 0)
 
@@ -241,12 +246,12 @@ func unmarjson(body []byte) (apexdb.Apimain, error) {
 }
 func notindb(stamplist []int, ts int) bool {
 	if len(stamplist) <= 0 {
-		log.Println("notindb len(stamplist) is zero")
+		//log.Println("notindb len(stamplist) is zero")
 		return true
 	}
 	for _, elem := range stamplist {
 		if elem == ts {
-			log.Println("notindb match found, returning false")
+			//log.Println("notindb match found, returning false")
 			return false
 		}
 	}
