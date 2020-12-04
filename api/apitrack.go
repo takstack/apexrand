@@ -131,11 +131,14 @@ func getmatches(p string, platform string, f *os.File, apikey string) error {
 	//log.Println("wrote num bytes:", n2, p)
 }
 func sendapitodb(a apexdb.Apimain) {
-	uid, err := strconv.Atoi(a.Apiseries[0].UID)
-	if err != nil {
-		log.Println("strconv err:", err)
+	var uid int
+	if len(a.Apiseries) > 0 {
+		var err error
+		uid, err = strconv.Atoi(a.Apiseries[0].UID)
+		if err != nil {
+			log.Println("strconv err:", err)
+		}
 	}
-
 	stamplist := apexdb.Selustamps(uid)
 	for _, elem := range a.Apiseries {
 
@@ -236,6 +239,9 @@ func unmarjson(body []byte) (apexdb.Apimain, error) {
 	return a, nil
 }
 func notindb(stamplist []int, ts int) bool {
+	if len(stamplist) <= 0 {
+		return true
+	}
 	for _, elem := range stamplist {
 		if elem == ts {
 			return false
