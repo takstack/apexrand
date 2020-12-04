@@ -134,10 +134,11 @@ func sendapitodb(a apexdb.Apimain) {
 	var uid int
 	if len(a.Apiseries) > 0 {
 		var err error
-		uid, err = strconv.Atoi(a.Apiseries[0].UID)
+		uid, err = strconv.Atoi(a.Apiseries[0].UID[len(a.Apiseries[0].UID)-6:])
 		if err != nil {
 			log.Println("strconv err:", err)
 		}
+
 	}
 	stamplist := apexdb.Selustamps(uid)
 	for _, elem := range a.Apiseries {
