@@ -143,55 +143,53 @@ func sendapitodb(a apexdb.Apimain) {
 	stamplist := apexdb.Selustamps(uid)
 	for _, elem := range a.Apiseries {
 
-		if notindb(stamplist, elem.Timestamp) {
+		if !notindb(stamplist, elem.Timestamp) || len(elem.Throwaway) != 0 {
+			continue
+		}
+		elem.Username = apexdb.Getuserfrompsn(elem.Player)
+		log.Println("in sendapitodb, notindb succeeded", elem.Username, elem.Timestamp)
+		elem.Importdate = time.Now()
+		elem.Stampconv = time.Unix(int64(elem.Timestamp), 0)
 
-			elem.Username = apexdb.Getuserfrompsn(elem.Player)
-			log.Println("in sendapitodb, notindb succeeded", elem.Username, elem.Timestamp)
-			elem.Importdate = time.Now()
-			elem.Stampconv = time.Unix(int64(elem.Timestamp), 0)
+		n, err := strconv.Atoi(elem.UID[len(elem.UID)-6:])
+		if err != nil {
+			log.Println("strconv err:", err)
+			continue
+		}
+		elem.Userid = n
 
-			n, err := strconv.Atoi(elem.UID[len(elem.UID)-6:])
-			if err != nil {
-				log.Println("strconv err:", err)
-				continue
+		for _, tracker := range elem.Tracker {
+			if tracker.Key == apexdb.Cat.Cat2 {
+				elem.Totdmg += tracker.Val * 1000
 			}
-			elem.Userid = n
-
-			for _, tracker := range elem.Tracker {
-				if tracker.Key == apexdb.Cat.Cat2 {
-					elem.Totdmg += tracker.Val * 1000
-				}
-				if tracker.Key == apexdb.Cat.Cat1 {
-					elem.Totdmg += tracker.Val * 1000
-				}
-				if tracker.Key == apexdb.Cat.Cat3 {
-					elem.Totdmg += tracker.Val * 500
-				}
+			if tracker.Key == apexdb.Cat.Cat1 {
+				elem.Totdmg += tracker.Val * 1000
+			}
+			if tracker.Key == apexdb.Cat.Cat3 {
+				elem.Totdmg += tracker.Val * 500
+			}
+			err = apexdb.Logtracker(elem, tracker)
+			if err != nil {
+				log.Println("db ins err:", err)
+				time.Sleep(time.Second * 1)
 				err = apexdb.Logtracker(elem, tracker)
 				if err != nil {
-					log.Println("db ins err:", err)
-					time.Sleep(time.Second * 1)
-					err = apexdb.Logtracker(elem, tracker)
-					if err != nil {
-						break
-					}
+					break
 				}
-			}
-			elem.Handi = apexdb.Gethandifromuser(elem.Username)
-			elem.Adjdmg = int(float64(elem.Totdmg) * ((10000 - float64(elem.Handi)) / 10000))
-			elem.Inctourn = checkchar(elem.Legend)
-			if len(elem.Throwaway) == 0 {
-				//log.Println("len(elem.Throwaway)", len(elem.Throwaway))
-				//log.Println("elem.Importdate", elem.Importdate)
-				err = apexdb.Logapigame(elem)
-				if err != nil {
-					log.Println("db ins err:", err)
-					continue
-				}
-			} else {
-				//log.Println("len(elem.Throwaway)too long", len(elem.Throwaway))
 			}
 		}
+		elem.Handi = apexdb.Gethandifromuser(elem.Username)
+		elem.Adjdmg = int(float64(elem.Totdmg) * ((10000 - float64(elem.Handi)) / 10000))
+		elem.Inctourn = checkchar(elem.Legend)
+
+		//log.Println("len(elem.Throwaway)", len(elem.Throwaway))
+		//log.Println("elem.Importdate", elem.Importdate)
+		err = apexdb.Logapigame(elem)
+		if err != nil {
+			log.Println("db ins err:", err)
+			continue
+		}
+
 	}
 }
 
