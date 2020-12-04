@@ -143,8 +143,9 @@ func sendapitodb(a apexdb.Apimain) {
 	for _, elem := range a.Apiseries {
 
 		if notindb(stamplist, elem.Timestamp) {
-			log.Println("in sendapitodb, notindb succeeded", elem.Username, elem.Timestamp)
+
 			elem.Username = apexdb.Getuserfrompsn(elem.Player)
+			log.Println("in sendapitodb, notindb succeeded", elem.Username, elem.Timestamp)
 			elem.Importdate = time.Now()
 			elem.Stampconv = time.Unix(int64(elem.Timestamp), 0)
 
@@ -241,10 +242,12 @@ func unmarjson(body []byte) (apexdb.Apimain, error) {
 }
 func notindb(stamplist []int, ts int) bool {
 	if len(stamplist) <= 0 {
+		log.Println("notindb len(stamplist) is zero")
 		return true
 	}
 	for _, elem := range stamplist {
 		if elem == ts {
+			log.Println("notindb match found, returning false")
 			return false
 		}
 	}
