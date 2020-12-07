@@ -104,7 +104,7 @@ func sendtxts() {
 	// Connect to the server, authenticate, set the sender and recipient,
 	// and send the email all in one step.
 	to := getphonelist()
-	msg := []byte("Subject: Do Not Reply-- text msg test\r\n")
+	msg := []byte("Subject: From server: text bro group chat if you got this\r\n")
 	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], to, msg)
 	if err != nil {
 		log.Println(err)
