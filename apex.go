@@ -100,7 +100,7 @@ func sendtxts() {
 
 	// Set up authentication information.
 	auth := smtp.PlainAuth("", key[0], key[1], "smtp.gmail.com")
-
+	log.Println("key", key)
 	// Connect to the server, authenticate, set the sender and recipient,
 	// and send the email all in one step.
 	to := getphonelist()
