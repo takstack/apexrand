@@ -51,7 +51,7 @@ func main() {
 
 	log.Println("reminder: set tournament time in loggame if in tournament")
 
-	http.HandleFunc("/current", shopbot)
+	http.HandleFunc("/shopbot", shopbot)
 	http.HandleFunc("/current", handler1)
 	//http.HandleFunc("/testroll", testroll)
 	http.HandleFunc("/reroll1", reroll1)
