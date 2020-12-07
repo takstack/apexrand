@@ -16,6 +16,9 @@ import (
 	_ "net/http/pprof"
 	"net/url"
 	//"runtime"
+	"bufio"
+	"net/smtp"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -48,6 +51,7 @@ func main() {
 
 	log.Println("reminder: set tournament time in loggame if in tournament")
 
+	http.HandleFunc("/current", shopbot)
 	http.HandleFunc("/current", handler1)
 	//http.HandleFunc("/testroll", testroll)
 	http.HandleFunc("/reroll1", reroll1)
@@ -70,6 +74,82 @@ func main() {
 	srv.SetKeepAlivesEnabled(false)
 	log.Fatalln(srv.ListenAndServe())
 
+}
+func shopbot(w http.ResponseWriter, r *http.Request) {
+	log.Println("shopbot started")
+	tmpl := template.Must(template.ParseFiles("shopbot.html"))
+	ip, ips, err := fromRequest(r)
+	_ = ips
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	log.Printf("request ip: %v \n\n", ip)
+
+	focus := r.URL.Query().Get("key")
+	if focus == "shop2020getit" {
+		tmpl.Execute(w, "")
+		sendtxts()
+		return
+	}
+	http.Redirect(w, r, "/", 302)
+	return
+
+}
+func sendtxts() {
+	key := getemailkey()
+
+	// Set up authentication information.
+	auth := smtp.PlainAuth("", key[0], key[1], "smtp.gmail.com")
+
+	// Connect to the server, authenticate, set the sender and recipient,
+	// and send the email all in one step.
+	to := getphonelist()
+	msg := []byte("Subject: Do Not Reply-- text msg test\r\n")
+	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], to, msg)
+	if err != nil {
+		log.Println(err)
+	}
+
+}
+func getphonelist() []string {
+	f, err := os.Open("/var/lib/api/phonelist")
+	if err != nil {
+		log.Println("file open error:", err)
+	}
+	scanner := bufio.NewScanner(f)
+	if err != nil {
+		log.Println("file open error:", err)
+	}
+	var pl []string
+	for scanner.Scan() {
+		if err := scanner.Err(); err != nil {
+			fmt.Println("error: reading standard input:", err)
+		}
+
+		pl = append(pl, scanner.Text())
+	}
+	//log.Println("apikey:", string(r))
+	return pl
+}
+func getemailkey() []string {
+	f, err := os.Open("/var/lib/api/emailkey")
+	if err != nil {
+		log.Println("file open error:", err)
+	}
+	scanner := bufio.NewScanner(f)
+	if err != nil {
+		log.Println("file open error:", err)
+	}
+	var key []string
+	for scanner.Scan() {
+		if err := scanner.Err(); err != nil {
+			fmt.Println("error: reading standard input:", err)
+		}
+
+		key = append(key, scanner.Text())
+	}
+	//log.Println("apikey:", string(r))
+	return key
 }
 
 //not working
