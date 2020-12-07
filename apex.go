@@ -117,9 +117,7 @@ func getphonelist() []string {
 		log.Println("file open error:", err)
 	}
 	scanner := bufio.NewScanner(f)
-	if err != nil {
-		log.Println("file open error:", err)
-	}
+
 	var pl []string
 	for scanner.Scan() {
 		if err := scanner.Err(); err != nil {
@@ -137,9 +135,7 @@ func getemailkey() []string {
 		log.Println("file open error:", err)
 	}
 	scanner := bufio.NewScanner(f)
-	if err != nil {
-		log.Println("file open error:", err)
-	}
+
 	var key []string
 	for scanner.Scan() {
 		if err := scanner.Err(); err != nil {
