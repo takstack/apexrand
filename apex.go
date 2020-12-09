@@ -112,12 +112,13 @@ func sendtxts() {
 }
 func sendtext(key []string, auth smtp.Auth, addr string) {
 	//sending without "To:" will make it bcc:
-	msg := []byte("To:" + addr + "\r\n" + "Subject:Sam Sam Bo Fam\r\n")
+	msg := []byte("To:" + addr + "\r\n" + "Subject:Sammy Sam\r\n\r\n" + "message test")
 
 	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], []string{addr}, msg)
 	if err != nil {
 		log.Println(err)
 	}
+	log.Println("smtp executed: ", addr)
 }
 
 //func for shopbot
