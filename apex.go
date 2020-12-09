@@ -109,6 +109,7 @@ func sendtxts() {
 	}
 }
 func sendtext(key []string, auth smtp.Auth, addr string) {
+	//sending without "To:" will make it bcc:
 	msg := []byte("To:" + addr + "\r\n" + "Subject:Sam Sam Bo Fam\r\n")
 
 	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], []string{addr}, msg)
