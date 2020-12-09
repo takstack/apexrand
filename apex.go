@@ -75,6 +75,8 @@ func main() {
 	log.Fatalln(srv.ListenAndServe())
 
 }
+
+//func for shopbot
 func shopbot(w http.ResponseWriter, r *http.Request) {
 	log.Println("shopbot started")
 	tmpl := template.Must(template.ParseFiles("shopbot.html"))
@@ -95,6 +97,8 @@ func shopbot(w http.ResponseWriter, r *http.Request) {
 	return
 
 }
+
+//func for shopbot
 func sendtxts() {
 	key := getemailkey()
 
@@ -104,13 +108,15 @@ func sendtxts() {
 	// Connect to the server, authenticate, set the sender and recipient,
 	// and send the email all in one step.
 	to := getphonelist()
-	msg := []byte("Subject: Do Not Reply -- send a text in group chat to confirm message was received\r\n")
+	msg := []byte("Subject: Sam Sam Bo Bam\r\n")
 	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], to, msg)
 	if err != nil {
 		log.Println(err)
 	}
 
 }
+
+//func for shopbot
 func getphonelist() []string {
 	f, err := os.Open("/var/lib/api/phonelist")
 	if err != nil {
@@ -129,6 +135,8 @@ func getphonelist() []string {
 	//log.Println("apikey:", string(r))
 	return pl
 }
+
+//func for shopbot
 func getemailkey() []string {
 	f, err := os.Open("/var/lib/api/emailkey")
 	if err != nil {
