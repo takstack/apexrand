@@ -100,15 +100,18 @@ func shopbot(w http.ResponseWriter, r *http.Request) {
 //func for shopbot
 func sendtxts() {
 	key := getemailkey()
-
-	// Set up authentication information.
 	auth := smtp.PlainAuth("", key[0], key[1], "smtp.gmail.com")
 	//log.Println("key", key)
-	// Connect to the server, authenticate, set the sender and recipient,
-	// and send the email all in one step.
-	to := getphonelist()
-	msg := []byte("Subject:PS5 at Best Buy")
-	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], to, msg)
+
+	tonums := getphonelist()
+	for _, addr := range tonums {
+		go sendtext(key, auth, addr)
+	}
+}
+func sendtext(key []string, auth smtp.Auth, addr string) {
+	msg := []byte("To:" + addr + "\r\n" + "Subject:Sam Sam Bo Fam\r\n")
+
+	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], []string{addr}, msg)
 	if err != nil {
 		log.Println(err)
 	}
