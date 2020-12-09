@@ -91,8 +91,6 @@ func shopbot(w http.ResponseWriter, r *http.Request) {
 	if focus == "shop2020getit" {
 		tmpl.Execute(w, "")
 		sendtxts()
-		sendtxts2()
-		sendtxts3()
 		return
 	}
 	http.Redirect(w, r, "/", 302)
@@ -110,48 +108,11 @@ func sendtxts() {
 	// Connect to the server, authenticate, set the sender and recipient,
 	// and send the email all in one step.
 	to := getphonelist()
-	msg := []byte("Subject:1-Sam Sam Bo Bam")
+	msg := []byte("Subject:PS5 at Best Buy")
 	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], to, msg)
 	if err != nil {
 		log.Println(err)
 	}
-
-}
-
-//func for shopbot
-func sendtxts2() {
-	key := getemailkey()
-
-	// Set up authentication information.
-	auth := smtp.PlainAuth("", key[0], key[1], "smtp.gmail.com")
-	//log.Println("key", key)
-	// Connect to the server, authenticate, set the sender and recipient,
-	// and send the email all in one step.
-	to := getphonelist()
-	msg := []byte("Subject:2-Banana Fana\r\n")
-	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], to, msg)
-	if err != nil {
-		log.Println(err)
-	}
-
-}
-
-//func for shopbot
-func sendtxts3() {
-	key := getemailkey()
-
-	// Set up authentication information.
-	auth := smtp.PlainAuth("", key[0], key[1], "smtp.gmail.com")
-	//log.Println("key", key)
-	// Connect to the server, authenticate, set the sender and recipient,
-	// and send the email all in one step.
-	to := getphonelist()
-	msg := []byte("Subject:3-Fo Fam\r\n" + "Body:Fee Fi Mo Mam")
-	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], to, msg)
-	if err != nil {
-		log.Println(err)
-	}
-
 }
 
 //func for shopbot
