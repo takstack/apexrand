@@ -34,8 +34,8 @@ func main() {
 	srv := &http.Server{
 		ReadTimeout:       10 * time.Second,
 		ReadHeaderTimeout: 10 * time.Second,
-		WriteTimeout:      15 * time.Second,
-		IdleTimeout:       15 * time.Second,
+		WriteTimeout:      10 * time.Second,
+		IdleTimeout:       10 * time.Second,
 
 		Addr: ":80",
 	}
@@ -91,6 +91,7 @@ func shopbot(w http.ResponseWriter, r *http.Request) {
 	if focus == "shop2020getit" {
 		tmpl.Execute(w, "")
 		sendtxts()
+		return
 	}
 	http.Redirect(w, r, "/", 302)
 	return
@@ -105,6 +106,7 @@ func sendtxts() {
 
 	tonums := getphonelist()
 	for _, addr := range tonums {
+		//concurrent async to allow the http page to serve while smtp sends in background, avoiding timeouts
 		go sendtext(key, auth, addr)
 	}
 }
