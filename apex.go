@@ -91,7 +91,6 @@ func shopbot(w http.ResponseWriter, r *http.Request) {
 	if focus == "shop2020getit" {
 		tmpl.Execute(w, "")
 		sendtxts()
-		return
 	}
 	http.Redirect(w, r, "/", 302)
 	return
