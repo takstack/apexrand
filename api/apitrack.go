@@ -54,7 +54,7 @@ func Apipull() {
 				continue
 			}
 		}
-
+		log.Println("after for loop send getmatches")
 		/*
 			f, err := os.Create("file/matchlist")
 			if err != nil {
