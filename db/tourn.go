@@ -92,11 +92,11 @@ func Loggame(player string, dmg string, place string) error {
 func Logmanualgame(player string, smgkills string, shotgunkills string, top3 string) error {
 	username := Getuser(player) //get username from current proper name
 	//var err error
-	smg, err := strconv.Atoi(smgkills)
-	shot, err := strconv.Atoi(shotgunkills)
-	top, err := strconv.Atoi(top3)
+	smg, err := strtoint(smgkills)
+	shot, err := strtoint(shotgunkills)
+	top, err := strtoint(top3)
 	if err != nil {
-		log.Println("Error: strconv.Atoi(dmg)", err)
+		log.Println("Error: strconv.Atoi(loggame inputs)", err)
 		return errors.New("Error parsing inputs")
 	}
 	if smg < 0 || smg > 20 {
@@ -345,4 +345,11 @@ func Writetourngamescsv2() {
 			}
 		}
 	*/
+}
+func strtoint(s string) (int, error) {
+	if s == "" {
+		return 0, nil
+	}
+	i, err := strconv.Atoi(s)
+	return i, err
 }
