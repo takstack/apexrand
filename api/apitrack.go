@@ -24,7 +24,6 @@ func Apipull() {
 	sleeptime := int(5)
 	for {
 		<-time.After(time.Second * time.Duration(sleeptime))
-		log.Println("beginning main for loop")
 
 		now := time.Now()
 		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone",
@@ -55,7 +54,7 @@ func Apipull() {
 				continue
 			}
 		}
-		log.Println("after for loop send getmatches")
+
 		/*
 			f, err := os.Create("file/matchlist")
 			if err != nil {
@@ -99,6 +98,9 @@ func getmatches(p string, platform string, f *os.File, apikey string) error {
 	}
 	resp, err := client.Do(req)
 
+	if os.IsTimeout(err) {
+		return errors.New("context deadline exceeded. Client.Timeout exceeded while awaiting headers")
+	}
 	if err != nil {
 		return err
 	}
