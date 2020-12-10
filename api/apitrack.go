@@ -24,6 +24,7 @@ func Apipull() {
 	sleeptime := int(5)
 	for {
 		<-time.After(time.Second * time.Duration(sleeptime))
+		log.Println("beginning main for loop")
 
 		now := time.Now()
 		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone",
