@@ -280,13 +280,37 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 			tmpl.Execute(w, Tourney)
 			return
 		}
-		showdata := r.FormValue("showdata")
+		showdata := r.FormValue("showdata") //selected to show players games
 
 		var focusname string
 		focusname = showdata
 		Tourney.P = focusname
 
-		if len(showdata) > 0 {
+		player := r.FormValue("player") //to log a game for that player
+		smgkills := r.FormValue("smgkills")
+		shotgunkills := r.FormValue("shotgunkills")
+		top3 := r.FormValue("top3")
+
+		log.Println("form action received tourney:", showdata, player)
+		log.Println("smgkills,shotgunkills,top3:", smgkills, shotgunkills, top3)
+
+		if len(player) > 0 {
+
+			log.Println("userform player >0")
+			focusname = player
+			err := apexdb.Logmanualgame(player, smgkills, shotgunkills, top3)
+			if err != nil {
+				Tourney.Errcode = err.Error()
+			} else {
+				Tourney.Errcode = ""
+				Tourney.T = apexdb.Seltourngames()
+				//http.Redirect(w, r, "/redir", 302) //redirect instead of executing template directly
+
+			}
+			focus := r.URL.Query().Get("focus")
+			http.Redirect(w, r, "/redirtourn?focus="+focus, 302) //redirect instead of executing template directly
+			return
+		} else if len(showdata) > 0 {
 			log.Println("showdata in else if:", showdata)
 			/*
 				log.Println("r.URL.Path", r.URL.Path)

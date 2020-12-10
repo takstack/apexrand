@@ -87,6 +87,31 @@ func Loggame(player string, dmg string, place string) error {
 	return nil
 }
 
+//Logmanualgame will enter data from games
+func Logmanualgame(player string, smgkills string, shotgunkills string, top3 string) error {
+	username := Getuser(player) //get username from current proper name
+	//var err error
+	smg, err := strconv.Atoi(smgkills)
+	shot, err := strconv.Atoi(shotgunkills)
+	top, err := strconv.Atoi(top3)
+	if err != nil {
+		log.Println("Error: strconv.Atoi(dmg)", err)
+		return errors.New("Error parsing damage")
+	}
+
+	now := time.Now()
+
+	form, err := db.Prepare("INSERT INTO manualgames(username,smg,shot,top3,gametime) VALUES (?,?,?,?,?)")
+	if err != nil {
+		log.Println(err.Error())
+	}
+	_, err = form.Exec(username, smg, shot, top, now)
+	if err != nil {
+		log.Println(err.Error())
+	}
+	return nil
+}
+
 //Wipetourn will wipe game table
 func Wipetourn(sessid string) {
 	username := Getuserfromsess(sessid)

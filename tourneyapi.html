@@ -142,4 +142,50 @@ Games
 <br>
 <br>
 <br>
+
+Reporting
+
+<table>
+<tr>
+    <th class="col1">
+        Player
+    </th>
+    <th class="col1">
+        SMG Kills
+    </th>
+    <th class="col1">
+        Shotgun Kills
+    </th>
+    <th class="col1">
+        Top_3 (1 for yes)
+    </th>
+
+</tr>
+{{range .Activeusers}}
+<tr>
+    <td class="col1">
+        {{.Username}}
+    </td>
+    <td class="col1">
+        <form method="POST"><input type="text" name="smgkills" size="5"> 
+    </td>
+    <td class="col1">
+        <input type="text" name="shotgunkills" size="5"> 
+    </td>
+    <td class="col1">
+        <input type="text" name="top3" size="5"> 
+    </td>
+    <td class="col1">
+        <button type="submit" name="player" value="{{.Username}}">Enter</button></form>
+        
+    </td>
+</tr>
+{{end}}
+</table>
+Note: Place must be between 1-30.  Damage cannot be negative.<br>
+<br>
+<p style="color:red">{{.Errcode}}</p>
+<br>
+<br>
+<br>
 <button onclick="location.href = '/wipetourn'">Wipe my games</button>
