@@ -100,6 +100,7 @@ func getmatches(p string, platform string, f *os.File, apikey string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
+		log.Println("statuscode: ", resp.StatusCode)
 		return errors.New("Non-200 http response")
 	}
 	_ = now
