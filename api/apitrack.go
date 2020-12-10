@@ -94,7 +94,9 @@ func getmatches(p string, platform string, f *os.File, apikey string) error {
 		return err
 	}
 
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: 5 * time.Second,
+	}
 	resp, err := client.Do(req)
 
 	if err != nil {
