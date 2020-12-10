@@ -50,9 +50,11 @@ func Apipull() {
 
 			f.Close()
 			if err != nil {
+				APIerr = "CONNECTION FAILED... Manually log games at bottom of this page"
 				log.Println(err, p)
 				continue
 			}
+			APIerr = "Connection successful"
 		}
 
 		/*
@@ -99,7 +101,7 @@ func getmatches(p string, platform string, f *os.File, apikey string) error {
 	resp, err := client.Do(req)
 
 	if os.IsTimeout(err) {
-		return errors.New("context deadline exceeded. Client.Timeout exceeded while awaiting headers")
+		return errors.New("client.Timeout exceeded while awaiting headers")
 	}
 	if err != nil {
 		return err
@@ -107,11 +109,9 @@ func getmatches(p string, platform string, f *os.File, apikey string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		APIerr = "CONNECTION FAILED... Manually log games at bottom of this page"
 		log.Println("statuscode: ", resp.StatusCode)
 		return errors.New("Non-200 http response")
 	}
-	APIerr = "Connection successful"
 	_ = now
 	//log.Printf("API access: %v, %s", time.Since(now), p)
 	body, err := ioutil.ReadAll(resp.Body)
