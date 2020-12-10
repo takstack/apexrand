@@ -102,11 +102,11 @@ func getmatches(p string, platform string, f *os.File, apikey string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		APIerr = "API connection failed. Manually log games at bottom of this page"
+		APIerr = "CONNECTION FAILED... Manually log games at bottom of this page"
 		log.Println("statuscode: ", resp.StatusCode)
 		return errors.New("Non-200 http response")
 	}
-	APIerr = "API connection successful"
+	APIerr = "Connection successful"
 	_ = now
 	//log.Printf("API access: %v, %s", time.Since(now), p)
 	body, err := ioutil.ReadAll(resp.Body)
