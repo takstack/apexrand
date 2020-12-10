@@ -303,6 +303,7 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 			focusname = player
 			err := apexdb.Logmanualgame(player, smgkills, shotgunkills, top3)
 			if err != nil {
+				log.Println("logmanualgame error: ", err)
 				Tourney.Errcode = err.Error()
 			} else {
 				Tourney.Errcode = ""

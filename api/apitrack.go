@@ -50,7 +50,7 @@ func Apipull() {
 
 			f.Close()
 			if err != nil {
-				log.Println(err)
+				log.Println(err, p)
 				continue
 			}
 		}
