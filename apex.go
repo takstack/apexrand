@@ -277,6 +277,7 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 					Tourney.G = elem.Games
 				}
 			}
+			Tourney.APIerr = api.APIerr
 			tmpl.Execute(w, Tourney)
 			return
 		}

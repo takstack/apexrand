@@ -19,6 +19,7 @@ type Tourney struct {
 	G           []Game //holds game vals for individual games
 	Activeusers []Onlineuser
 	Errcode     string //err val for incorrect dmg input
+	APIerr      string
 }
 
 //Tourn is dataset to show standings
