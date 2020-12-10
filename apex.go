@@ -267,6 +267,7 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 			//Tourney.P = Tourney.T[0].Player
 
 			focus := r.URL.Query().Get("focus")
+			Tourney.Errcode = r.URL.Query().Get("err")
 			//r.URL.Query().Del("focus")
 
 			log.Printf("after redir web param: %s \n\n", focus)
@@ -279,6 +280,7 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 			}
 			Tourney.APIerr = api.APIerr
 			tmpl.Execute(w, Tourney)
+			Tourney.Errcode = ""
 			return
 		}
 		showdata := r.FormValue("showdata") //selected to show players games
@@ -309,7 +311,7 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 
 			}
 			focus := r.URL.Query().Get("focus")
-			http.Redirect(w, r, "/redirtourn?focus="+focus, 302) //redirect instead of executing template directly
+			http.Redirect(w, r, "/redirtourn?focus="+focus+"&err="+Tourney.Errcode, 302) //redirect instead of executing template directly
 			return
 		} else if len(showdata) > 0 {
 			log.Println("showdata in else if:", showdata)
@@ -323,7 +325,7 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 				q.Del("focus")
 				u.RawQuery = q.Encode()
 			*/
-			http.Redirect(w, r, "/redirtourn?focus="+showdata, 302) //redirect instead of executing template directly
+			http.Redirect(w, r, "/redirtourn?focus="+showdata+"&err="+Tourney.Errcode, 302) //redirect instead of executing template directly
 			return
 		}
 		//log.Println("after redir showdata:", showdata, "focusname:", focusname)

@@ -97,9 +97,17 @@ func Logmanualgame(player string, smgkills string, shotgunkills string, top3 str
 	top, err := strconv.Atoi(top3)
 	if err != nil {
 		log.Println("Error: strconv.Atoi(dmg)", err)
-		return errors.New("Error parsing damage")
+		return errors.New("Error parsing inputs")
 	}
-
+	if smg < 0 || smg > 20 {
+		return errors.New("Error value for SMG kills")
+	}
+	if shot < 0 || shot > 20 {
+		return errors.New("Error value for Shotgun kills")
+	}
+	if top < 0 || top > 1 {
+		return errors.New("Error value for Top_3")
+	}
 	now := time.Now()
 
 	form, err := db.Prepare("INSERT INTO manualgames(username,smg,shot,top3,gametime) VALUES (?,?,?,?,?)")
