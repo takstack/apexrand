@@ -108,11 +108,22 @@ func sendtxts() {
 	for _, addr := range tonums {
 		//concurrent async to allow the http page to serve while smtp sends in background, avoiding timeouts
 		go sendtext(key, auth, addr)
+		go sendtext2(key, auth, addr)
 	}
 }
 func sendtext(key []string, auth smtp.Auth, addr string) {
 	//sending without "To:" will make it bcc:
 	msg := []byte("To:" + addr + "\r\n" + "Subject:PS5 - Best Buy\r\n" + "\r\n" + "Go get it!")
+
+	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], []string{addr}, msg)
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println("smtp executed: ", addr)
+}
+func sendtext2(key []string, auth smtp.Auth, addr string) {
+	//sending without "To:" will make it bcc:
+	msg := []byte("To:" + addr + "\r\n" + "Subject:Link\r\n" + "\r\n" + "https://www.bestbuy.com/cart?loc=PS5%20restock%20and%20other%20tech+gaming%20finds/deals&ref=198&cmp=RMX&acampID=0")
 
 	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], []string{addr}, msg)
 	if err != nil {
