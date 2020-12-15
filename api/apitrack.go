@@ -43,7 +43,7 @@ func Apipull() {
 		status := decjsonmap()
 		if status != "UP" {
 			if statuscounter%10 == 0 {
-				log.Println("API Servers are: ", status, time.Since(lastpull), "since last pull")
+				log.Println("API Servers are: ", status, time.Since(lastpull).Round(time.Second/10), "since last pull")
 			}
 			statuscounter++
 			APIerr = "CONNECTION FAILED... Manually log games at bottom of this page"
