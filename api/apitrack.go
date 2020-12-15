@@ -37,9 +37,9 @@ func Apipull() {
 	sleeptime := int(5)
 	for {
 		<-time.After(time.Second * time.Duration(sleeptime))
-
-		if decjsonmap() != "UP" {
-			log.Println("API Servers are down.")
+		status := decjsonmap()
+		if status != "UP" {
+			log.Println("API Servers are: ", status)
 			APIerr = "CONNECTION FAILED... Manually log games at bottom of this page"
 			continue
 		}
