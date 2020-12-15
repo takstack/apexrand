@@ -35,12 +35,19 @@ func Apipull() {
 	apikey := getapikey()
 	lastpull = time.Now()
 	sleeptime := int(5)
+	statuscounter := 0
 	for {
 		<-time.After(time.Second * time.Duration(sleeptime))
+
+		//check api status json and continue if down
 		status := decjsonmap()
 		if status != "UP" {
-			log.Println("API Servers are: ", status)
+			if statuscounter%10 == 0 {
+				log.Println("API Servers are: ", status)
+			}
+			statuscounter++
 			APIerr = "CONNECTION FAILED... Manually log games at bottom of this page"
+			sleeptime = 30
 			continue
 		}
 
