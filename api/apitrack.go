@@ -40,7 +40,7 @@ func Apipull() {
 		<-time.After(time.Second * time.Duration(sleeptime))
 
 		//check api status json and continue if down
-		status := decjsonmap()
+		status := decjsonmap(apikey)
 		if status != "UP" {
 			if statuscounter%10 == 0 {
 				log.Println("API Servers are: ", status, time.Since(lastpull).Round(time.Second/10), "since last pull")
@@ -111,8 +111,8 @@ func Apipull() {
 		}
 	}
 }
-func decjsonmap() string {
-	s := fmt.Sprintf("https://apexlegendsstatus.com/servers.json")
+func decjsonmap(apikey string) string {
+	s := fmt.Sprintf("https://api.mozambiquehe.re/servers?auth=%s", apikey)
 	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
 	req, err := http.NewRequest("GET", s, nil)
 	//_ = s
