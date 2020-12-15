@@ -13,6 +13,19 @@ import (
 	"time"
 )
 
+//used for api status
+type jsonmap struct {
+	Area Dets `json:"EU-West"`
+}
+
+//Dets used for api status
+type Dets struct {
+	Status   string `json:"Status"`
+	Code     int    `json:"HTTPCode"`
+	Resptime int    `json:"ResponseTime"`
+	Tstamp   int    `json:"QueryTimestamp"`
+}
+
 //APIerr tracks last status of the api so if connection is failing, users can manually log games
 var APIerr string
 var lastpull time.Time
@@ -24,6 +37,12 @@ func Apipull() {
 	sleeptime := int(5)
 	for {
 		<-time.After(time.Second * time.Duration(sleeptime))
+
+		if decjsonmap() != "UP" {
+			log.Println("API Servers are down.")
+			APIerr = "CONNECTION FAILED... Manually log games at bottom of this page"
+			continue
+		}
 
 		now := time.Now()
 		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone",
@@ -83,6 +102,32 @@ func Apipull() {
 			sleeptime = 30
 		}
 	}
+}
+func decjsonmap() string {
+	s := fmt.Sprintf("https://apexlegendsstatus.com/servers.json")
+	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
+	req, err := http.NewRequest("GET", s, nil)
+	//_ = s
+	if err != nil {
+		fmt.Println("err:", err)
+		return "decjsonmap err newreq"
+	}
+	client := http.Client{}
+	resp, err := client.Do(req)
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("err:", err)
+		return "decjsonmap err readall"
+	}
+	var j map[string]jsonmap
+	err = json.Unmarshal(body, &j)
+	if err != nil {
+		fmt.Println("err:", err)
+		return "decjsonmap err unmarshal"
+	}
+	return j["Mozambiquehere_StatsAPI"].Area.Status
+	//fmt.Println("body:", string(body))
+	//fmt.Println("j unmarshaled", j["Mozambiquehere_StatsAPI"].Area.Status)
 }
 
 func getmatches(p string, platform string, f *os.File, apikey string) error {
