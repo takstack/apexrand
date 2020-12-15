@@ -43,7 +43,7 @@ func Apipull() {
 		status := decjsonmap()
 		if status != "UP" {
 			if statuscounter%10 == 0 {
-				log.Println("API Servers are: ", status)
+				log.Println("API Servers are: ", status, time.Since(lastpull), "since last pull")
 			}
 			statuscounter++
 			APIerr = "CONNECTION FAILED... Manually log games at bottom of this page"
@@ -97,6 +97,7 @@ func Apipull() {
 
 		//log.Println("pulled data in: ", time.Since(now))
 		lastpull = time.Now()
+		statuscounter = 0
 		t := apexdb.Sellatestimport()
 		//log.Println("sellatestimport, now: ", t,now)
 		if now.Sub(t) < time.Minute*30 {
