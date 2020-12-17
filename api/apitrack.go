@@ -40,8 +40,9 @@ func Apipull() {
 		<-time.After(time.Second * time.Duration(sleeptime))
 
 		//check api status json and continue if down
-		status := decjsonmap(apikey)
-		if status != "UP" {
+		status, err := decjsonmap(apikey)
+		if status != "UP" || err != nil {
+			log.Println("decjsonmap err:", err)
 			if statuscounter%10 == 0 {
 				log.Println("API Servers are: ", status, time.Since(lastpull).Round(time.Second/10), "since last pull")
 			}
@@ -111,29 +112,29 @@ func Apipull() {
 		}
 	}
 }
-func decjsonmap(apikey string) string {
+func decjsonmap(apikey string) (string, error) {
 	s := fmt.Sprintf("https://api.mozambiquehe.re/servers?auth=%s", apikey)
 	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
 	req, err := http.NewRequest("GET", s, nil)
 	//_ = s
 	if err != nil {
-		fmt.Println("err:", err)
-		return "decjsonmap err newreq"
+		fmt.Println("err decjsonmap newreq:", err)
+		return "", errors.New("decjsonmap err newreq")
 	}
 	client := http.Client{}
 	resp, err := client.Do(req)
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("err:", err)
-		return "decjsonmap err readall"
+		fmt.Println("err decjsonmap readall:", err)
+		return "", errors.New("decjsonmap err readall")
 	}
 	var j map[string]jsonmap
 	err = json.Unmarshal(body, &j)
 	if err != nil {
-		fmt.Println("err:", err)
-		return "decjsonmap err unmarshal"
+		fmt.Println("err decjsonmap unmar:", err)
+		return "", errors.New("decjsonmap err unmarshal")
 	}
-	return j["Mozambiquehere_StatsAPI"].Area.Status
+	return j["Mozambiquehere_StatsAPI"].Area.Status, nil
 	//fmt.Println("body:", string(body))
 	//fmt.Println("j unmarshaled", j["Mozambiquehere_StatsAPI"].Area.Status)
 }
