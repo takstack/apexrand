@@ -42,7 +42,7 @@ func Apipull() {
 		//check api status json and continue if down
 		status, err := decjsonmap(apikey)
 		if status != "UP" || err != nil {
-			log.Println("decjsonmap err:", err)
+			log.Println("from decjsonmap err:", err)
 			if statuscounter%10 == 0 {
 				log.Println("API Servers are: ", status, time.Since(lastpull).Round(time.Second/10), "since last pull")
 			}
