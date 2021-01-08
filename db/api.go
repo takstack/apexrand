@@ -84,7 +84,7 @@ var Cat Cats
 var Char []string
 
 func initcats() {
-	Cat = Cats{"smg_kills", "shotgun_kills", "top_3"}
+	Cat = Cats{"headshots", "damage", "top_3"}
 	Char = []string{"Gibraltar", "Caustic", "Wattson", "Rampart"}
 }
 
