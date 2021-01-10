@@ -42,10 +42,11 @@ func Apipull() {
 		//check api status json and continue if down
 		status, err := decjsonmap(apikey)
 		if status != "UP" || err != nil {
-			if err != nil {
-				log.Println("from decjsonmap err:", err)
-			}
-			if statuscounter%10 == 0 {
+
+			if statuscounter%20 == 0 {
+				if err != nil {
+					log.Println("from decjsonmap err:", err)
+				}
 				log.Println("API Servers are: ", status, time.Since(lastpull).Round(time.Second/10),
 					"since last pull, sleep: 30, statuscounter:", statuscounter)
 			}
@@ -130,18 +131,21 @@ func decjsonmap(apikey string) (string, error) {
 		log.Println("statuscode: ", resp.StatusCode)
 		return "", errors.New("Non-200 http response")
 	}
+
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("err decjsonmap readall:", err)
 		return "", errors.New("decjsonmap err readall")
 	}
-	fmt.Println("body:", string(body))
+	//fmt.Println("body:", string(body))
+
 	var j map[string]jsonmap
 	err = json.Unmarshal(body, &j)
 	if err != nil {
 		fmt.Println("err decjsonmap unmar:", err)
 		return "", errors.New("decjsonmap err unmarshal")
 	}
+
 	return j["Mozambiquehere_StatsAPI"].Area.Status, nil
 	//fmt.Println("body:", string(body))
 	//fmt.Println("j unmarshaled", j["Mozambiquehere_StatsAPI"].Area.Status)

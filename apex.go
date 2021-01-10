@@ -50,7 +50,7 @@ func main() {
 	//apexdb.Delallsess() leave all sessions open for now
 	go api.Apipull()
 
-	log.Println("reminder: set tournament time in loggame if in tournament")
+	log.Println("reminder: set tournament time in loggame, logmangames params if in tournament")
 
 	http.HandleFunc("/shopbot", shopbot)
 	http.HandleFunc("/current", handler1)
@@ -301,7 +301,8 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 		focusname = showdata
 		Tourney.P = focusname
 
-		player := r.FormValue("player") //to log a game for that player
+		//to log a game for that player
+		player := r.FormValue("player")
 		field1 := r.FormValue("field1")
 		field2 := r.FormValue("field2")
 		field3 := r.FormValue("field3")

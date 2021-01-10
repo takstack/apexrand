@@ -83,6 +83,7 @@ var Cat Cats
 //Char is global var for characters currently allowed
 var Char []string
 
+//set logmanual games as well as tourn times
 func initcats() {
 	Cat = Cats{"headshots", "damage", "top_3"}
 	Char = []string{"Gibraltar", "Caustic", "Wattson", "Rampart"}
