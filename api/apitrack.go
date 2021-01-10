@@ -131,6 +131,7 @@ func decjsonmap(apikey string) (string, error) {
 		fmt.Println("err decjsonmap readall:", err)
 		return "", errors.New("decjsonmap err readall")
 	}
+	fmt.Println("body:", body)
 	var j map[string]jsonmap
 	err = json.Unmarshal(body, &j)
 	if err != nil {
