@@ -3,7 +3,7 @@ package main
 import (
 	//"logger"
 	"apexrand/api"
-	"apexrand/db"
+	apexdb "apexrand/db"
 	"apexrand/random"
 	"bytes"
 	"encoding/json"
@@ -15,6 +15,7 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"net/url"
+
 	//"runtime"
 	"bufio"
 	"net/smtp"
@@ -301,18 +302,18 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 		Tourney.P = focusname
 
 		player := r.FormValue("player") //to log a game for that player
-		smgkills := r.FormValue("smgkills")
-		shotgunkills := r.FormValue("shotgunkills")
-		top3 := r.FormValue("top3")
+		field1 := r.FormValue("field1")
+		field2 := r.FormValue("field2")
+		field3 := r.FormValue("field3")
 
 		log.Println("form action received tourney:", showdata, player)
-		log.Println("smgkills,shotgunkills,top3:", smgkills, shotgunkills, top3)
+		log.Println("field1, field2, field3:", field1, field2, field3)
 
 		if len(player) > 0 {
 
 			log.Println("userform player >0")
 			focusname = player
-			err := apexdb.Logmanualgame(player, smgkills, shotgunkills, top3)
+			err := apexdb.Logmanualgame(player, field1, field2, field3)
 			if err != nil {
 				log.Println("logmanualgame error: ", err)
 				Tourney.Errcode = err.Error()

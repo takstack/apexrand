@@ -91,32 +91,32 @@ func Loggame(player string, dmg string, place string) error {
 }
 
 //Logmanualgame will enter data from games
-func Logmanualgame(player string, smgkills string, shotgunkills string, top3 string) error {
+func Logmanualgame(player string, field1 string, field2 string, field3 string) error {
 	username := Getuser(player) //get username from current proper name
 	//var err error
-	smg, err := strtoint(smgkills)
-	shot, err := strtoint(shotgunkills)
-	top, err := strtoint(top3)
+	f1, err := strtoint(field1)
+	f2, err := strtoint(field2)
+	f3, err := strtoint(field3)
 	if err != nil {
 		log.Println("Error: strconv.Atoi(loggame inputs)", err)
 		return errors.New("Error parsing inputs")
 	}
-	if smg < 0 || smg > 20 {
-		return errors.New("Error value for SMG kills")
+	if f1 < 0 || f1 > 1000 {
+		return errors.New("Error value for f1")
 	}
-	if shot < 0 || shot > 20 {
-		return errors.New("Error value for Shotgun kills")
+	if f2 < 0 || f2 > 8000 {
+		return errors.New("Error value for f2 ")
 	}
-	if top < 0 || top > 1 {
-		return errors.New("Error value for Top_3")
+	if f3 < 0 || f3 > 1 {
+		return errors.New("Error value for f3")
 	}
 	now := time.Now()
 
-	form, err := db.Prepare("INSERT INTO manualgames(username,smg,shot,top3,gametime) VALUES (?,?,?,?,?)")
+	form, err := db.Prepare("INSERT INTO manualgames(username,field1,field2,field3,gametime) VALUES (?,?,?,?,?)")
 	if err != nil {
 		log.Println(err.Error())
 	}
-	_, err = form.Exec(username, smg, shot, top, now)
+	_, err = form.Exec(username, f1, f2, f3, now)
 	if err != nil {
 		log.Println(err.Error())
 	}
