@@ -126,6 +126,10 @@ func decjsonmap(apikey string) (string, error) {
 	}
 	client := http.Client{}
 	resp, err := client.Do(req)
+	if resp.StatusCode != 200 {
+		log.Println("statuscode: ", resp.StatusCode)
+		return "", errors.New("Non-200 http response")
+	}
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		fmt.Println("err decjsonmap readall:", err)
