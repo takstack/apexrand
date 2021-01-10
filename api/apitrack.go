@@ -232,13 +232,13 @@ func sendapitodb(a apexdb.Apimain) {
 
 		for _, tracker := range elem.Tracker {
 			if tracker.Key == apexdb.Cat.Cat2 {
-				elem.Totdmg += tracker.Val * 1000
+				elem.Totdmg += tracker.Val
 			}
 			if tracker.Key == apexdb.Cat.Cat1 {
-				elem.Totdmg += tracker.Val * 1000
+				elem.Totdmg += tracker.Val * 100
 			}
 			if tracker.Key == apexdb.Cat.Cat3 {
-				elem.Totdmg += tracker.Val * 500
+				elem.Totdmg += tracker.Val * 250
 			}
 			err = apexdb.Logtracker(elem, tracker)
 			if err != nil {
@@ -252,8 +252,9 @@ func sendapitodb(a apexdb.Apimain) {
 		}
 		elem.Handi = apexdb.Gethandifromuser(elem.Username)
 		elem.Adjdmg = int(float64(elem.Totdmg) * ((10000 - float64(elem.Handi)) / 10000))
-		elem.Inctourn = checkchar(elem.Legend)
-
+		//check if char is allowed in tourn
+		//elem.Inctourn = checkchar(elem.Legend)
+		elem.Inctourn = true
 		//log.Println("len(elem.Throwaway)", len(elem.Throwaway))
 		//log.Println("elem.Importdate", elem.Importdate)
 		err = apexdb.Logapigame(elem)
