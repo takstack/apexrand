@@ -85,6 +85,7 @@ func Apipull() {
 				log.Println(err, p)
 				continue
 			}
+			statuscounter = 0
 			APIerr = "Connection successful"
 		}
 
@@ -116,6 +117,8 @@ func Apipull() {
 		}
 	}
 }
+
+//decodes json map of server statuses for api server
 func decjsonmap(apikey string) (string, error) {
 	s := fmt.Sprintf("https://api.mozambiquehe.re/servers?auth=%s", apikey)
 	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
@@ -125,8 +128,13 @@ func decjsonmap(apikey string) (string, error) {
 		fmt.Println("err decjsonmap newreq:", err)
 		return "", errors.New("decjsonmap err newreq")
 	}
-	client := http.Client{}
+	client := http.Client{
+		Timeout: 5 * time.Second,
+	}
 	resp, err := client.Do(req)
+	if os.IsTimeout(err) {
+		return "", errors.New("client.Timeout decjsonmap exceeded while awaiting headers")
+	}
 	if resp.StatusCode != 200 {
 		//log.Println("statuscode: ", resp.StatusCode)
 		return "", fmt.Errorf("Non-200 http response. Statuscode: %d", resp.StatusCode)
