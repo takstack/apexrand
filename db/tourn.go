@@ -191,7 +191,7 @@ func getplayersgames(player string) []Game {
 }
 func apigetplayersgames(player string) []Game {
 	starttime := time.Date(2021, time.Month(1), 15, 8, 0, 0, 0, time.UTC)
-	endtime := time.Date(2020, time.Month(2), 1, 8, 0, 0, 0, time.UTC)
+	endtime := time.Date(2021, time.Month(2), 1, 8, 0, 0, 0, time.UTC)
 
 	qry := "select gameid, username,totaldmg, handicap, adjdmg, tstamp from apigames where username=? and tstamp > ? and tstamp < ? and inctourn='1' order by totaldmg desc limit 15"
 	res, err := db.Query(qry, player, starttime, endtime)
