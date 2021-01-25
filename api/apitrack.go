@@ -43,13 +43,13 @@ func Apipull() {
 		status, err := decjsonmap(apikey)
 		if status != "UP" || err != nil {
 
-			if statuscounter%20 == 0 {
-				if err != nil {
-					log.Println("from decjsonmap err:", err)
-				}
-				log.Println("API Servers are: ", status, time.Since(lastpull).Round(time.Second/10),
-					"since last pull, sleep: 30, statuscounter:", statuscounter)
+			//if statuscounter%20 == 0 {
+			if err != nil {
+				log.Println("from decjsonmap err:", err)
 			}
+			log.Println("API Servers are: ", status, time.Since(lastpull).Round(time.Second/10),
+				"since last pull, sleep: 30, statuscounter:", statuscounter)
+			//}
 			statuscounter++
 			APIerr = "CONNECTION FAILED... Manually log games at bottom of this page"
 			sleeptime = 30
