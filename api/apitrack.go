@@ -46,6 +46,7 @@ func Apipull() {
 			//if statuscounter%20 == 0 {
 			if err != nil {
 				log.Println("from decjsonmap err:", err)
+				status = "No server response"
 			}
 			log.Println("API Servers are: ", status, time.Since(lastpull).Round(time.Second/10),
 				"since last pull, sleep: 30, statuscounter:", statuscounter)
