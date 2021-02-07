@@ -291,7 +291,7 @@ func unmarjson(body []byte) (apexdb.Apimain, error) {
 		log.Println("json err:", err)
 		return a, err
 	}
-
+	log.Println("body:", string(body))
 	for i := range a.Apiseries {
 		li := &a.Apiseries[i]
 		if len(li.Rawtracker) > 0 {
