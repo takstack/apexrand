@@ -41,7 +41,7 @@ func Apipull() {
 
 		//check api status json and continue if down
 		status, err := decjsonmap(apikey)
-		if status != "UP" || err != nil {
+		if status == "DOWN" || err != nil {
 
 			//if statuscounter%20 == 0 {
 			if err != nil {
@@ -56,7 +56,9 @@ func Apipull() {
 			sleeptime = 30
 			continue
 		}
-
+		if status == "SLOW" {
+			log.Println("API Servers are: ", status, ", operations continued")
+		}
 		now := time.Now()
 		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone",
 			"lildongmanisme", "kringo506", "hochilinh", "linh4tw"}
