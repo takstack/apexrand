@@ -164,7 +164,7 @@ func decjsonmap(apikey string) (string, error) {
 
 func getmatches(p string, platform string, f *os.File, apikey string) error {
 	now := time.Now()
-	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?player=%s&platform=%s&auth=%s&history=1&action=get", p, platform, apikey)
+	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?version=5&player=%s&platform=%s&auth=%s&history=1&action=get", p, platform, apikey)
 	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
 	req, err := http.NewRequest("GET", s, nil)
 	//_ = s
@@ -186,7 +186,7 @@ func getmatches(p string, platform string, f *os.File, apikey string) error {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		log.Println("statuscode: ", resp.StatusCode)
+		log.Println("getmatches statuscode: ", resp.StatusCode)
 		return errors.New("Non-200 http response")
 	}
 	_ = now
