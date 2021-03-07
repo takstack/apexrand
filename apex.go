@@ -91,7 +91,9 @@ func shopbot(w http.ResponseWriter, r *http.Request) {
 	focus := r.URL.Query().Get("key")
 	if focus == "shop2020getit" {
 		tmpl.Execute(w, "")
-		sendtxts()
+		//texting disabled due to no longer in use
+		//sendtxts()
+		log.Println("send texts should have been executed but disabled for now")
 		return
 	}
 	http.Redirect(w, r, "/", 302)
