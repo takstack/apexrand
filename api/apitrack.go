@@ -62,7 +62,7 @@ func Apipull() {
 		now := time.Now()
 		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone",
 			"lildongmanisme", "kringo506", "hochilinh", "linh4tw"}
-
+		log.Println("replace playername with uid......player=HeyImLifeline by uid=1000575543540") //reminder to update api query
 		//sl := []string{"lildongmanisme"}
 		for _, p := range sl {
 			s := fmt.Sprintf("file/matchlist-%s", p)
@@ -79,7 +79,7 @@ func Apipull() {
 					platform = "PS4"
 				}
 			*/
-			log.Println("replace playername with uid......player=HeyImLifeline by uid=1000575543540") //reminder to update api query
+
 			platform := apexdb.Getplatfrompsn(p)
 			err = getmatches(p, platform, f, apikey)
 
