@@ -125,6 +125,7 @@ func Logtracker(g Apigames, tracker Apitracker) error {
 
 //Upduid exp
 func Upduid(g Apigames) error {
+	log.Println("g.UID, g.Player", g.UID, g.Player)
 	_, err := db.Exec("UPDATE user SET uid=? WHERE psnid=?;", g.UID, g.Player)
 	return err
 }
