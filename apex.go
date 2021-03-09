@@ -571,6 +571,7 @@ func redirtourn(w http.ResponseWriter, r *http.Request) {
 		q1 := u1.Query()
 		q1.Del("err")
 		u1.RawQuery = q1.Encode()
+		log.Println("u1.string: ", u1.String())
 		http.Redirect(w, r, u1.String()+"?focus="+focus+"&err="+errcode, 302)
 		return
 	}
