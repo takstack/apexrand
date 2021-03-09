@@ -79,9 +79,13 @@ func Apipull() {
 					platform = "PS4"
 				}
 			*/
-
+			uid, err := apexdb.Getuid(p)
+			if err != nil {
+				log.Println("uid missing: ", p)
+				break
+			}
 			platform := apexdb.Getplatfrompsn(p)
-			err = getmatches(p, platform, f, apikey)
+			err = getmatches(p, uid, platform, f, apikey)
 
 			f.Close()
 			if err != nil {
@@ -163,9 +167,9 @@ func decjsonmap(apikey string) (string, error) {
 	//fmt.Println("j unmarshaled", j["Mozambiquehere_StatsAPI"].Area.Status)
 }
 
-func getmatches(p string, platform string, f *os.File, apikey string) error {
+func getmatches(p string, uid string, platform string, f *os.File, apikey string) error {
 	now := time.Now()
-	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?version=5&player=%s&platform=%s&auth=%s&history=1&action=get", p, platform, apikey)
+	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?version=5&uid=%s&platform=%s&auth=%s&history=1&action=get", uid, platform, apikey)
 	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
 	req, err := http.NewRequest("GET", s, nil)
 	//_ = s
@@ -230,15 +234,12 @@ func sendapitodb(a apexdb.Apimain) {
 		}
 
 	}
+
 	stamplist := apexdb.Selustamps(uid)
 
 	//looping through each item in api results
 	for _, elem := range a.Apiseries {
-		err := apexdb.Upduid(elem)
-		if err != nil {
-			log.Println("db ins err Upduid:", err)
-			continue
-		}
+
 		//if the timestamp exists already or this api item is not a tracker, skip logging
 		if !notindb(stamplist, elem.Timestamp) || len(elem.Throwaway) != 0 {
 			continue

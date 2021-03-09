@@ -130,6 +130,15 @@ func Upduid(g Apigames) error {
 	return err
 }
 
+//Getuid exp
+func Getuid(p string) (string, error) {
+	var s string
+	qry := fmt.Sprintf("select uid from user where psnid='%s';", p)
+	err := db.QueryRow(qry).Scan(&s)
+	handleError(err)
+	return s, err
+}
+
 //SeltopAPImatches gets most recent match list for any user from api
 func SeltopAPImatches(username string) Apimain {
 	qry := fmt.Sprintf("select uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,inctourn, importdate from apigames where username='%s' order by tstamp desc limit 3;", username)
