@@ -584,6 +584,7 @@ func redirtourn(w http.ResponseWriter, r *http.Request) {
 		log.Println("URL Parse failed: ", err)
 	}
 	q := u.Query()
+	q.Del("err")
 	q.Del("focus")
 	u.RawQuery = q.Encode()
 	http.Redirect(w, r, u.String()+"?focus="+focus, 302)
