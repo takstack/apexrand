@@ -318,8 +318,9 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 			focusname = player
 			err := apexdb.Logmanualgame(player, field1, field2, field3)
 			if err != nil {
-				log.Println("logmanualgame error: ", err)
 				Tourney.Errcode = err.Error()
+				log.Println("logmanualgame error: ", Tourney.Errcode)
+
 			} else {
 				Tourney.Errcode = ""
 				Tourney.T = apexdb.Seltourngames()
@@ -560,6 +561,20 @@ func reroll3(w http.ResponseWriter, r *http.Request) {
 	return
 }
 func redirtourn(w http.ResponseWriter, r *http.Request) {
+	errcode := r.URL.Query().Get("err")
+	if errcode != "" {
+		focus := r.URL.Query().Get("focus")
+		u1, err := url.Parse(r.Header.Get("Referer"))
+		if err != nil {
+			log.Println("URL Parse failed, err: ", err)
+		}
+		q1 := u1.Query()
+		q1.Del("err")
+		u1.RawQuery = q1.Encode()
+		http.Redirect(w, r, u1.String()+"?focus="+focus+"&err="+errcode, 302)
+		return
+	}
+
 	focus := r.URL.Query().Get("focus")
 
 	u, err := url.Parse(r.Header.Get("Referer"))
@@ -571,6 +586,7 @@ func redirtourn(w http.ResponseWriter, r *http.Request) {
 	u.RawQuery = q.Encode()
 	http.Redirect(w, r, u.String()+"?focus="+focus, 302)
 	return
+
 }
 func apires(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
