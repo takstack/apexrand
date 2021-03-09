@@ -210,9 +210,9 @@ func getmatches(p string, platform string, f *os.File, apikey string) error {
 	}
 	//log.Println("getmatches a:", a)
 	sendapitodb(a)
-	if err != nil {
-		return err
-	}
+	//if err != nil {
+	//	return err
+	//}
 	//_ = n2
 	return nil
 	//log.Println(string(body))
@@ -234,7 +234,11 @@ func sendapitodb(a apexdb.Apimain) {
 
 	//looping through each item in api results
 	for _, elem := range a.Apiseries {
-
+		err := apexdb.Upduid(elem)
+		if err != nil {
+			log.Println("db ins err Upduid:", err)
+			continue
+		}
 		//if the timestamp exists already or this api item is not a tracker, skip logging
 		if !notindb(stamplist, elem.Timestamp) || len(elem.Throwaway) != 0 {
 			continue
@@ -281,11 +285,6 @@ func sendapitodb(a apexdb.Apimain) {
 		err = apexdb.Logapigame(elem)
 		if err != nil {
 			log.Println("db ins err Logapigame:", err)
-			continue
-		}
-		err = apexdb.Upduid(elem)
-		if err != nil {
-			log.Println("db ins err Upduid:", err)
 			continue
 		}
 
