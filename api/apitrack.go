@@ -280,7 +280,12 @@ func sendapitodb(a apexdb.Apimain) {
 		//log.Println("elem.Importdate", elem.Importdate)
 		err = apexdb.Logapigame(elem)
 		if err != nil {
-			log.Println("db ins err:", err)
+			log.Println("db ins err Logapigame:", err)
+			continue
+		}
+		err = apexdb.Upduid(elem)
+		if err != nil {
+			log.Println("db ins err Upduid:", err)
 			continue
 		}
 

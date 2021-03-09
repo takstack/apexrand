@@ -123,6 +123,12 @@ func Logtracker(g Apigames, tracker Apitracker) error {
 	return nil
 }
 
+//Upduid exp
+func Upduid(g Apigames) error {
+	_, err := db.Exec("UPDATE user SET uid=? WHERE psnid=?;", g.UID, g.Player)
+	return err
+}
+
 //SeltopAPImatches gets most recent match list for any user from api
 func SeltopAPImatches(username string) Apimain {
 	qry := fmt.Sprintf("select uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,inctourn, importdate from apigames where username='%s' order by tstamp desc limit 3;", username)
