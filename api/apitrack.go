@@ -63,7 +63,7 @@ func Apipull() {
 			sleeptime = 30
 			continue
 		}
-		if status == "SLOW" {
+		if status == "SLOW" || status == "OVERLOADED" {
 			log.Println("API Servers are: ", status, ", operations continued")
 		}
 		now := time.Now()
