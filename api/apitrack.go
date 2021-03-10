@@ -91,7 +91,7 @@ func Apipull() {
 			uid, err := apexdb.Seluid(p)
 
 			if err != nil {
-				log.Println("db uid call failed, getting uid from api")
+				log.Println("db uid call failed, getting uid from api - ", p)
 				uid, err = getuid(p, platform, apikey)
 				if err != nil {
 					log.Println("getuid error: ", err)
