@@ -124,14 +124,14 @@ func Logtracker(g Apigames, tracker Apitracker) error {
 }
 
 //Upduid exp
-func Upduid(g Apigames) error {
-	log.Println("g.UID, g.Player", g.UID, g.Player)
-	_, err := db.Exec("UPDATE user SET uid=? WHERE psnid=?;", g.UID, g.Player)
+func Upduid(UID string, Player string) error {
+	log.Println("UID, Player", UID, Player)
+	_, err := db.Exec("UPDATE user SET uid=? WHERE psnid=?;", UID, Player)
 	return err
 }
 
-//Getuid exp
-func Getuid(p string) (string, error) {
+//Seluid exp
+func Seluid(p string) (string, error) {
 	var s string
 	qry := fmt.Sprintf("select uid from user where psnid='%s';", p)
 	err := db.QueryRow(qry).Scan(&s)

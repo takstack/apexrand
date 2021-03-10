@@ -26,6 +26,13 @@ type Dets struct {
 	Tstamp   int    `json:"QueryTimestamp"`
 }
 
+//Stats used for api player stats - UID
+type Stats struct {
+	Global struct {
+		UID string `json:"uid"`
+	} `json:"global"`
+}
+
 //APIerr tracks last status of the api so if connection is failing, users can manually log games
 var APIerr string
 var lastpull time.Time
@@ -79,12 +86,20 @@ func Apipull() {
 					platform = "PS4"
 				}
 			*/
-			uid, err := apexdb.Getuid(p)
+
+			platform := apexdb.Getplatfrompsn(p)
+			uid, err := apexdb.Seluid(p)
+			log.Println("uid in apipull: ", uid)
 			if err != nil {
+				uid, err := getuid(p, platform, apikey)
+				if err != nil {
+					log.Println("getuid error: ", err)
+					break
+				}
+				apexdb.Upduid(uid, p)
 				log.Println("uid missing: ", p)
 				break
 			}
-			platform := apexdb.Getplatfrompsn(p)
 			err = getmatches(p, uid, platform, f, apikey)
 
 			f.Close()
@@ -337,6 +352,45 @@ func unmarjson(body []byte) (apexdb.Apimain, error) {
 	}
 	//log.Printf("%+v\n", a)
 	return a, nil
+}
+func getuid(p string, platform string, apikey string) (string, error) {
+	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?version=5&platform=%s4&player=%s&auth=%s", platform, p, apikey)
+	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
+	req, err := http.NewRequest("GET", s, nil)
+	//_ = s
+	if err != nil {
+		fmt.Println("err decjsonmap newreq:", err)
+		return "", errors.New("decjsonmap err newreq")
+	}
+	client := http.Client{
+		Timeout: 5 * time.Second,
+	}
+	resp, err := client.Do(req)
+	if os.IsTimeout(err) {
+		return "", errors.New("client.Timeout decjsonmap exceeded while awaiting headers")
+	}
+	if resp.StatusCode != 200 {
+		//log.Println("statuscode: ", resp.StatusCode)
+		return "", fmt.Errorf("Non-200 http response. Statuscode: %d", resp.StatusCode)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("err decjsonmap readall:", err)
+		return "", errors.New("decjsonmap err readall")
+	}
+	//fmt.Println("body:", string(body))
+
+	var Stat Stats
+	err = json.Unmarshal(body, &Stat.Global.UID)
+	if err != nil {
+		fmt.Println("err getuid:", err)
+		return "", errors.New("err getuid unmarshal")
+	}
+
+	return Stat.Global.UID, nil
+	//fmt.Println("body:", string(body))
+	//fmt.Println("j unmarshaled", j["Mozambiquehere_StatsAPI"].Area.Status)
 }
 func notindb(stamplist []int, ts int) bool {
 	if len(stamplist) <= 0 {
