@@ -89,13 +89,15 @@ func Apipull() {
 
 			platform := apexdb.Getplatfrompsn(p)
 			uid, err := apexdb.Seluid(p)
-			log.Println("uid in apipull: ", uid)
+
 			if err != nil {
-				uid, err := getuid(p, platform, apikey)
+				log.Println("db uid call failed, getting uid from api")
+				uid, err = getuid(p, platform, apikey)
 				if err != nil {
 					log.Println("getuid error: ", err)
 					break
 				}
+				log.Println("uid from getuid: ", uid)
 				apexdb.Upduid(uid, p)
 				log.Println("uid missing: ", p)
 				break
