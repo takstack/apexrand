@@ -68,7 +68,7 @@ func Apipull() {
 		}
 		now := time.Now()
 		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone",
-			"lildongmanisme", "kringo506", "hochilinh", "linh4tw"}
+			"lildongmanisme", "kringo506", "hochilinh"} //, excluding until games played "linh4tw"
 
 		//sl := []string{"lildongmanisme"}
 		for _, p := range sl {
@@ -95,12 +95,12 @@ func Apipull() {
 				uid, err = getuid(p, platform, apikey)
 				if err != nil {
 					log.Println("getuid error: ", err)
-					break
+
 				}
 				log.Println("uid from getuid: ", uid)
 				apexdb.Upduid(uid, p)
 				log.Println("uid missing: ", p)
-				break
+				continue
 			}
 			err = getmatches(p, uid, platform, f, apikey)
 
