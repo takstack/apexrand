@@ -198,7 +198,7 @@ func Seltrackers(u int, t time.Time) []Apitracker {
 		var game Apitracker
 		// for each row, scan the result into our tag composite object
 		err := res.Scan(&game.Val, &game.Key, &game.Name)
-		handleError(err)
+		he(err)
 
 		sl = append(sl, game)
 	}

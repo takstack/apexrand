@@ -55,7 +55,7 @@ func Loggame(player string, dmg string, place string) error {
 	d, err := strconv.Atoi(dmg)
 	if err != nil {
 		log.Println("Error: strconv.Atoi(dmg)", err)
-		return errors.New("Error parsing damage")
+		return errors.New("error parsing damage")
 	}
 
 	p, err := strconv.Atoi(place)
@@ -95,20 +95,27 @@ func Logmanualgame(player string, field1 string, field2 string, field3 string) e
 	username := Getuser(player) //get username from current proper name
 	//var err error
 	f1, err := strtoint(field1)
+	if err != nil {
+		log.Println("logmanualgame error 1")
+	}
 	f2, err := strtoint(field2)
+	if err != nil {
+		log.Println("logmanualgame error 2")
+	}
 	f3, err := strtoint(field3)
 	if err != nil {
+		log.Println("logmanualgame error 3")
 		log.Println("Error: strconv.Atoi(loggame inputs)", err)
-		return errors.New("Error parsing inputs")
+		return errors.New("error parsing inputs")
 	}
 	if f1 < 0 || f1 > 1000 {
-		return errors.New("Error value for f1")
+		return errors.New("error value for f1")
 	}
 	if f2 < 0 || f2 > 8000 {
-		return errors.New("Error value for f2 ")
+		return errors.New("error value for f2 ")
 	}
 	if f3 < 0 || f3 > 1 {
-		return errors.New("Error value for f3")
+		return errors.New("error value for f3")
 	}
 	now := time.Now()
 
@@ -170,6 +177,8 @@ func Seltourngames() []Tourn {
 
 	return pSL
 }
+
+/*
 func getplayersgames(player string) []Game {
 
 	qry := "select id, username, dmg, place, placedmg, totaldmg, handicap, adj_dmg, gametime from games where username=? and inc_tourn='1' order by totaldmg desc limit 10"
@@ -189,6 +198,7 @@ func getplayersgames(player string) []Game {
 
 	return sl
 }
+*/
 func apigetplayersgames(player string) []Game {
 	starttime := time.Date(2021, time.Month(1), 15, 8, 0, 0, 0, time.UTC)
 	endtime := time.Date(2021, time.Month(2), 1, 8, 0, 0, 0, time.UTC)

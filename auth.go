@@ -1,7 +1,7 @@
 package main
 
 import (
-	"apexrand/db"
+	apexdb "apexrand/db"
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
@@ -37,22 +37,12 @@ func login(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "login failed")
 		return
 	}
-	ip, ips, err := fromRequest(r)
-	_ = ip
+	_, ips, err := fromRequest(r)
 	if err != nil {
 		log.Println("Error - IP Parse: ", err)
 	}
 	//log.Printf("login ip: %v\n", ip)
-
-	sessid := createsessid()
-	delcookie(w, r, sessid)
-	setnewapexcookie(w, r, sessid)
-
-	log.Println("sessid", sessid)
-	apexdb.Updsessid(det.user, sessid)
-	apexdb.Logip(sessid, ips)
-	log.Println("entered user ip: ", sessid, ips)
-	apexdb.Updsessexp(sessid, newexpire())
+	renewcookie(w, r, det.user, ips)
 
 	teamassignment, err := assignteams()
 	if err != nil {
@@ -60,8 +50,8 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 	apexdb.Assignteam(det.user, teamassignment)
 
-	http.Redirect(w, r, "/current", 302)
-	return
+	http.Redirect(w, r, "/current", http.StatusFound)
+
 }
 func auth(l formlogin) error {
 
@@ -81,7 +71,7 @@ func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
 	cookie, err := getcookie(w, r, "apextoken")
 	if err != nil {
 		log.Printf("chkvalidsess - no cookie\n\n")
-		http.Redirect(w, r, "/login", 302)
+		http.Redirect(w, r, "/login", http.StatusFound)
 		return false
 	}
 
@@ -110,7 +100,7 @@ func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
 		return true
 	}
 
-	http.Redirect(w, r, "/login", 302)
+	http.Redirect(w, r, "/login", http.StatusFound)
 	return false
 
 }
@@ -125,13 +115,13 @@ func chgname(w http.ResponseWriter, r *http.Request, newname string) {
 	cookie, err := getcookie(w, r, "apextoken")
 	if err != nil {
 		log.Println("chkvalidsess - no cookie")
-		http.Redirect(w, r, "/login", 302)
-		return
+		http.Redirect(w, r, "/login", http.StatusFound)
+
 	}
 	sessid := cookie.Value
 
 	apexdb.Updpropername(sessid, newname)
-	return
+
 }
 func addplayertoteam(propername string) {
 	num, err := assignteams()
@@ -146,12 +136,24 @@ func assignteams() (int, error) {
 	t1 := len(apexdb.Getteamassigns(1))
 	t2 := len(apexdb.Getteamassigns(2))
 	if t1+t2 >= 6 {
-		return 0, errors.New("Teams full")
+		return 0, errors.New("teams full")
 	}
 	if t1 < 3 {
 		return 1, nil
 	}
 	return 2, nil
+}
+func renewcookie(w http.ResponseWriter, r *http.Request, user string, ips string) {
+	sessid := createsessid()
+	delcookie(w, r, sessid)
+	setnewapexcookie(w, r, sessid)
+
+	log.Println("sessid", sessid)
+	apexdb.Updsessid(user, sessid)
+	apexdb.Logip(sessid, ips)
+	log.Println("entered user ip: ", sessid, ips)
+	apexdb.Updsessexp(sessid, newexpire())
+
 }
 func getcookie(w http.ResponseWriter, r *http.Request, s string) (*http.Cookie, error) {
 	ip, ips, err := fromRequest(r)
@@ -227,11 +229,11 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie("apextoken")
 	if err != nil {
 		log.Println("error retrieving cookie")
-		http.Redirect(w, r, "/login", 302)
+		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
 	sessid := cookie.Value
 	apexdb.Delsess(sessid)
-	http.Redirect(w, r, "/login", 302)
-	return
+	http.Redirect(w, r, "/login", http.StatusFound)
+
 }

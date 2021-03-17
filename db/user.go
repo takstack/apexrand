@@ -4,8 +4,10 @@ import (
 	//"database/sql"
 	//"errors"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql" //comment
 	"log"
+
+	_ "github.com/go-sql-driver/mysql" //comment
+
 	//"math"
 	"time"
 )
@@ -62,6 +64,13 @@ func Insuserfromfile() {
 		log.Fatalln("Commit Error")
 	}
 }
+func Createuser(email string, platform string, playerid string, romanname string, username string, pass string) error {
+	form, err := db.Prepare("INSERT INTO user (eaddr,platform,psnid,propername,username,pass) VALUES(?,?,?,?,?,?);")
+	handleError(err)
+	_, err = form.Exec(email, platform, playerid, romanname, username, pass)
+	handleError(err)
+	return err
+}
 
 //Updpropername allows users to update their own name
 func Updpropername(sessid string, newname string) {
@@ -69,7 +78,7 @@ func Updpropername(sessid string, newname string) {
 	handleError(err)
 	_, err = form.Exec(newname, sessid)
 	handleError(err)
-	return
+
 }
 
 //Getuser returns the actual username for a players proper name
@@ -129,7 +138,6 @@ func Sethandifromuser(username string, handicap int) {
 	_, err = form.Exec(handicap, username)
 	handleError(err)
 	log.Println("set handicap for:", username)
-	return
 
 }
 
@@ -189,7 +197,6 @@ func Seluser(u string) Creds {
 	qry := fmt.Sprintf("select username, pass, sess_id, sess_exp from user where username = '%s';", u)
 	err := db.QueryRow(qry).Scan(&res.Username, &res.Pass, &res.Sessid, &res.Exp)
 	handleError(err)
-
 	return res
 }
 
@@ -205,5 +212,5 @@ func Updlogin(username string, pass string, sessid string) {
 	_, err = form.Exec(pass, sessid)
 	handleError(err)
 	log.Println("user/pass updated:", username, pass)
-	return
+
 }

@@ -5,11 +5,13 @@ import (
 	"apexrand/api"
 	apexdb "apexrand/db"
 	"apexrand/random"
-	"bytes"
-	"encoding/json"
+
+	//"bytes"
+	//"encoding/json"
 	"fmt"
 	"html/template"
-	"io/ioutil"
+
+	//"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -17,9 +19,8 @@ import (
 	"net/url"
 
 	//"runtime"
-	"bufio"
-	"net/smtp"
-	"os"
+	//"bufio"
+	//"os"
 	"strconv"
 	"strings"
 	"time"
@@ -51,7 +52,7 @@ func main() {
 	go api.Apipull()
 
 	log.Println("reminder: set tournament time in loggame, logmangames params if in tournament")
-
+	http.HandleFunc("/reg", reg)
 	http.HandleFunc("/shopbot", shopbot)
 	http.HandleFunc("/current", handler1)
 	//http.HandleFunc("/testroll", testroll)
@@ -96,11 +97,10 @@ func shopbot(w http.ResponseWriter, r *http.Request) {
 		log.Println("send texts should have been executed but disabled for now")
 		return
 	}
-	http.Redirect(w, r, "/", 302)
-	return
-
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
+/*
 //func for shopbot
 func sendtxts() {
 	key := getemailkey()
@@ -174,7 +174,8 @@ func getemailkey() []string {
 	//log.Println("apikey:", string(r))
 	return key
 }
-
+*/
+/*
 //not working
 func testroll(w http.ResponseWriter, r *http.Request) {
 	for i := 0; i < 2; i++ {
@@ -201,6 +202,7 @@ func testroll(w http.ResponseWriter, r *http.Request) {
 		log.Println(string(body))
 	}
 }
+*/
 func getstats(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
@@ -220,15 +222,15 @@ func getstats(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.ParseFiles("stats.html"))
 		tmpl.Execute(w, st)
 	}
-	return
+
 }
 func rollauto(w http.ResponseWriter, r *http.Request) {
 	log.Println("autorolling")
 
 	Res = random.Autoroller(Res)
 
-	http.Redirect(w, r, "/stats", 302)
-	return
+	http.Redirect(w, r, "/stats", http.StatusFound) //instead of 302
+
 }
 func wipestats(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
@@ -237,9 +239,8 @@ func wipestats(w http.ResponseWriter, r *http.Request) {
 
 		apexdb.Wipestats()
 		random.Rollcounter = 0
-		http.Redirect(w, r, "/stats", 302)
+		http.Redirect(w, r, "/stats", http.StatusFound)
 	}
-	return
 
 }
 func wipetourn(w http.ResponseWriter, r *http.Request) {
@@ -249,15 +250,14 @@ func wipetourn(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("apextoken")
 		if err != nil {
 			log.Println("error retrieving cookie")
-			http.Redirect(w, r, "/login", 302)
-			return
+			http.Redirect(w, r, "/login", http.StatusFound)
+
 		}
 		sessid := cookie.Value
 		apexdb.Wipetourn(sessid)
 
-		http.Redirect(w, r, "/tournament", 302)
+		http.Redirect(w, r, "/tournament", http.StatusFound)
 	}
-	return
 
 }
 func tourneyapi(w http.ResponseWriter, r *http.Request) {
@@ -324,11 +324,11 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 			} else {
 				Tourney.Errcode = ""
 				Tourney.T = apexdb.Seltourngames()
-				//http.Redirect(w, r, "/redir", 302) //redirect instead of executing template directly
+				//http.Redirect(w, r, "/redir", http.StatusFound) //redirect instead of executing template directly
 
 			}
 			focus := r.URL.Query().Get("focus")
-			http.Redirect(w, r, "/redirtourn?focus="+focus+"&err="+Tourney.Errcode, 302) //redirect instead of executing template directly
+			http.Redirect(w, r, "/redirtourn?focus="+focus+"&err="+Tourney.Errcode, http.StatusFound) //redirect instead of executing template directly
 			return
 		} else if len(showdata) > 0 {
 			log.Println("showdata in else if:", showdata)
@@ -342,7 +342,7 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 				q.Del("focus")
 				u.RawQuery = q.Encode()
 			*/
-			http.Redirect(w, r, "/redirtourn?focus="+showdata+"&err="+Tourney.Errcode, 302) //redirect instead of executing template directly
+			http.Redirect(w, r, "/redirtourn?focus="+showdata+"&err="+Tourney.Errcode, http.StatusFound) //redirect instead of executing template directly
 			return
 		}
 		//log.Println("after redir showdata:", showdata, "focusname:", focusname)
@@ -364,8 +364,10 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 			tmpl.Execute(w, Tourney)
 		*/
 	}
-	return
+
 }
+
+/*
 func tourney(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
@@ -421,48 +423,52 @@ func tourney(w http.ResponseWriter, r *http.Request) {
 			} else {
 				Tourney.Errcode = ""
 				Tourney.T = apexdb.Seltourngames()
-				//http.Redirect(w, r, "/redir", 302) //redirect instead of executing template directly
+				//http.Redirect(w, r, "/redir", http.StatusFound) //redirect instead of executing template directly
 
 			}
 			focus := r.URL.Query().Get("focus")
-			http.Redirect(w, r, "/redirtourn?focus="+focus, 302) //redirect instead of executing template directly
+			http.Redirect(w, r, "/redirtourn?focus="+focus, http.StatusFound) //redirect instead of executing template directly
 			return
 		} else if len(showdata) > 0 {
 			log.Println("showdata in else if:", showdata)
-			/*
-				log.Println("r.URL.Path", r.URL.Path)
-				u, err := url.Parse(r.URL.Path)
-				if err != nil {
-					log.Println("URL Parse failed: ", err)
-				}
-				q := u.Query()
-				q.Del("focus")
-				u.RawQuery = q.Encode()
-			*/
-			http.Redirect(w, r, "/redirtourn?focus="+showdata, 302) //redirect instead of executing template directly
-			return
+*/
+/*
+	log.Println("r.URL.Path", r.URL.Path)
+	u, err := url.Parse(r.URL.Path)
+	if err != nil {
+		log.Println("URL Parse failed: ", err)
+	}
+	q := u.Query()
+	q.Del("focus")
+	u.RawQuery = q.Encode()
+*/
+/*
+		http.Redirect(w, r, "/redirtourn?focus="+showdata, http.StatusFound) //redirect instead of executing template directly
+		return
+	}
+	//log.Println("after redir showdata:", showdata, "focusname:", focusname)
+*/
+/*
+	not executed if methodpost chk exists above
+	focus := r.URL.Query().Get("focus")
+	r.URL.Query().Del("focus")
+
+	log.Println("after redir web param:", focus)
+
+	for _, elem := range Tourney.T {
+		if elem.Player == focus {
+			log.Println(elem.Games)
+			Tourney.G = elem.Games
 		}
-		//log.Println("after redir showdata:", showdata, "focusname:", focusname)
-
-		/*
-			not executed if methodpost chk exists above
-			focus := r.URL.Query().Get("focus")
-			r.URL.Query().Del("focus")
-
-			log.Println("after redir web param:", focus)
-
-			for _, elem := range Tourney.T {
-				if elem.Player == focus {
-					log.Println(elem.Games)
-					Tourney.G = elem.Games
-				}
-			}
-			log.Println("before execute")
-			tmpl.Execute(w, Tourney)
-		*/
+	}
+	log.Println("before execute")
+	tmpl.Execute(w, Tourney)
+*/
+/*
 	}
 	return
 }
+*/
 func teams(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
@@ -477,7 +483,7 @@ func teams(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("apextoken")
 		if err != nil {
 			log.Println("error retrieving cookie")
-			http.Redirect(w, r, "/login", 302)
+			http.Redirect(w, r, "/login", http.StatusFound)
 			return
 		}
 		sessid := cookie.Value
@@ -523,7 +529,6 @@ func teams(w http.ResponseWriter, r *http.Request) {
 		//tmpl := template.Must(template.ParseFiles("teams.html"))
 		tmpl.Execute(w, user)
 	}
-	return
 
 }
 func reroll1(w http.ResponseWriter, r *http.Request) {
@@ -534,9 +539,9 @@ func reroll1(w http.ResponseWriter, r *http.Request) {
 		_ = Res
 		//log.Println("reroll res:", Res)
 		//log.Println("reroll1 res:", Res)
-		http.Redirect(w, r, "/current", 302)
+		http.Redirect(w, r, "/current", http.StatusFound)
 	}
-	return
+
 }
 func reroll2(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
@@ -545,9 +550,9 @@ func reroll2(w http.ResponseWriter, r *http.Request) {
 		Res = random.Rollnewload(Res, 2)
 		_ = Res
 		//log.Println("reroll res:", Res)
-		http.Redirect(w, r, "/current", 302)
+		http.Redirect(w, r, "/current", http.StatusFound)
 	}
-	return
+
 }
 func reroll3(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
@@ -556,9 +561,9 @@ func reroll3(w http.ResponseWriter, r *http.Request) {
 		Res = random.Rollnewload(Res, 3)
 		_ = Res
 		//log.Printf("reroll res:%+v", Res.Tchals)
-		http.Redirect(w, r, "/current", 302)
+		http.Redirect(w, r, "/current", http.StatusFound)
 	}
-	return
+
 }
 func redirtourn(w http.ResponseWriter, r *http.Request) {
 	errcode := r.URL.Query().Get("err")
@@ -573,7 +578,7 @@ func redirtourn(w http.ResponseWriter, r *http.Request) {
 		q1.Del("focus")
 		u1.RawQuery = q1.Encode()
 		log.Println("u1.string: ", u1.String())
-		http.Redirect(w, r, u1.String()+"?focus="+focus+"&err="+errcode, 302)
+		http.Redirect(w, r, u1.String()+"?focus="+focus+"&err="+errcode, http.StatusFound)
 		return
 	}
 
@@ -587,8 +592,7 @@ func redirtourn(w http.ResponseWriter, r *http.Request) {
 	q.Del("err")
 	q.Del("focus")
 	u.RawQuery = q.Encode()
-	http.Redirect(w, r, u.String()+"?focus="+focus, 302)
-	return
+	http.Redirect(w, r, u.String()+"?focus="+focus, http.StatusFound)
 
 }
 func apires(w http.ResponseWriter, r *http.Request) {
@@ -603,8 +607,8 @@ func apires(w http.ResponseWriter, r *http.Request) {
 		cookie, err := r.Cookie("apextoken")
 		if err != nil {
 			log.Println("error retrieving cookie")
-			http.Redirect(w, r, "/login", 302)
-			return
+			http.Redirect(w, r, "/login", http.StatusFound)
+
 		}
 		sessid := cookie.Value
 		username := apexdb.Getuserfromsess(sessid)
@@ -619,8 +623,65 @@ func apires(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.ParseFiles("apires.html"))
 		tmpl.Execute(w, Apimain)
 	}
-	return
 }
+func reg(w http.ResponseWriter, r *http.Request) {
+	log.Println("reg started")
+	tmpl := template.Must(template.ParseFiles("reg.html"))
+
+	_, ips, err := fromRequest(r)
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	if r.Method != http.MethodPost {
+
+		tmpl.Execute(w, nil)
+		return
+	}
+	//to log a game for that player
+	email := r.FormValue("player")
+	platform := r.FormValue("platform")
+	playerid := r.FormValue("playerid")
+	romanname := r.FormValue("romanname")
+	username := r.FormValue("username")
+	pass := r.FormValue("pass")
+
+	switch platform {
+	case "PSN":
+		platform = "PS4"
+	case "Xbox":
+		platform = "X1"
+	}
+
+	log.Println("form action received reg:", email, platform, playerid, romanname, username, pass)
+
+	err = apexdb.Createuser(email, platform, playerid, romanname, username, pass)
+	if err != nil {
+		//Tourney.Errcode = err.Error()
+		log.Println("reg error: ", err)
+	}
+	renewcookie(w, r, username, ips)
+	http.Redirect(w, r, "/apex", http.StatusFound)
+}
+
+//log.Println("after redir showdata:", showdata, "focusname:", focusname)
+
+/*
+	not executed if methodpost chk exists above
+	focus := r.URL.Query().Get("focus")
+	r.URL.Query().Del("focus")
+
+	log.Println("after redir web param:", focus)
+
+	for _, elem := range Tourney.T {
+		if elem.Player == focus {
+			log.Println(elem.Games)
+			Tourney.G = elem.Games
+		}
+	}
+	log.Println("before execute")
+	tmpl.Execute(w, Tourney)
+*/
+
 func handler1(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
@@ -638,15 +699,14 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 		tmpl := template.Must(template.ParseFiles("forms.html"))
 		tmpl.Execute(w, Res)
 	}
-	return
+
 }
 
 func helloServer(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprintf(w, "The server you were connecting to was disconnected or no longer in use.  Please try your request again or leave a message below")
-	http.Redirect(w, r, "/apex", 302)
-	return
-}
+	http.Redirect(w, r, "/apex", http.StatusFound)
 
+}
 func fromRequest(req *http.Request) (net.IP, string, error) {
 	//log.Println("parsing new req ip")
 	ip, _, err := net.SplitHostPort(req.RemoteAddr)
@@ -675,7 +735,7 @@ func fromRequest(req *http.Request) (net.IP, string, error) {
 	if err != nil {
 		return nil, "", fmt.Errorf("userip: %q did not convert to str", req.RemoteAddr)
 	}
-	//log.Println("ip parsed")
+	log.Println("ip parsed: ", ip)
 	//log.Println(userIP, userIPs)
 	return userIP, ip, nil
 }

@@ -4,9 +4,10 @@ import (
 	//"database/sql"
 	//"errors"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql" //comment
 	"log"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql" //comment
 )
 
 //Selsess will return session info for sess id
@@ -25,7 +26,7 @@ func Logip(sessid string, ip string) {
 	handleError(err)
 	_, err = form.Exec(ip, sessid)
 	handleError(err)
-	return
+
 }
 
 //Getuserfromip will return username for an ip address
@@ -44,7 +45,7 @@ func Updsessid(username string, sessid string) {
 	handleError(err)
 	_, err = form.Exec(sessid, username)
 	handleError(err)
-	return
+
 }
 
 //Updsessexp will return session info for sess id
@@ -53,7 +54,7 @@ func Updsessexp(sessid string, newexp time.Time) {
 	handleError(err)
 	_, err = form.Exec(newexp, sessid)
 	handleError(err)
-	return
+
 }
 
 //Checkallvalidsess removes sess_id for all expired sessions
@@ -63,7 +64,7 @@ func Checkallvalidsess() {
 	handleError(err)
 	_, err = form.Exec(now)
 	handleError(err)
-	return
+
 }
 
 //Delsess removes sess_id for all expired sessions
@@ -84,7 +85,6 @@ func Delsess(sessid string) {
 		handleError(err)
 	*/
 
-	return
 }
 
 //Delallsess removes sess_id for all expired sessions
@@ -97,5 +97,5 @@ func Delallsess() {
 	_, err = form.Exec(oldexp)
 	handleError(err)
 	log.Println("all sessions deleted")
-	return
+
 }

@@ -4,9 +4,10 @@ import (
 	//"database/sql"
 	"errors"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql" //comment
 	"log"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql" //comment
 )
 
 //Team is list of players assigned to each team
@@ -43,7 +44,7 @@ func Assignteam(username string, teamassignment int) {
 	handleError(err)
 	_, err = form.Exec(teamassignment, username)
 	handleError(err)
-	return
+
 }
 
 //Switchteams switch to other team
