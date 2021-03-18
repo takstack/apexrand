@@ -2,6 +2,7 @@ package main
 
 import (
 	apexdb "apexrand/db"
+	"bufio"
 	"crypto/rand"
 	"encoding/base64"
 	"errors"
@@ -10,6 +11,8 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"net/smtp"
+	"os"
 	"time"
 )
 
@@ -52,6 +55,68 @@ func login(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/current", http.StatusFound)
 
+}
+func reg(w http.ResponseWriter, r *http.Request) {
+	log.Println("reg started")
+	tmpl := template.Must(template.ParseFiles("reg.html"))
+
+	_, _, err := fromRequest(r)
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	if r.Method != http.MethodPost {
+		tmpl.Execute(w, nil)
+		return
+	}
+	//to log a game for that player
+	var user apexdb.Creds
+	user.Email = r.FormValue("email")
+	user.Platform = r.FormValue("platform")
+	user.Playerid = r.FormValue("playerid")
+	user.Romanname = r.FormValue("romanname")
+	user.Username = r.FormValue("username")
+	user.Pass = r.FormValue("pass")
+
+	switch user.Platform {
+	case "PSN":
+		user.Platform = "PS4"
+	case "Xbox":
+		user.Platform = "X1"
+	}
+
+	log.Println("form action received reg:", user.Email, user.Platform, user.Playerid, user.Romanname, user.Username, user.Pass)
+
+	user.Confstr = createsessid()
+	err = apexdb.Createuser(user)
+	if err != nil {
+		//Tourney.Errcode = err.Error()
+		log.Println("reg error: ", err)
+	}
+	//renewcookie(w, r, username, ips)
+	sendemail(user.Email, "http://apexlott.com/confirm?conf="+user.Confstr)
+	http.Redirect(w, r, "/confirm", http.StatusFound)
+}
+func waitconf(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("waitconf.html"))
+	tmpl.Execute(w, nil)
+}
+
+func confirm(w http.ResponseWriter, r *http.Request) {
+	log.Println("tourney started")
+	tmpl := template.Must(template.ParseFiles("confirmed.html"))
+	//ip prints
+	_, _, err := fromRequest(r)
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	//check confirmation code, update user db if code matches
+	conf := r.URL.Query().Get("conf")
+	err = apexdb.Updconfirmed(conf)
+
+	if err != nil {
+		http.Redirect(w, r, "/waitconf", http.StatusFound)
+	}
+	tmpl.Execute(w, nil)
 }
 func auth(l formlogin) error {
 
@@ -236,4 +301,36 @@ func logout(w http.ResponseWriter, r *http.Request) {
 	apexdb.Delsess(sessid)
 	http.Redirect(w, r, "/login", http.StatusFound)
 
+}
+
+//func for shopbot
+func getemailkey() []string {
+	f, err := os.Open("/var/lib/api/emailkey")
+	if err != nil {
+		log.Println("file open error:", err)
+	}
+	scanner := bufio.NewScanner(f)
+
+	var key []string
+	for scanner.Scan() {
+		if err := scanner.Err(); err != nil {
+			fmt.Println("error: reading standard input:", err)
+		}
+
+		key = append(key, scanner.Text())
+	}
+	//log.Println("apikey:", string(r))
+	return key
+}
+func sendemail(addr string, link string) {
+	key := getemailkey()
+	auth := smtp.PlainAuth("", key[0], key[1], "smtp.gmail.com")
+	//sending without "To:" will make it bcc:
+	msg := []byte("To:" + addr + "\r\n" + "Subject:Apexlott.com Confirmation Link\r\n" + "\r\n" + link)
+
+	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], []string{addr}, msg)
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println("smtp executed: ", addr)
 }

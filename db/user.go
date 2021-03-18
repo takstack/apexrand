@@ -14,10 +14,15 @@ import (
 
 //Creds holds user login info
 type Creds struct {
-	Username string
-	Pass     string
-	Sessid   string
-	Exp      time.Time
+	Username  string
+	Pass      string
+	Sessid    string
+	Exp       time.Time
+	Email     string
+	Platform  string
+	Playerid  string
+	Romanname string
+	Confstr   string
 }
 
 //User holds display info for user status
@@ -64,12 +69,22 @@ func Insuserfromfile() {
 		log.Fatalln("Commit Error")
 	}
 }
-func Createuser(email string, platform string, playerid string, romanname string, username string, pass string) error {
-	form, err := db.Prepare("INSERT INTO user (eaddr,platform,psnid,propername,username,pass,handicap,tournpart) VALUES(?,?,?,?,?,?,?,?);")
+func Createuser(user Creds) error {
+	form, err := db.Prepare("INSERT INTO user (eaddr,platform,psnid,propername,username,pass,handicap,tournpart,confstr,confirmed) VALUES(?,?,?,?,?,?,?,?);")
 	handleError(err)
-	_, err = form.Exec(email, platform, playerid, romanname, username, pass, 0, 0)
+	_, err = form.Exec(user.Email, user.Platform, user.Playerid, user.Romanname, user.Username, user.Pass, 0, 0, user.Confstr, 0)
 	handleError(err)
 	return err
+}
+
+//Updconfirmed switches confirmed to 1
+func Updconfirmed(conf string) error {
+	form, err := db.Prepare("UPDATE user SET confirmed = 1 WHERE confstr = ?;")
+	handleError(err)
+	_, err = form.Exec(conf)
+	handleError(err)
+	return err
+
 }
 
 //Updpropername allows users to update their own name
@@ -95,6 +110,16 @@ func Getuser(propername string) string {
 func Getuserfromsess(sessid string) string {
 	var res string
 	qry := fmt.Sprintf("select username from user where sess_id = '%s';", sessid)
+	err := db.QueryRow(qry).Scan(&res)
+	handleError(err)
+
+	return res
+}
+
+//Getuserfromconf returns the actual username for a confirm string
+func Getuserfromconf(conf string) string {
+	var res string
+	qry := fmt.Sprintf("select username from user where confstr = '%s';", conf)
 	err := db.QueryRow(qry).Scan(&res)
 	handleError(err)
 

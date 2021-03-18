@@ -64,6 +64,8 @@ func main() {
 	http.HandleFunc("/rollauto", rollauto)
 	http.HandleFunc("/apex", handler1)
 	http.HandleFunc("/login", login)
+	http.HandleFunc("/waitconf", waitconf)
+	http.HandleFunc("/confirm", confirm)
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/teams", teams)
 	http.HandleFunc("/tournament", tourneyapi)
@@ -100,130 +102,26 @@ func shopbot(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
-/*
-//func for shopbot
-func sendtxts() {
-	key := getemailkey()
-	auth := smtp.PlainAuth("", key[0], key[1], "smtp.gmail.com")
-	//log.Println("key", key)
-
-	tonums := getphonelist()
-	for _, addr := range tonums {
-		//concurrent async to allow the http page to serve while smtp sends in background, avoiding timeouts
-		go sendtext(key, auth, addr)
-		go sendtext2(key, auth, addr)
-	}
-}
-func sendtext(key []string, auth smtp.Auth, addr string) {
-	//sending without "To:" will make it bcc:
-	msg := []byte("To:" + addr + "\r\n" + "Subject:PS5 - Best Buy\r\n" + "\r\n" + "Go get it!")
-
-	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], []string{addr}, msg)
-	if err != nil {
-		log.Println(err)
-	}
-	log.Println("smtp executed: ", addr)
-}
-func sendtext2(key []string, auth smtp.Auth, addr string) {
-	//sending without "To:" will make it bcc:
-	msg := []byte("To:" + addr + "\r\n" + "Subject:Link\r\n" + "\r\n" + "https://www.bestbuy.com/cart?loc=PS5%20restock%20and%20other%20tech+gaming%20finds/deals&ref=198&cmp=RMX&acampID=0")
-
-	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], []string{addr}, msg)
-	if err != nil {
-		log.Println(err)
-	}
-	log.Println("smtp executed: ", addr)
-}
-
-//func for shopbot
-func getphonelist() []string {
-	f, err := os.Open("/var/lib/api/phonelist")
-	if err != nil {
-		log.Println("file open error:", err)
-	}
-	scanner := bufio.NewScanner(f)
-
-	var pl []string
-	for scanner.Scan() {
-		if err := scanner.Err(); err != nil {
-			fmt.Println("error: reading standard input:", err)
-		}
-
-		pl = append(pl, scanner.Text())
-	}
-	//log.Println("apikey:", string(r))
-	return pl
-}
-
-//func for shopbot
-func getemailkey() []string {
-	f, err := os.Open("/var/lib/api/emailkey")
-	if err != nil {
-		log.Println("file open error:", err)
-	}
-	scanner := bufio.NewScanner(f)
-
-	var key []string
-	for scanner.Scan() {
-		if err := scanner.Err(); err != nil {
-			fmt.Println("error: reading standard input:", err)
-		}
-
-		key = append(key, scanner.Text())
-	}
-	//log.Println("apikey:", string(r))
-	return key
-}
-*/
-/*
-//not working
-func testroll(w http.ResponseWriter, r *http.Request) {
-	for i := 0; i < 2; i++ {
-		reqbody, err := json.Marshal(map[string]string{
-			"name": "howdy",
-		})
-		if err != nil {
-			log.Fatal(err)
-		}
-		req, err := http.NewRequest("POST", "/reroll3", bytes.NewBuffer(reqbody))
-		if err != nil {
-			log.Fatal(err)
-		}
-		client := http.Client{}
-		resp, err := client.Do(req)
-		if err != nil {
-			log.Fatal(err)
-		}
-		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			log.Fatal(err)
-		}
-		log.Println(string(body))
-	}
-}
-*/
 func getstats(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
-	if validsess {
-		log.Println("stats started")
-		ip, ips, err := fromRequest(r)
-		_ = ips
-		if err != nil {
-			log.Println("Error - IP Parse: ", err)
-		}
-		log.Printf("request ip: %v \n\n", ip)
-
-		var st apexdb.Stats
-		st.Cursecount = apexdb.Selcursestats()
-		st.Playercount = apexdb.Selplayerstats()
-		st.Totalrolls = apexdb.Getnumrolls()
-		st.Thresh = random.Thresh
-		tmpl := template.Must(template.ParseFiles("stats.html"))
-		tmpl.Execute(w, st)
+	if !validsess {
+		return
+	}
+	log.Println("stats started")
+	_, _, err := fromRequest(r)
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
 	}
 
+	var st apexdb.Stats
+	st.Cursecount = apexdb.Selcursestats()
+	st.Playercount = apexdb.Selplayerstats()
+	st.Totalrolls = apexdb.Getnumrolls()
+	st.Thresh = random.Thresh
+	tmpl := template.Must(template.ParseFiles("stats.html"))
+	tmpl.Execute(w, st)
 }
+
 func rollauto(w http.ResponseWriter, r *http.Request) {
 	log.Println("autorolling")
 
@@ -367,108 +265,6 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 
 }
 
-/*
-func tourney(w http.ResponseWriter, r *http.Request) {
-	validsess := chkvalidsession(w, r)
-	if validsess {
-		log.Println("tourney started")
-		tmpl := template.Must(template.ParseFiles("tourney.html"))
-		ip, ips, err := fromRequest(r)
-		_ = ips
-		if err != nil {
-			log.Println("Error - IP Parse: ", err)
-		}
-		log.Printf("request ip: %v \n\n", ip)
-
-		var Tourney apexdb.Tourney
-		Tourney.T = apexdb.Seltourngames()
-		Tourney.Activeusers = apexdb.Getactiveusers()
-
-		if r.Method != http.MethodPost {
-			//Tourney.G = Tourney.T[0].Games
-			//Tourney.P = Tourney.T[0].Player
-
-			focus := r.URL.Query().Get("focus")
-			//r.URL.Query().Del("focus")
-
-			log.Printf("after redir web param: %s \n\n", focus)
-			Tourney.P = focus
-			for _, elem := range Tourney.T {
-				if elem.Player == focus {
-					//log.Println(elem.Games)
-					Tourney.G = elem.Games
-				}
-			}
-			tmpl.Execute(w, Tourney)
-			return
-		}
-		showdata := r.FormValue("showdata")
-		player := r.FormValue("player")
-		dmg := r.FormValue("dmg")
-		place := r.FormValue("place")
-		log.Println("form action received tourney:", showdata, player)
-		log.Println("dmg,place:", dmg, place)
-
-		var focusname string
-		focusname = showdata
-		Tourney.P = focusname
-
-		if len(player) > 0 {
-
-			log.Println("userform player >0")
-			focusname = player
-			err := apexdb.Loggame(player, dmg, place)
-			if err != nil {
-				Tourney.Errcode = err.Error()
-			} else {
-				Tourney.Errcode = ""
-				Tourney.T = apexdb.Seltourngames()
-				//http.Redirect(w, r, "/redir", http.StatusFound) //redirect instead of executing template directly
-
-			}
-			focus := r.URL.Query().Get("focus")
-			http.Redirect(w, r, "/redirtourn?focus="+focus, http.StatusFound) //redirect instead of executing template directly
-			return
-		} else if len(showdata) > 0 {
-			log.Println("showdata in else if:", showdata)
-*/
-/*
-	log.Println("r.URL.Path", r.URL.Path)
-	u, err := url.Parse(r.URL.Path)
-	if err != nil {
-		log.Println("URL Parse failed: ", err)
-	}
-	q := u.Query()
-	q.Del("focus")
-	u.RawQuery = q.Encode()
-*/
-/*
-		http.Redirect(w, r, "/redirtourn?focus="+showdata, http.StatusFound) //redirect instead of executing template directly
-		return
-	}
-	//log.Println("after redir showdata:", showdata, "focusname:", focusname)
-*/
-/*
-	not executed if methodpost chk exists above
-	focus := r.URL.Query().Get("focus")
-	r.URL.Query().Del("focus")
-
-	log.Println("after redir web param:", focus)
-
-	for _, elem := range Tourney.T {
-		if elem.Player == focus {
-			log.Println(elem.Games)
-			Tourney.G = elem.Games
-		}
-	}
-	log.Println("before execute")
-	tmpl.Execute(w, Tourney)
-*/
-/*
-	}
-	return
-}
-*/
 func teams(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
@@ -624,62 +420,6 @@ func apires(w http.ResponseWriter, r *http.Request) {
 		tmpl.Execute(w, Apimain)
 	}
 }
-func reg(w http.ResponseWriter, r *http.Request) {
-	log.Println("reg started")
-	tmpl := template.Must(template.ParseFiles("reg.html"))
-
-	_, ips, err := fromRequest(r)
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
-	if r.Method != http.MethodPost {
-		tmpl.Execute(w, nil)
-		return
-	}
-	//to log a game for that player
-	email := r.FormValue("email")
-	platform := r.FormValue("platform")
-	playerid := r.FormValue("playerid")
-	romanname := r.FormValue("romanname")
-	username := r.FormValue("username")
-	pass := r.FormValue("pass")
-
-	switch platform {
-	case "PSN":
-		platform = "PS4"
-	case "Xbox":
-		platform = "X1"
-	}
-
-	log.Println("form action received reg:", email, platform, playerid, romanname, username, pass)
-
-	err = apexdb.Createuser(email, platform, playerid, romanname, username, pass)
-	if err != nil {
-		//Tourney.Errcode = err.Error()
-		log.Println("reg error: ", err)
-	}
-	renewcookie(w, r, username, ips)
-	http.Redirect(w, r, "/apex", http.StatusFound)
-}
-
-//log.Println("after redir showdata:", showdata, "focusname:", focusname)
-
-/*
-	not executed if methodpost chk exists above
-	focus := r.URL.Query().Get("focus")
-	r.URL.Query().Del("focus")
-
-	log.Println("after redir web param:", focus)
-
-	for _, elem := range Tourney.T {
-		if elem.Player == focus {
-			log.Println(elem.Games)
-			Tourney.G = elem.Games
-		}
-	}
-	log.Println("before execute")
-	tmpl.Execute(w, Tourney)
-*/
 
 func handler1(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
@@ -738,3 +478,202 @@ func fromRequest(req *http.Request) (net.IP, string, error) {
 	//log.Println(userIP, userIPs)
 	return userIP, ip, nil
 }
+
+/*
+func tourney(w http.ResponseWriter, r *http.Request) {
+	validsess := chkvalidsession(w, r)
+	if validsess {
+		log.Println("tourney started")
+		tmpl := template.Must(template.ParseFiles("tourney.html"))
+		ip, ips, err := fromRequest(r)
+		_ = ips
+		if err != nil {
+			log.Println("Error - IP Parse: ", err)
+		}
+		log.Printf("request ip: %v \n\n", ip)
+
+		var Tourney apexdb.Tourney
+		Tourney.T = apexdb.Seltourngames()
+		Tourney.Activeusers = apexdb.Getactiveusers()
+
+		if r.Method != http.MethodPost {
+			//Tourney.G = Tourney.T[0].Games
+			//Tourney.P = Tourney.T[0].Player
+
+			focus := r.URL.Query().Get("focus")
+			//r.URL.Query().Del("focus")
+
+			log.Printf("after redir web param: %s \n\n", focus)
+			Tourney.P = focus
+			for _, elem := range Tourney.T {
+				if elem.Player == focus {
+					//log.Println(elem.Games)
+					Tourney.G = elem.Games
+				}
+			}
+			tmpl.Execute(w, Tourney)
+			return
+		}
+		showdata := r.FormValue("showdata")
+		player := r.FormValue("player")
+		dmg := r.FormValue("dmg")
+		place := r.FormValue("place")
+		log.Println("form action received tourney:", showdata, player)
+		log.Println("dmg,place:", dmg, place)
+
+		var focusname string
+		focusname = showdata
+		Tourney.P = focusname
+
+		if len(player) > 0 {
+
+			log.Println("userform player >0")
+			focusname = player
+			err := apexdb.Loggame(player, dmg, place)
+			if err != nil {
+				Tourney.Errcode = err.Error()
+			} else {
+				Tourney.Errcode = ""
+				Tourney.T = apexdb.Seltourngames()
+				//http.Redirect(w, r, "/redir", http.StatusFound) //redirect instead of executing template directly
+
+			}
+			focus := r.URL.Query().Get("focus")
+			http.Redirect(w, r, "/redirtourn?focus="+focus, http.StatusFound) //redirect instead of executing template directly
+			return
+		} else if len(showdata) > 0 {
+			log.Println("showdata in else if:", showdata)
+*/
+/*
+	log.Println("r.URL.Path", r.URL.Path)
+	u, err := url.Parse(r.URL.Path)
+	if err != nil {
+		log.Println("URL Parse failed: ", err)
+	}
+	q := u.Query()
+	q.Del("focus")
+	u.RawQuery = q.Encode()
+*/
+/*
+		http.Redirect(w, r, "/redirtourn?focus="+showdata, http.StatusFound) //redirect instead of executing template directly
+		return
+	}
+	//log.Println("after redir showdata:", showdata, "focusname:", focusname)
+*/
+/*
+	not executed if methodpost chk exists above
+	focus := r.URL.Query().Get("focus")
+	r.URL.Query().Del("focus")
+
+	log.Println("after redir web param:", focus)
+
+	for _, elem := range Tourney.T {
+		if elem.Player == focus {
+			log.Println(elem.Games)
+			Tourney.G = elem.Games
+		}
+	}
+	log.Println("before execute")
+	tmpl.Execute(w, Tourney)
+*/
+/*
+	}
+	return
+}
+*/
+
+//log.Println("after redir showdata:", showdata, "focusname:", focusname)
+
+/*
+	not executed if methodpost chk exists above
+	focus := r.URL.Query().Get("focus")
+	r.URL.Query().Del("focus")
+
+	log.Println("after redir web param:", focus)
+
+	for _, elem := range Tourney.T {
+		if elem.Player == focus {
+			log.Println(elem.Games)
+			Tourney.G = elem.Games
+		}
+	}
+	log.Println("before execute")
+	tmpl.Execute(w, Tourney)
+*/
+
+/*
+//func for shopbot
+func sendtxts() {
+	key := getemailkey()
+	auth := smtp.PlainAuth("", key[0], key[1], "smtp.gmail.com")
+	//log.Println("key", key)
+
+	tonums := getphonelist()
+	for _, addr := range tonums {
+		//concurrent async to allow the http page to serve while smtp sends in background, avoiding timeouts
+		go sendtext(key, auth, addr)
+		go sendtext2(key, auth, addr)
+	}
+}
+
+func sendtext2(key []string, auth smtp.Auth, addr string) {
+	//sending without "To:" will make it bcc:
+	msg := []byte("To:" + addr + "\r\n" + "Subject:Link\r\n" + "\r\n" + "https://www.bestbuy.com/cart?loc=PS5%20restock%20and%20other%20tech+gaming%20finds/deals&ref=198&cmp=RMX&acampID=0")
+
+	err := smtp.SendMail("smtp.gmail.com:587", auth, key[0], []string{addr}, msg)
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println("smtp executed: ", addr)
+}
+
+//func for shopbot
+func getphonelist() []string {
+	f, err := os.Open("/var/lib/api/phonelist")
+	if err != nil {
+		log.Println("file open error:", err)
+	}
+	scanner := bufio.NewScanner(f)
+
+	var pl []string
+	for scanner.Scan() {
+		if err := scanner.Err(); err != nil {
+			fmt.Println("error: reading standard input:", err)
+		}
+
+		pl = append(pl, scanner.Text())
+	}
+	//log.Println("apikey:", string(r))
+	return pl
+}
+
+
+*/
+/*
+//not working
+func testroll(w http.ResponseWriter, r *http.Request) {
+	for i := 0; i < 2; i++ {
+		reqbody, err := json.Marshal(map[string]string{
+			"name": "howdy",
+		})
+		if err != nil {
+			log.Fatal(err)
+		}
+		req, err := http.NewRequest("POST", "/reroll3", bytes.NewBuffer(reqbody))
+		if err != nil {
+			log.Fatal(err)
+		}
+		client := http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println(string(body))
+	}
+}
+*/
