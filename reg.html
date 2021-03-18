@@ -40,42 +40,53 @@
 
 <h1>Register</h1>
 <p>All fields are required</p>
-<table>
-<tbody>
-<tr><form method="POST">
-<td class="col1">Email</td>
-<td class="col1"></form><input type="text" name="fieldemail" /></td>
-</tr>
-<tr>
-<td class="col1">Platform</td>
-<td class="col1"></form><select name="platform" id="platform">
-<option value="PSN">PSN</option>
-<option value="Xbox">Xbox</option>
-<option value="PC">PC</option>
-</select></td>
-</tr>
-<tr>
-<td class="col1">PlayerID</td>
-<td class="col1"><input type="text" name="playerid" /></td>
-</tr>
-</tbody>
-</table>
-<p><br /> <br /> <br /><br /> For Apexlott.com:</p>
-<table>
-<tbody>
-<tr>
-<td class="col1">Username</td>
-<td class="col1"><input type="text" name="username" /></td>
-</tr>
-<tr>
-<td class="col1">Password</td>
-<td class="col1"><input type="text" name="pass" /></td>
-</tr>
-<tr>
-<td class="col1">Roman name</td>
-<td class="col1"><input type="text" name="romanname" /></td>
-</tr>
-</tbody>
-</table>
+<form method="POST" action="">
+    <table>
+    <tbody>
+
+    <tr>
+        <td class="col1">Email</td>
+        <td class="col1"></form><input type="hidden" name="fieldemail" /></td>
+    </tr>
+
+    <tr>
+        <td class="col1">Platform</td>
+        <td class="col1"></form><select name="platform" id="platform">
+            <option value="PSN">PSN</option>
+            <option value="Xbox">Xbox</option>
+            <option value="PC">PC</option>
+            </select></td>
+    </tr>
+
+    <tr>
+        <td class="col1">PlayerID</td>
+        <td class="col1"><input type="hidden" name="playerid" /></td>
+    </tr>
+
+    </tbody>
+    </table>
+
+    <p><br /> <br /> <br /><br /> For Apexlott.com:</p>
+    <table>
+    <tbody>
+
+    <tr>
+        <td class="col1">Username</td>
+        <td class="col1"><input type="hidden" name="username" /></td>
+    </tr>
+
+    <tr>
+        <td class="col1">Password</td>
+        <td class="col1"><input type="hidden" name="pass" /></td>
+    </tr>
+
+    <tr>
+        <td class="col1">Roman name</td>
+        <td class="col1"><input type="hidden" name="romanname" /></td>
+    </tr>
+
+    </tbody>
+    </table>
 </form>
-<p><br /> <br /> </form><input type="submit" /></p>
+
+<p><br /> <br /> <button type="submit">Submit</button></p>
