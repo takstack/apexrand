@@ -94,7 +94,8 @@ func reg(w http.ResponseWriter, r *http.Request) {
 	}
 	//renewcookie(w, r, username, ips)
 	sendemail(user.Email, "http://apexlott.com/confirm?conf="+user.Confstr)
-	http.Redirect(w, r, "/confirm", http.StatusFound)
+	log.Println("conf address: ", "http://apexlott.com/confirm?conf="+user.Confstr)
+	http.Redirect(w, r, "/waitconf", http.StatusFound)
 }
 func waitconf(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("waitconf.html"))
