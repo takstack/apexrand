@@ -63,6 +63,7 @@ func main() {
 	http.HandleFunc("/wipestats", wipestats)
 	http.HandleFunc("/rollauto", rollauto)
 	http.HandleFunc("/apex", handler1)
+	http.HandleFunc("/roulette", roulette)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/waitconf", waitconf)
 	http.HandleFunc("/confirm", confirm)
@@ -445,7 +446,27 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, Res)
 
 }
+func roulette(w http.ResponseWriter, r *http.Request) {
+	validsess := chkvalidsession(w, r)
+	if !validsess {
+		return
+	}
+	viewcounter++
+	ip, ips, err := fromRequest(r)
+	_ = ips
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	//log.Println(r.Header)
+	//log.Println("Read cookie:", r.Header.Get("Cookie"))
 
+	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
+	log.Printf("Request executed \n\n")
+
+	tmpl := template.Must(template.ParseFiles("roulette.html"))
+	tmpl.Execute(w, Res)
+
+}
 func helloServer(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprintf(w, "The server you were connecting to was disconnected or no longer in use.  Please try your request again or leave a message below")
 	http.Redirect(w, r, "/apex", http.StatusFound)
