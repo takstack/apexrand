@@ -136,6 +136,16 @@ func Getuserfrompsn(psnid string) string {
 	return res
 }
 
+//Getconfstatus returns the actual username for a players proper name
+func Getconfstatus(username string) bool {
+	var res bool
+	qry := fmt.Sprintf("select confirmed from user where username = '%s';", username)
+	err := db.QueryRow(qry).Scan(&res)
+	handleError(err)
+
+	return res
+}
+
 //Getplatfrompsn returns the actual username for a players proper name
 func Getplatfrompsn(psnid string) string {
 	var res string

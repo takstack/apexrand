@@ -32,7 +32,11 @@ func login(w http.ResponseWriter, r *http.Request) {
 		pass: r.FormValue("fieldpass"),
 	}
 	log.Printf("login:%+v", det)
-
+	confirmed := apexdb.Getconfstatus(det.user)
+	if !confirmed {
+		fmt.Fprintf(w, "not confirmed")
+		return
+	}
 	err := auth(det)
 
 	if err != nil {
