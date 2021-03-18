@@ -162,7 +162,7 @@ func decjsonmap(apikey string) (string, error) {
 	}
 	if resp.StatusCode != 200 {
 		//log.Println("statuscode: ", resp.StatusCode)
-		return "", fmt.Errorf("Non-200 http response. Statuscode: %d", resp.StatusCode)
+		return "", fmt.Errorf("non-200 http response. Statuscode: %d", resp.StatusCode)
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -184,6 +184,7 @@ func decjsonmap(apikey string) (string, error) {
 	//fmt.Println("j unmarshaled", j["Mozambiquehere_StatsAPI"].Area.Status)
 }
 
+//change this to pull all confirmed from db **************************************************************************************************************************************
 func getmatches(p string, uid string, platform string, f *os.File, apikey string) error {
 	now := time.Now()
 	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?version=5&uid=%s&platform=%s&auth=%s&history=1&action=get", uid, platform, apikey)

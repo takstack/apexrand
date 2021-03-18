@@ -44,7 +44,7 @@ func main() {
 	//apexdb.Opendb()
 	apexdb.Insvarfromfile()
 	apexdb.Inscursefromfile()
-	apexdb.Insuserfromfile()
+	apexdb.Insuserfromfile() //disabled to allow for email to be used for testing
 
 	//apexdb.Sethandicap() //set new handicaps based on closed tourney
 	//apexdb.Writetourngamescsv2()
