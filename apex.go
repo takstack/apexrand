@@ -637,7 +637,7 @@ func reg(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//to log a game for that player
-	email := r.FormValue("player")
+	email := r.FormValue("email")
 	platform := r.FormValue("platform")
 	playerid := r.FormValue("playerid")
 	romanname := r.FormValue("romanname")
