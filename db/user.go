@@ -65,9 +65,9 @@ func Insuserfromfile() {
 	}
 }
 func Createuser(email string, platform string, playerid string, romanname string, username string, pass string) error {
-	form, err := db.Prepare("INSERT INTO user (eaddr,platform,psnid,propername,username,pass) VALUES(?,?,?,?,?,?);")
+	form, err := db.Prepare("INSERT INTO user (eaddr,platform,psnid,propername,username,pass,handicap,tournpart) VALUES(?,?,?,?,?,?,?,?);")
 	handleError(err)
-	_, err = form.Exec(email, platform, playerid, romanname, username, pass)
+	_, err = form.Exec(email, platform, playerid, romanname, username, pass, 0, 0)
 	handleError(err)
 	return err
 }
