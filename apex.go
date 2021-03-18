@@ -440,7 +440,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
 	log.Printf("Request executed \n\n")
 
-	tmpl := template.Must(template.ParseFiles("forms.html"))
+	tmpl := template.Must(template.ParseFiles("roulette.html"))
 	tmpl.Execute(w, Res)
 
 }

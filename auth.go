@@ -58,7 +58,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 	}
 	apexdb.Assignteam(det.user, teamassignment)
 
-	http.Redirect(w, r, "/current", http.StatusFound)
+	http.Redirect(w, r, "/home", http.StatusFound)
 
 }
 func reg(w http.ResponseWriter, r *http.Request) {
