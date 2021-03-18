@@ -1,6 +1,7 @@
 package main
 
 import (
+	"apexrand/api"
 	apexdb "apexrand/db"
 	"bufio"
 	"crypto/rand"
@@ -120,6 +121,13 @@ func confirm(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		http.Redirect(w, r, "/waitconf", http.StatusFound)
+	}
+	player := apexdb.Getplayeridfromuser(apexdb.Getuserfromconf(conf))
+	platform := apexdb.Getplatfrompsn(player)
+
+	err = api.Addapiuser(player, platform)
+	if err != nil {
+		log.Println("add api user err: ", err)
 	}
 	tmpl.Execute(w, nil)
 }

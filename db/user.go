@@ -136,6 +136,16 @@ func Getuserfrompsn(psnid string) string {
 	return res
 }
 
+//Getplayeridfromuser returns the actual username for a players proper name
+func Getplayeridfromuser(user string) string {
+	var res string
+	qry := fmt.Sprintf("select psnid from user where username = '%s';", user)
+	err := db.QueryRow(qry).Scan(&res)
+	handleError(err)
+
+	return res
+}
+
 //Getconfstatus returns the actual username for a players proper name
 func Getconfstatus(username string) bool {
 	var res bool

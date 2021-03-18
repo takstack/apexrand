@@ -209,7 +209,7 @@ func getmatches(p string, uid string, platform string, f *os.File, apikey string
 
 	if resp.StatusCode != 200 {
 		log.Println("getmatches statuscode: ", resp.StatusCode)
-		return errors.New("Non-200 http response")
+		return errors.New("non-200 http response")
 	}
 	_ = now
 	//log.Printf("API access: %v, %s", time.Since(now), p)
@@ -355,6 +355,45 @@ func unmarjson(body []byte) (apexdb.Apimain, error) {
 	//log.Printf("%+v\n", a)
 	return a, nil
 }
+
+//Addapiuser exp
+func Addapiuser(player string, platform string) error {
+	now := time.Now()
+	apikey := getapikey()
+	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?player=%s&platform=%s&auth=%s&history=1&action=add", player, platform, apikey)
+	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
+	req, err := http.NewRequest("GET", s, nil)
+	//_ = s
+	if err != nil {
+		return err
+	}
+
+	client := &http.Client{
+		Timeout: 5 * time.Second,
+	}
+	resp, err := client.Do(req)
+
+	if os.IsTimeout(err) {
+		return errors.New("client.Timeout exceeded while awaiting headers")
+	}
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != 200 {
+		log.Println("getmatches statuscode: ", resp.StatusCode)
+		return errors.New("non-200 http response")
+	}
+	_ = now
+	//log.Printf("API access: %v, %s", time.Since(now), p)
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return err
+	}
+	log.Println("add api player resp: ", string(body))
+	return err
+}
 func getuid(p string, platform string, apikey string) (string, error) {
 	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?version=5&platform=%s4&player=%s&auth=%s", platform, p, apikey)
 	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
@@ -373,7 +412,7 @@ func getuid(p string, platform string, apikey string) (string, error) {
 	}
 	if resp.StatusCode != 200 {
 		//log.Println("statuscode: ", resp.StatusCode)
-		return "", fmt.Errorf("Non-200 http response. Statuscode: %d", resp.StatusCode)
+		return "", fmt.Errorf("non-200 http response. Statuscode: %d", resp.StatusCode)
 	}
 
 	body, err := ioutil.ReadAll(resp.Body)
@@ -407,6 +446,8 @@ func notindb(stamplist []int, ts int) bool {
 	}
 	return true
 }
+
+/*
 func checkchar(c string) bool {
 
 	for _, elem := range apexdb.Char {
@@ -437,7 +478,7 @@ func readjson() {
 
 	unmarjson(body)
 }
-
+*/
 //Reqtopapimatches exp
 func Reqtopapimatches(username string) apexdb.Apimain {
 	now := time.Now()

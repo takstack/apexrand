@@ -160,108 +160,110 @@ func wipetourn(w http.ResponseWriter, r *http.Request) {
 }
 func tourneyapi(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
-	if validsess {
-		log.Println("tourney started")
-		tmpl := template.Must(template.ParseFiles("tourneyapi.html"))
-		ip, ips, err := fromRequest(r)
-		_ = ips
-		if err != nil {
-			log.Println("Error - IP Parse: ", err)
-		}
-		log.Printf("request ip: %v \n\n", ip)
-
-		var Tourney apexdb.Tourney
-		Tourney.T = apexdb.Seltourngames()
-		Tourney.Activeusers = apexdb.Getactiveusers()
-
-		if r.Method != http.MethodPost {
-			//Tourney.G = Tourney.T[0].Games
-			//Tourney.P = Tourney.T[0].Player
-
-			focus := r.URL.Query().Get("focus")
-			Tourney.Errcode = r.URL.Query().Get("err")
-			//r.URL.Query().Del("focus")
-
-			log.Printf("after redir web param: %s \n\n", focus)
-			Tourney.P = focus
-			for _, elem := range Tourney.T {
-				if elem.Player == focus {
-					//log.Println(elem.Games)
-					Tourney.G = elem.Games
-				}
-			}
-			Tourney.APIerr = api.APIerr
-			tmpl.Execute(w, Tourney)
-			Tourney.Errcode = ""
-			return
-		}
-		showdata := r.FormValue("showdata") //selected to show players games
-
-		var focusname string
-		focusname = showdata
-		Tourney.P = focusname
-
-		//to log a game for that player
-		player := r.FormValue("player")
-		field1 := r.FormValue("field1")
-		field2 := r.FormValue("field2")
-		field3 := r.FormValue("field3")
-
-		log.Println("form action received tourney:", showdata, player)
-		log.Println("field1, field2, field3:", field1, field2, field3)
-
-		if len(player) > 0 {
-
-			log.Println("userform player >0")
-			focusname = player
-			err := apexdb.Logmanualgame(player, field1, field2, field3)
-			if err != nil {
-				Tourney.Errcode = err.Error()
-				log.Println("logmanualgame error: ", Tourney.Errcode)
-
-			} else {
-				Tourney.Errcode = ""
-				Tourney.T = apexdb.Seltourngames()
-				//http.Redirect(w, r, "/redir", http.StatusFound) //redirect instead of executing template directly
-
-			}
-			focus := r.URL.Query().Get("focus")
-			http.Redirect(w, r, "/redirtourn?focus="+focus+"&err="+Tourney.Errcode, http.StatusFound) //redirect instead of executing template directly
-			return
-		} else if len(showdata) > 0 {
-			log.Println("showdata in else if:", showdata)
-			/*
-				log.Println("r.URL.Path", r.URL.Path)
-				u, err := url.Parse(r.URL.Path)
-				if err != nil {
-					log.Println("URL Parse failed: ", err)
-				}
-				q := u.Query()
-				q.Del("focus")
-				u.RawQuery = q.Encode()
-			*/
-			http.Redirect(w, r, "/redirtourn?focus="+showdata+"&err="+Tourney.Errcode, http.StatusFound) //redirect instead of executing template directly
-			return
-		}
-		//log.Println("after redir showdata:", showdata, "focusname:", focusname)
-
-		/*
-			not executed if methodpost chk exists above
-			focus := r.URL.Query().Get("focus")
-			r.URL.Query().Del("focus")
-
-			log.Println("after redir web param:", focus)
-
-			for _, elem := range Tourney.T {
-				if elem.Player == focus {
-					log.Println(elem.Games)
-					Tourney.G = elem.Games
-				}
-			}
-			log.Println("before execute")
-			tmpl.Execute(w, Tourney)
-		*/
+	if !validsess {
+		return
 	}
+
+	log.Println("tourney started")
+	tmpl := template.Must(template.ParseFiles("tourneyapi.html"))
+	ip, ips, err := fromRequest(r)
+	_ = ips
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	log.Printf("request ip: %v \n\n", ip)
+
+	var Tourney apexdb.Tourney
+	Tourney.T = apexdb.Seltourngames()
+	Tourney.Activeusers = apexdb.Getactiveusers()
+
+	if r.Method != http.MethodPost {
+		//Tourney.G = Tourney.T[0].Games
+		//Tourney.P = Tourney.T[0].Player
+
+		focus := r.URL.Query().Get("focus")
+		Tourney.Errcode = r.URL.Query().Get("err")
+		//r.URL.Query().Del("focus")
+
+		log.Printf("after redir web param: %s \n\n", focus)
+		Tourney.P = focus
+		for _, elem := range Tourney.T {
+			if elem.Player == focus {
+				//log.Println(elem.Games)
+				Tourney.G = elem.Games
+			}
+		}
+		Tourney.APIerr = api.APIerr
+		tmpl.Execute(w, Tourney)
+		Tourney.Errcode = ""
+		return
+	}
+	showdata := r.FormValue("showdata") //selected to show players games
+
+	var focusname string
+	focusname = showdata
+	Tourney.P = focusname
+
+	//to log a game for that player
+	player := r.FormValue("player")
+	field1 := r.FormValue("field1")
+	field2 := r.FormValue("field2")
+	field3 := r.FormValue("field3")
+
+	log.Println("form action received tourney:", showdata, player)
+	log.Println("field1, field2, field3:", field1, field2, field3)
+
+	if len(player) > 0 {
+
+		log.Println("userform player >0")
+		focusname = player
+		err := apexdb.Logmanualgame(player, field1, field2, field3)
+		if err != nil {
+			Tourney.Errcode = err.Error()
+			log.Println("logmanualgame error: ", Tourney.Errcode)
+
+		} else {
+			Tourney.Errcode = ""
+			Tourney.T = apexdb.Seltourngames()
+			//http.Redirect(w, r, "/redir", http.StatusFound) //redirect instead of executing template directly
+
+		}
+		focus := r.URL.Query().Get("focus")
+		http.Redirect(w, r, "/redirtourn?focus="+focus+"&err="+Tourney.Errcode, http.StatusFound) //redirect instead of executing template directly
+		return
+	} else if len(showdata) > 0 {
+		log.Println("showdata in else if:", showdata)
+		/*
+			log.Println("r.URL.Path", r.URL.Path)
+			u, err := url.Parse(r.URL.Path)
+			if err != nil {
+				log.Println("URL Parse failed: ", err)
+			}
+			q := u.Query()
+			q.Del("focus")
+			u.RawQuery = q.Encode()
+		*/
+		http.Redirect(w, r, "/redirtourn?focus="+showdata+"&err="+Tourney.Errcode, http.StatusFound) //redirect instead of executing template directly
+		return
+	}
+	//log.Println("after redir showdata:", showdata, "focusname:", focusname)
+
+	/*
+		not executed if methodpost chk exists above
+		focus := r.URL.Query().Get("focus")
+		r.URL.Query().Del("focus")
+
+		log.Println("after redir web param:", focus)
+
+		for _, elem := range Tourney.T {
+			if elem.Player == focus {
+				log.Println(elem.Games)
+				Tourney.G = elem.Games
+			}
+		}
+		log.Println("before execute")
+		tmpl.Execute(w, Tourney)
+	*/
 
 }
 
@@ -393,51 +395,53 @@ func redirtourn(w http.ResponseWriter, r *http.Request) {
 }
 func apires(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
-	if validsess {
-
-		ip, ips, err := fromRequest(r)
-		_ = ips
-		if err != nil {
-			log.Println("Error - IP Parse: ", err)
-		}
-		cookie, err := r.Cookie("apextoken")
-		if err != nil {
-			log.Println("error retrieving cookie")
-			http.Redirect(w, r, "/login", http.StatusFound)
-
-		}
-		sessid := cookie.Value
-		username := apexdb.Getuserfromsess(sessid)
-		//log.Println(r.Header)
-		//log.Println("Read cookie:", r.Header.Get("Cookie"))
-
-		Apimain := api.Reqtopapimatches(username)
-		log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
-		log.Printf("Request executed \n\n")
-		//log.Println("runtime heap allocation: ", runtime.ReadMemStats())
-
-		tmpl := template.Must(template.ParseFiles("apires.html"))
-		tmpl.Execute(w, Apimain)
+	if !validsess {
+		return
 	}
+	ip, ips, err := fromRequest(r)
+	_ = ips
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	cookie, err := r.Cookie("apextoken")
+	if err != nil {
+		log.Println("error retrieving cookie")
+		http.Redirect(w, r, "/login", http.StatusFound)
+
+	}
+	sessid := cookie.Value
+	username := apexdb.Getuserfromsess(sessid)
+	//log.Println(r.Header)
+	//log.Println("Read cookie:", r.Header.Get("Cookie"))
+
+	Apimain := api.Reqtopapimatches(username)
+	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
+	log.Printf("Request executed \n\n")
+	//log.Println("runtime heap allocation: ", runtime.ReadMemStats())
+
+	tmpl := template.Must(template.ParseFiles("apires.html"))
+	tmpl.Execute(w, Apimain)
+
 }
 
 func handler1(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
-	if validsess {
-		viewcounter++
-		ip, ips, err := fromRequest(r)
-		_ = ips
-		if err != nil {
-			log.Println("Error - IP Parse: ", err)
-		}
-		//log.Println(r.Header)
-		//log.Println("Read cookie:", r.Header.Get("Cookie"))
-		log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
-		log.Printf("Request executed \n\n")
-
-		tmpl := template.Must(template.ParseFiles("forms.html"))
-		tmpl.Execute(w, Res)
+	if !validsess {
+		return
 	}
+	viewcounter++
+	ip, ips, err := fromRequest(r)
+	_ = ips
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	//log.Println(r.Header)
+	//log.Println("Read cookie:", r.Header.Get("Cookie"))
+	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
+	log.Printf("Request executed \n\n")
+
+	tmpl := template.Must(template.ParseFiles("forms.html"))
+	tmpl.Execute(w, Res)
 
 }
 
