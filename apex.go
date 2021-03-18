@@ -437,10 +437,11 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	}
 	//log.Println(r.Header)
 	//log.Println("Read cookie:", r.Header.Get("Cookie"))
+
 	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
 	log.Printf("Request executed \n\n")
 
-	tmpl := template.Must(template.ParseFiles("roulette.html"))
+	tmpl := template.Must(template.ParseFiles("home.html"))
 	tmpl.Execute(w, Res)
 
 }
