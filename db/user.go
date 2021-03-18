@@ -70,7 +70,7 @@ func Insuserfromfile() {
 	}
 }
 func Createuser(user Creds) error {
-	form, err := db.Prepare("INSERT INTO user (eaddr,platform,psnid,propername,username,pass,handicap,tournpart,confstr,confirmed) VALUES(?,?,?,?,?,?,?,?);")
+	form, err := db.Prepare("INSERT INTO user (eaddr,platform,psnid,propername,username,pass,handicap,tournpart,confstr,confirmed) VALUES(?,?,?,?,?,?,?,?,?,?);")
 	handleError(err)
 	_, err = form.Exec(user.Email, user.Platform, user.Playerid, user.Romanname, user.Username, user.Pass, 0, 0, user.Confstr, 0)
 	handleError(err)
