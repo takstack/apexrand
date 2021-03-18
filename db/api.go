@@ -123,6 +123,24 @@ func Logtracker(g Apigames, tracker Apitracker) error {
 	return nil
 }
 
+//Getplayerlist exp
+func Getplayerlist() ([]string, error) {
+	qry := "select psnid from user where pullapi ='1'"
+	res, err := db.Query(qry)
+	handleError(err)
+	var sl []string
+	for res.Next() {
+		var s string
+		// for each row, scan the result into our tag composite object
+		err := res.Scan(&s)
+		handleError(err)
+
+		sl = append(sl, s)
+	}
+	res.Close()
+	return sl, err
+}
+
 //Upduid exp
 func Upduid(UID string, Player string) error {
 	log.Println("UID, Player", UID, Player)

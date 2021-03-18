@@ -67,8 +67,12 @@ func Apipull() {
 			log.Println("API Servers are: ", status, ", operations continued")
 		}
 		now := time.Now()
-		sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone",
-			"lildongmanisme", "kringo506", "hochilinh"} //, excluding until games played "linh4tw"
+		sl, err := apexdb.Getplayerlist()
+		if err != nil {
+			log.Println(err)
+		}
+		//sl := []string{"full_send_deez", "jeffteeezy", "turbles", "theohmazingone",
+		//	"lildongmanisme", "kringo506", "hochilinh"} //, excluding until games played "linh4tw"
 
 		//sl := []string{"lildongmanisme"}
 		for _, p := range sl {
