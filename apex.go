@@ -633,7 +633,6 @@ func reg(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error - IP Parse: ", err)
 	}
 	if r.Method != http.MethodPost {
-
 		tmpl.Execute(w, nil)
 		return
 	}
