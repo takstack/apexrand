@@ -169,7 +169,7 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("tourney started")
-	tmpl := template.Must(template.ParseFiles("tourneyapi.html"))
+	tmpl := template.Must(template.ParseFiles("static/html/tourneyapi.html"))
 	ip, ips, err := fromRequest(r)
 	_ = ips
 	if err != nil {
