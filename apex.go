@@ -75,7 +75,8 @@ func main() {
 	http.HandleFunc("/apires", apires)
 	http.HandleFunc("/", helloServer)
 
-	http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
+	//http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 	srv.SetKeepAlivesEnabled(false)
 	log.Fatalln(srv.ListenAndServe())
 
@@ -442,7 +443,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
 	log.Printf("Request executed \n\n")
 
-	tmpl := template.Must(template.ParseFiles("home.html"))
+	tmpl := template.Must(template.ParseFiles("/static/home.html"))
 	tmpl.Execute(w, Res)
 
 }

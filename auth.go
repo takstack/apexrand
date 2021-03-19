@@ -23,7 +23,7 @@ type formlogin struct {
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("login.html"))
+	tmpl := template.Must(template.ParseFiles("/static/login.html"))
 	if r.Method != http.MethodPost {
 		tmpl.Execute(w, nil)
 		return
