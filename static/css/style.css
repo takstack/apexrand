@@ -32,6 +32,7 @@ table.style1{
     border-spacing: 0px;
     border-collapse: collapse; 
     width: 320px;
+    padding-left: 5px;
 }
 .tcol1{
     border:1px solid black;
