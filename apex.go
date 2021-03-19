@@ -443,7 +443,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
 	log.Printf("Request executed \n\n")
 
-	tmpl := template.Must(template.ParseFiles("/static/html/home.html"))
+	tmpl := template.Must(template.ParseFiles("html/home.html"))
 	tmpl.Execute(w, Res)
 
 }
@@ -464,7 +464,7 @@ func roulette(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
 	log.Printf("Request executed \n\n")
 
-	tmpl := template.Must(template.ParseFiles("/static/html/roulette.html"))
+	tmpl := template.Must(template.ParseFiles("/html/roulette.html"))
 	tmpl.Execute(w, Res)
 
 }
