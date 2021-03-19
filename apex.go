@@ -77,7 +77,7 @@ func main() {
 	http.HandleFunc("/", helloServer)
 
 	//http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
-	//http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
 	srv.SetKeepAlivesEnabled(false)
 	log.Fatalln(srv.ListenAndServe())
