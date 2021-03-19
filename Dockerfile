@@ -8,7 +8,8 @@ ADD ./random /go/src/apexrand/random
 ADD ./api /go/src/apexrand/api
 ADD ./qrw /go/src/apexrand/qrw
 ADD ./file /go/src/apexrand/file
-ADD ./images /go/src/apexrand/images
+#ADD ./images /go/src/apexrand/images
+ADD ./static /go/src/apexrand/static
 
 WORKDIR /app
 #RUN go get /C/Users/Randy/Dropbox/Prog/GoProj/src/qrw
