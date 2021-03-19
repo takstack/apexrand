@@ -63,27 +63,27 @@ API status:  {{.APIerr}}
 <br>
 <br>
 Standings
-<table>
+<table class="style1">
 <tr>
-    <th class="col1">
+    <th class="tcol1">
         Player
     </th>
-    <th class="col1">
+    <th class="tcol1">
         Num
     </th>
-    <th class="col1">
+    <th class="tcol1">
         Handicap
     </th>
-    <th class="col1">
+    <th class="tcol1">
         Avg Points
     </th>
-    <th class="col1">
+    <th class="tcol1">
         Total Points
     </th>
-    <th class="col1">
+    <th class="tcol1">
         Adj Avg
     </th>
-    <th class="col1">
+    <th class="tcol1">
         Adj Total
     </th>
     
@@ -91,31 +91,31 @@ Standings
 {{range .T}}
 <tr>
     
-    <td class="col1">
+    <td class="tcol1">
         <form method="POST"><button type="submit" name="showdata" value="{{.Player}}">{{.Player}}</button></form>
     </td>
-    <td class="col1">
+    <td class="tcol1">
         {{.Numgames}}
     </td>
-    <td class="col1">
+    <td class="tcol1">
         {{.Handicap}}
     </td>
-    <td class="col1">
+    <td class="tcol1">
         {{.Avgdmg}}
     </td>
-    <td class="col1">
+    <td class="tcol1">
         {{.Sumdmg}}
     </td>
-    <td class="col1">
+    <td class="tcol1">
         {{.Adjavg}}
     </td>
-    <td class="col1">
+    <td class="tcol1">
         {{.Adjsum}}
     </td>
 </tr>
 {{end}}
 
-</table>
+</table1>
 
 <br>
 <br>
@@ -123,31 +123,31 @@ Standings
 Games
 <table>
 <tr>
-    <th class="col3">
+    <th class="tcol3">
         Player
     </th>
-    <th class="col3">
+    <th class="tcol3">
         Points
     </th>
-    <th class="col3">
+    <th class="tcol3">
         Adj Points
     </th>
-    <th class="col2">
+    <th class="tcol2">
         Gametime
     </th>
 </tr>
 {{range .G}}
 <tr>
-    <td class="col3">
+    <td class="tcol3">
         {{$.P}}
     </td>
-    <td class="col3">
+    <td class="tcol3">
         {{.Totdmg}}
     </td>
-    <td class="col3">
+    <td class="tcol3">
         {{.Adjdmg}}
     </td>
-    <td class="col2">
+    <td class="tcol2">
         ID: {{.ID}},<br>
         {{.Gametime.Format "01-02 T15:04"}}
     </td>
@@ -160,37 +160,37 @@ Games
 
 Reporting
 
-<table>
+<table class="style1">
 <tr>
-    <th class="col1">
+    <th class="tcol1">
         Player
     </th>
-    <th class="col1">
+    <th class="tcol1">
         Headshots
     </th>
-    <th class="col1">
+    <th class="tcol1">
         Damage
     </th>
-    <th class="col1">
+    <th class="tcol1">
         Top_3 (0 or 1)
     </th>
 
 </tr>
 {{range .Activeusers}}
 <tr>
-    <td class="col1">
+    <td class="tcol1">
         {{.Username}}
     </td>
-    <td class="col1">
+    <td class="tcol1">
         <form method="POST"><input type="text" name="field1" size="5"> 
     </td>
-    <td class="col1">
+    <td class="tcol1">
         <input type="text" name="field2" size="5"> 
     </td>
-    <td class="col1">
+    <td class="tcol1">
         <input type="text" name="field3" size="5"> 
     </td>
-    <td class="col1">
+    <td class="tcol1">
         <button type="submit" name="player" value="{{.Username}}">Enter</button></form>
         
     </td>
