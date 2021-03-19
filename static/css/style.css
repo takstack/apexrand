@@ -84,7 +84,7 @@ color: white;
 /* sub-navigation bar */
 .subtopnav {
 overflow: hidden;
-background-color: rgb(167, 172, 165);
+background-color: rgb(187, 206, 180);
 }
 
 .subtopnav a {
@@ -102,6 +102,6 @@ color: black;
 }
 
 .subtopnav a.active {
-background-color: #5d615d;
+background-color: #4caf50;
 color: rgb(0, 0, 0);
 }
