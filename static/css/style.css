@@ -84,14 +84,14 @@ color: white;
 /* sub-navigation bar */
 .subtopnav {
 overflow: hidden;
-background-color: rgb(206, 154, 154);
+background-color: rgb(167, 172, 165);
 }
 
 .subtopnav a {
 float: left;
-color: #f2f2f2;
+color: #000000;
 text-align: center;
-padding: 5px 16px;
+padding: 5px 20px;
 text-decoration: none;
 font-size: 12px;
 }
@@ -102,6 +102,6 @@ color: black;
 }
 
 .subtopnav a.active {
-background-color: #233d24;
-color: white;
+background-color: #5d615d;
+color: rgb(0, 0, 0);
 }
