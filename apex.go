@@ -340,7 +340,7 @@ func reroll1(w http.ResponseWriter, r *http.Request) {
 		_ = Res
 		//log.Println("reroll res:", Res)
 		//log.Println("reroll1 res:", Res)
-		http.Redirect(w, r, "/current", http.StatusFound)
+		http.Redirect(w, r, "/roulette", http.StatusFound)
 	}
 
 }
@@ -351,7 +351,7 @@ func reroll2(w http.ResponseWriter, r *http.Request) {
 		Res = random.Rollnewload(Res, 2)
 		_ = Res
 		//log.Println("reroll res:", Res)
-		http.Redirect(w, r, "/current", http.StatusFound)
+		http.Redirect(w, r, "/roulette", http.StatusFound)
 	}
 
 }
@@ -362,7 +362,7 @@ func reroll3(w http.ResponseWriter, r *http.Request) {
 		Res = random.Rollnewload(Res, 3)
 		_ = Res
 		//log.Printf("reroll res:%+v", Res.Tchals)
-		http.Redirect(w, r, "/current", http.StatusFound)
+		http.Redirect(w, r, "/roulette", http.StatusFound)
 	}
 
 }

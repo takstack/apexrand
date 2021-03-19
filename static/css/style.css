@@ -9,6 +9,7 @@ table{
 .rowborder{
     border-bottom:1px solid black;
 }
+
 .col1{
     border-right:1px solid black;
     background-color: rgba(191,201,202,.9);
