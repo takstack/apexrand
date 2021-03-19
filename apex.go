@@ -10,7 +10,6 @@ import (
 	//"encoding/json"
 	"fmt"
 	"html/template"
-	"path/filepath"
 
 	//"io/ioutil"
 	"log"
@@ -87,7 +86,7 @@ func main() {
 //func for shopbot
 func shopbot(w http.ResponseWriter, r *http.Request) {
 	log.Println("shopbot started")
-	tmpl := template.Must(template.ParseFiles("shopbot.html"))
+	tmpl := template.Must(template.ParseFiles("static/html/shopbot.html"))
 	ip, ips, err := fromRequest(r)
 	_ = ips
 	if err != nil {
@@ -122,7 +121,7 @@ func getstats(w http.ResponseWriter, r *http.Request) {
 	st.Playercount = apexdb.Selplayerstats()
 	st.Totalrolls = apexdb.Getnumrolls()
 	st.Thresh = random.Thresh
-	tmpl := template.Must(template.ParseFiles("stats.html"))
+	tmpl := template.Must(template.ParseFiles("static/html/stats.html"))
 	tmpl.Execute(w, st)
 }
 
@@ -289,7 +288,7 @@ func teams(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		sessid := cookie.Value
-		tmpl := template.Must(template.ParseFiles("teams.html"))
+		tmpl := template.Must(template.ParseFiles("static/html/teams.html"))
 
 		var user apexdb.User
 		user.Teams = apexdb.Getbothteams()
@@ -328,7 +327,7 @@ func teams(w http.ResponseWriter, r *http.Request) {
 		user.Activeusers = apexdb.Getactiveusers()
 
 		//log.Println("teams:", user)
-		//tmpl := template.Must(template.ParseFiles("teams.html"))
+		//tmpl := template.Must(template.ParseFiles("static/html/teams.html"))
 		tmpl.Execute(w, user)
 	}
 
@@ -423,7 +422,7 @@ func apires(w http.ResponseWriter, r *http.Request) {
 	log.Printf("Request executed \n\n")
 	//log.Println("runtime heap allocation: ", runtime.ReadMemStats())
 
-	tmpl := template.Must(template.ParseFiles("apires.html"))
+	tmpl := template.Must(template.ParseFiles("static/html/apires.html"))
 	tmpl.Execute(w, Apimain)
 
 }
@@ -445,7 +444,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
 	log.Printf("Request executed \n\n")
 
-	tmpl := template.Must(template.ParseFiles(filepath.Join("/static", "html", "home.html")))
+	tmpl := template.Must(template.ParseFiles("static/html/home.html"))
 	tmpl.Execute(w, Res)
 
 }
@@ -466,7 +465,7 @@ func roulette(w http.ResponseWriter, r *http.Request) {
 	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
 	log.Printf("Request executed \n\n")
 
-	tmpl := template.Must(template.ParseFiles("/static/html/roulette.html"))
+	tmpl := template.Must(template.ParseFiles("static/html/roulette.html"))
 	tmpl.Execute(w, Res)
 
 }
@@ -513,7 +512,7 @@ func tourney(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
 		log.Println("tourney started")
-		tmpl := template.Must(template.ParseFiles("tourney.html"))
+		tmpl := template.Must(template.ParseFiles("static/html/tourney.html"))
 		ip, ips, err := fromRequest(r)
 		_ = ips
 		if err != nil {
