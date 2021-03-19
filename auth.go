@@ -23,7 +23,7 @@ type formlogin struct {
 }
 
 func login(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("/static/login.html"))
+	tmpl := template.Must(template.ParseFiles("static/html/login.html"))
 	if r.Method != http.MethodPost {
 		tmpl.Execute(w, nil)
 		return
@@ -63,7 +63,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 }
 func reg(w http.ResponseWriter, r *http.Request) {
 	log.Println("reg started")
-	tmpl := template.Must(template.ParseFiles("reg.html"))
+	tmpl := template.Must(template.ParseFiles("static/html/reg.html"))
 
 	_, _, err := fromRequest(r)
 	if err != nil {
@@ -103,13 +103,13 @@ func reg(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/waitconf", http.StatusFound)
 }
 func waitconf(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("waitconf.html"))
+	tmpl := template.Must(template.ParseFiles("static/html/waitconf.html"))
 	tmpl.Execute(w, nil)
 }
 
 func confirm(w http.ResponseWriter, r *http.Request) {
 	log.Println("tourney started")
-	tmpl := template.Must(template.ParseFiles("confirmed.html"))
+	tmpl := template.Must(template.ParseFiles("static/html/confirmed.html"))
 	//ip prints
 	_, _, err := fromRequest(r)
 	if err != nil {
