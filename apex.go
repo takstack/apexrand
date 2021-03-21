@@ -303,6 +303,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 			u: sl,
 		}
 		log.Println("after struct db call")
+		log.Println("data.u", data.u)
 		log.Println("trackers started")
 		tmpl := template.Must(template.ParseFiles("static/html/trackersapi.html"))
 
