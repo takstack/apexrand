@@ -296,15 +296,15 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Println("users sl", sl)
 		log.Println("before struct db call")
-		data := struct {
-			g []apexdb.Game
-			u []apexdb.Onlineuser
+		Data := struct {
+			G []apexdb.Game
+			U []apexdb.Onlineuser
 		}{
-			g: games,
-			u: users,
+			G: games,
+			U: users,
 		}
 		log.Println("after struct db call")
-		log.Println("data.u", data.u)
+		log.Println("data.u", Data.U)
 
 		tmpl := template.Must(template.ParseFiles("static/html/trackersapi.html"))
 
@@ -314,9 +314,9 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		//data.u = apexdb.Getactiveusers()
 		//r.URL.Query().Del("focus")
 
-		log.Printf("after redir web param: %s \n+%v\n", focus, data)
+		log.Printf("after redir web param: %s \n+%v\n", focus, Data)
 
-		tmpl.Execute(w, data)
+		tmpl.Execute(w, Data)
 		return //check============================================================================================================================
 	}
 	showdata := r.FormValue("showdata") //selected to show players games
