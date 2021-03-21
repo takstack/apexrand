@@ -191,7 +191,7 @@ func decjsonmap(apikey string) (string, error) {
 //change this to pull all confirmed from db **************************************************************************************************************************************
 func getmatches(p string, uid string, platform string, f *os.File, apikey string) error {
 	now := time.Now()
-	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?version=5&uid=%s&platform=%s&auth=%s&history=1&action=get", uid, platform, apikey)
+	s := fmt.Sprintf("https://api.mozambiquehe.re/bridge?version=5&uid=%s&platform=%s&limit=50&auth=%s&history=1&action=get", uid, platform, apikey)
 	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
 	req, err := http.NewRequest("GET", s, nil)
 	//_ = s
