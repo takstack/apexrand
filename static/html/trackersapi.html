@@ -25,20 +25,21 @@ Users
 <br><br>
 <table class="style1">
 <tr>
-    <th class="tcol1">
+    <th class="tcol2">
         Player
     </th>
 </tr>
 {{range .U}}
 <tr>
-    <td class="tcol1">
+    <td class="tcol2">
        <form method="POST"><button type="submit" name="showdata" value="{{.Username}}">{{.Username}}</button></form> 
     </td>
 </tr>
 {{end}}
-
 </table>
-
+<br>
+<br>
+<br>
 Trackers
 <table class="style1">
 <tr>
@@ -51,7 +52,7 @@ Trackers
     <th class="tcol3">
         Nameid
     </th>
-    <th class="tcol2">
+    <th class="tcol3">
         Val
     </th>
     <th class="tcol3">
@@ -73,7 +74,7 @@ Trackers
     <td class="tcol3">
         {{.Val}}
     </td>
-    <td class="tcol2">
+    <td class="tcol3">
         ID: {{.ID}},<br>
         {{.Gametime.Format "01-02 T15:04"}}
     </td>
