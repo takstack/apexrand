@@ -277,9 +277,9 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 	}
 	if r.Method != http.MethodPost {
 		focus := r.URL.Query().Get("focus")
-		log.Println("before active users db call")
 		users := apexdb.Getactiveusers()
-		log.Println("after active users db call")
+		games := apexdb.Seltourntrackers(focus)
+		log.Println("focus, games", focus, games)
 
 		var sl []string
 		for _, elem := range users {
@@ -291,7 +291,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 			g []apexdb.Game
 			u []string
 		}{
-			g: apexdb.Seltourntrackers(focus),
+			g: games,
 			u: sl,
 		}
 		log.Println("after struct db call")
