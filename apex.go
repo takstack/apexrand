@@ -275,6 +275,13 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 	if !validsess {
 		return
 	}
+	ip, ips, err := fromRequest(r)
+	_ = ips
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	log.Printf("request ip: %v \n\n", ip)
+
 	if r.Method != http.MethodPost {
 		focus := r.URL.Query().Get("focus")
 		users := apexdb.Getactiveusers()
@@ -286,7 +293,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		for _, elem := range users {
 			sl = append(sl, elem.Username)
 		}
-
+		log.Println("users sl", sl)
 		log.Println("before struct db call")
 		data := struct {
 			g []apexdb.Game
@@ -298,12 +305,6 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		log.Println("after struct db call")
 		log.Println("trackers started")
 		tmpl := template.Must(template.ParseFiles("static/html/trackersapi.html"))
-		ip, ips, err := fromRequest(r)
-		_ = ips
-		if err != nil {
-			log.Println("Error - IP Parse: ", err)
-		}
-		log.Printf("request ip: %v \n\n", ip)
 
 		//set focus to get trackers-----------------------------------------------------------------------------------------------------
 
@@ -314,6 +315,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		log.Printf("after redir web param: %s \n+%v\n", focus, data)
 
 		tmpl.Execute(w, data)
+		return //check============================================================================================================================
 	}
 	showdata := r.FormValue("showdata") //selected to show players games
 	http.Redirect(w, r, "/redirtrackers?focus="+showdata, http.StatusFound)
