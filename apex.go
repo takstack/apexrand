@@ -66,12 +66,14 @@ func main() {
 	http.HandleFunc("/roulette", roulette)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/waitconf", waitconf)
+	http.HandleFunc("/trackers", trackersapi)
 	http.HandleFunc("/confirm", confirm)
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/teams", teams)
 	http.HandleFunc("/tournament", tourneyapi)
 	http.HandleFunc("/wipetourn", wipetourn)
 	http.HandleFunc("/redirtourn", redirtourn)
+	http.HandleFunc("/redirtrackers", redirtrackers)
 	http.HandleFunc("/apires", apires)
 	http.HandleFunc("/", helloServer)
 
@@ -247,7 +249,6 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 			u.RawQuery = q.Encode()
 		*/
 		http.Redirect(w, r, "/redirtourn?focus="+showdata+"&err="+Tourney.Errcode, http.StatusFound) //redirect instead of executing template directly
-		return
 	}
 	//log.Println("after redir showdata:", showdata, "focusname:", focusname)
 
@@ -269,7 +270,49 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 	*/
 
 }
+func trackersapi(w http.ResponseWriter, r *http.Request) {
+	validsess := chkvalidsession(w, r)
+	if !validsess {
+		return
+	}
+	if r.Method != http.MethodPost {
+		focus := r.URL.Query().Get("focus")
 
+		users := apexdb.Getactiveusers()
+		var sl []string
+		for _, elem := range users {
+			sl = append(sl, elem.Username)
+		}
+		data := struct {
+			g []apexdb.Game
+			u []string
+		}{
+			g: apexdb.Seltourntrackers(focus),
+			u: sl,
+		}
+
+		log.Println("trackers started")
+		tmpl := template.Must(template.ParseFiles("static/html/trackersapi.html"))
+		ip, ips, err := fromRequest(r)
+		_ = ips
+		if err != nil {
+			log.Println("Error - IP Parse: ", err)
+		}
+		log.Printf("request ip: %v \n\n", ip)
+
+		//set focus to get trackers-----------------------------------------------------------------------------------------------------
+
+		//data.g = apexdb.Seltourntrackers(focus)
+		//data.u = apexdb.Getactiveusers()
+		//r.URL.Query().Del("focus")
+
+		log.Printf("after redir web param: %s \n+%v\n", focus, data)
+
+		tmpl.Execute(w, data)
+	}
+	showdata := r.FormValue("showdata") //selected to show players games
+	http.Redirect(w, r, "/redirtrackers?focus="+showdata, http.StatusFound)
+}
 func teams(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
@@ -391,6 +434,19 @@ func redirtourn(w http.ResponseWriter, r *http.Request) {
 	}
 	q := u.Query()
 	q.Del("err")
+	q.Del("focus")
+	u.RawQuery = q.Encode()
+	http.Redirect(w, r, u.String()+"?focus="+focus, http.StatusFound)
+
+}
+func redirtrackers(w http.ResponseWriter, r *http.Request) {
+	focus := r.URL.Query().Get("focus")
+
+	u, err := url.Parse(r.Header.Get("Referer"))
+	if err != nil {
+		log.Println("URL Parse failed: ", err)
+	}
+	q := u.Query()
 	q.Del("focus")
 	u.RawQuery = q.Encode()
 	http.Redirect(w, r, u.String()+"?focus="+focus, http.StatusFound)

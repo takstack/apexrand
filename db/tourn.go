@@ -40,6 +40,8 @@ type Tourn struct {
 type Game struct {
 	ID       int
 	Username string
+	Player   string
+	Legend   string
 	Dmg      int
 	Place    int
 	Placedmg int
@@ -47,6 +49,8 @@ type Game struct {
 	Handicap int
 	Adjdmg   int
 	Gametime time.Time
+	Nameid   string
+	Val      int
 }
 
 //Loggame will enter data from games
@@ -83,6 +87,7 @@ func Loggame(player string, dmg string, place string) error {
 	if err != nil {
 		panic(err.Error())
 	}
+	defer form.Close()
 	_, err = form.Exec(username, d, p, pdmg, tdmg, handi, adjdmg, 1, tourndate, now)
 	if err != nil {
 		panic(err.Error())
@@ -123,6 +128,7 @@ func Logmanualgame(player string, field1 string, field2 string, field3 string) e
 	if err != nil {
 		log.Println(err.Error())
 	}
+	defer form.Close()
 	_, err = form.Exec(username, f1, f2, f3, now)
 	if err != nil {
 		log.Println(err.Error())
@@ -137,7 +143,6 @@ func Wipetourn(sessid string) {
 	if err != nil {
 		log.Println(err.Error())
 	}
-
 }
 
 //Seltourngames will get game data
@@ -199,12 +204,13 @@ func getplayersgames(player string) []Game {
 	return sl
 }
 */
-func apigetplayersgames(player string) []Game {
-	starttime := time.Date(2021, time.Month(1), 15, 8, 0, 0, 0, time.UTC)
-	endtime := time.Date(2021, time.Month(2), 1, 8, 0, 0, 0, time.UTC)
 
-	qry := "select gameid, username,totaldmg, handicap, adjdmg, tstamp from apigames where username=? and tstamp > ? and tstamp < ? and inctourn='1' order by totaldmg desc limit 15"
-	res, err := db.Query(qry, player, starttime, endtime)
+func apigetplayersgames(player string) []Game {
+	//starttime := time.Date(2021, time.Month(1), 15, 8, 0, 0, 0, time.UTC)
+	//endtime := time.Date(2021, time.Month(2), 1, 8, 0, 0, 0, time.UTC)
+
+	qry := "select gameid, username, totaldmg, handicap, adjdmg, tstamp from apigames where username=? and tstamp > ? and tstamp < ? and inctourn='1' order by totaldmg desc limit 15"
+	res, err := db.Query(qry, player, Tvar.Starttime, Tvar.Endtime)
 	handleError(err)
 	var sl []Game
 	for res.Next() {
@@ -237,6 +243,69 @@ func getplayersgamesspecdate(player string, tourndate time.Time) [][]string {
 		handleError(err)
 
 		sl = append(sl, []string{u, dconv, tconv})
+	}
+	res.Close()
+
+	return sl
+} /////
+//Seltourngames will get game data
+func Seltourntrackers(p string) []Game {
+	u := Getproper(p)
+	gsl := apigetplayerstrackers(u)
+
+	//if there are no games, add empty set
+	if len(gsl) == 0 {
+		g := Game{}
+		gsl = append(gsl, g)
+		log.Println("seltourntrackers end len==0. gsl:", gsl)
+
+	}
+	/*
+		sort.SliceStable(pSL, func(i, j int) bool {
+			return pSL[i].Adjsum > pSL[j].Adjsum
+		})
+	*/
+	return gsl
+}
+
+/*
+func getplayersgames(player string) []Game {
+
+	qry := "select id, username, dmg, place, placedmg, totaldmg, handicap, adj_dmg, gametime from games where username=? and inc_tourn='1' order by totaldmg desc limit 10"
+	res, err := db.Query(qry, player)
+	handleError(err)
+	var sl []Game
+	for res.Next() {
+		var g Game
+		// for each row, scan the result into our tag composite object
+		err := res.Scan(&g.ID, &g.Username, &g.Dmg, &g.Place, &g.Placedmg, &g.Totdmg, &g.Handicap, &g.Adjdmg, &g.Gametime)
+		g.Gametime = Convertutc(g.Gametime)
+		handleError(err)
+
+		sl = append(sl, g)
+	}
+	res.Close()
+
+	return sl
+}
+*/
+
+func apigetplayerstrackers(user string) []Game {
+	form, err := db.Prepare("select c.gameid, c.psnid, c.tstamp, c.legend, c.totaldmg, c.adjdmg, b.nameid, b.val from (select a.uid,a.gameid,a.psnid,a.tstamp,a.legend,a.totaldmg,a.adjdmg,a.inctourn from apigames as a where a.tstamp > '?' and a.tstamp < '?' and a.username='?'	order by a.totaldmg desc limit 0,?) as c left join apitracker as b on c.uid=b.uid and c.tstamp=b.tstamp and c.inctourn='1';")
+	handleError(err)
+	defer form.Close()
+	res, err := form.Query(Tvar.Starttime, Tvar.Endtime, user, Tvar.Numgames)
+	handleError(err)
+
+	var sl []Game
+	for res.Next() {
+		var g Game
+		// for each row, scan the result into our tag composite object
+		err := res.Scan(&g.ID, &g.Player, &g.Gametime, &g.Legend, &g.Totdmg, &g.Adjdmg, &g.Nameid, &g.Val)
+		g.Gametime = Convertutc(g.Gametime)
+		handleError(err)
+
+		sl = append(sl, g)
 	}
 	res.Close()
 

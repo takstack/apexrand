@@ -14,11 +14,23 @@ import (
 	"time"
 )
 
+//Tournvar holds tourn variables
+type Tournvar struct {
+	Cat       Cats
+	Char      []string
+	Numgames  int
+	Starttime time.Time
+	Endtime   time.Time
+}
+
 //Cats are tracker categories, initialized in init
 type Cats struct {
-	Cat1 string
-	Cat2 string
-	Cat3 string
+	Cat1  string
+	Cat2  string
+	Cat3  string
+	Cat1v int
+	Cat2v int
+	Cat3v int
 }
 
 /*
@@ -77,16 +89,16 @@ type Apievent struct {
 	A1 string `json:"action"`
 }
 
-//Cat is global var for 3 tracker categories currently in use
-var Cat Cats
-
-//Char is global var for characters currently allowed
-var Char []string
+//Tournvar is global var for tourney setup
+var Tvar Tournvar
 
 //set logmanual games as well as tourn times
 func initcats() {
-	Cat = Cats{"headshots", "damage", "top_3"}
-	Char = []string{"Gibraltar", "Caustic", "Wattson", "Rampart"}
+	Tvar.Cat = Cats{Cat1: "headshots", Cat2: "damage", Cat3: "top_3"}
+	Tvar.Char = []string{"Gibraltar", "Caustic", "Wattson", "Rampart"}
+	Tvar.Numgames = 10
+	Tvar.Starttime = time.Date(2021, time.Month(1), 15, 8, 0, 0, 0, time.UTC)
+	Tvar.Endtime = time.Date(2021, time.Month(2), 1, 8, 0, 0, 0, time.UTC)
 }
 
 //Logapigame will enter data from games

@@ -279,13 +279,13 @@ func sendapitodb(a apexdb.Apimain) {
 		elem.Userid = n
 
 		for _, tracker := range elem.Tracker {
-			if tracker.Key == apexdb.Cat.Cat2 {
+			if tracker.Key == apexdb.Tvar.Cat.Cat2 {
 				elem.Totdmg += tracker.Val
 			}
-			if tracker.Key == apexdb.Cat.Cat1 {
+			if tracker.Key == apexdb.Tvar.Cat.Cat1 {
 				elem.Totdmg += tracker.Val * 100
 			}
-			if tracker.Key == apexdb.Cat.Cat3 {
+			if tracker.Key == apexdb.Tvar.Cat.Cat3 {
 				elem.Totdmg += tracker.Val * 1000
 			}
 			err = apexdb.Logtracker(elem, tracker)
@@ -494,14 +494,14 @@ func Reqtopapimatches(username string) apexdb.Apimain {
 		tracked := apexdb.Seltrackers(matchlist.Apiseries[i].Userid, matchlist.Apiseries[i].Stampconv)
 		for _, elem := range tracked {
 			//log.Println("request elem.Key == apexdb.Cat.Cat1", elem.Key, apexdb.Cat.Cat1)
-			if elem.Key == apexdb.Cat.Cat1 {
+			if elem.Key == apexdb.Tvar.Cat.Cat1 {
 				//log.Println("request in cat1")
 				p.Val1 = strconv.Itoa(elem.Val)
 			}
-			if elem.Key == apexdb.Cat.Cat2 {
+			if elem.Key == apexdb.Tvar.Cat.Cat2 {
 				p.Val2 = strconv.Itoa(elem.Val)
 			}
-			if elem.Key == apexdb.Cat.Cat3 {
+			if elem.Key == apexdb.Tvar.Cat.Cat3 {
 				p.Val3 = strconv.Itoa(elem.Val)
 			}
 		}

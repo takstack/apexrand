@@ -72,6 +72,7 @@ func Insuserfromfile() {
 func Createuser(user Creds) error {
 	form, err := db.Prepare("INSERT INTO user (eaddr,platform,psnid,propername,username,pass,handicap,tournpart,confstr,confirmed) VALUES(?,?,?,?,?,?,?,?,?,?);")
 	handleError(err)
+	defer form.Close()
 	_, err = form.Exec(user.Email, user.Platform, user.Playerid, user.Romanname, user.Username, user.Pass, 0, 0, user.Confstr, 0)
 	handleError(err)
 	return err
@@ -81,6 +82,7 @@ func Createuser(user Creds) error {
 func Updconfirmed(conf string) error {
 	form, err := db.Prepare("UPDATE user SET confirmed = 1 WHERE confstr = ?;")
 	handleError(err)
+	defer form.Close()
 	_, err = form.Exec(conf)
 	handleError(err)
 	return err
@@ -91,6 +93,7 @@ func Updconfirmed(conf string) error {
 func Updpropername(sessid string, newname string) {
 	form, err := db.Prepare("UPDATE user SET propername = ? WHERE sess_id = ?;")
 	handleError(err)
+	defer form.Close()
 	_, err = form.Exec(newname, sessid)
 	handleError(err)
 
@@ -180,6 +183,7 @@ func Gethandifromuser(username string) int {
 func Sethandifromuser(username string, handicap int) {
 	form, err := db.Prepare("UPDATE user SET handicap= ? WHERE username =?;")
 	handleError(err)
+	defer form.Close()
 	_, err = form.Exec(handicap, username)
 	handleError(err)
 	log.Println("set handicap for:", username)
@@ -249,11 +253,13 @@ func Seluser(u string) Creds {
 func Updlogin(username string, pass string, sessid string) {
 	form, err := db.Prepare("UPDATE user SET username = ? WHERE sess_id = ?;")
 	handleError(err)
+	defer form.Close()
 	_, err = form.Exec(username, sessid)
 	handleError(err)
 
 	form, err = db.Prepare("UPDATE user SET pass = ? WHERE sess_id = ?;")
 	handleError(err)
+	defer form.Close()
 	_, err = form.Exec(pass, sessid)
 	handleError(err)
 	log.Println("user/pass updated:", username, pass)
