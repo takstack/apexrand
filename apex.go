@@ -287,15 +287,11 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		focus := r.URL.Query().Get("focus")
 		users := apexdb.Getactiveusers()
 		games := apexdb.Seltourntrackers(focus)
-		log.Println("active users", users)
-		log.Println("focus, games", focus, games)
+		//log.Println("active users", users)
+		//log.Println("focus, games", focus, games)
 
-		var sl []string
-		for _, elem := range users {
-			sl = append(sl, elem.Username)
-		}
-		log.Println("users sl", sl)
-		log.Println("before struct db call")
+		//log.Println("users sl", sl)
+
 		Data := struct {
 			G []apexdb.Game
 			U []apexdb.Onlineuser
@@ -303,8 +299,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 			G: games,
 			U: users,
 		}
-		log.Println("after struct db call")
-		log.Println("data.U", Data.U)
+		//log.Println("data.U", Data.U)
 
 		tmpl := template.Must(template.ParseFiles("static/html/trackersapi.html"))
 
