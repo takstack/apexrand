@@ -252,6 +252,7 @@ func getplayersgamesspecdate(player string, tourndate time.Time) [][]string {
 //Seltourngames will get game data
 func Seltourntrackers(u string) []Game {
 	//u := Getproper(p)
+	log.Println("Seltourntrackers, user:", u)
 	gsl := apigetplayerstrackers(u)
 
 	//if there are no games, add empty set
