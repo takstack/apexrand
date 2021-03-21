@@ -14,9 +14,9 @@
 </div>
 <p></p> 
 <div class="subtopnav">
-    <a class="active" href="standings">Standings</a>
-    <a href="trackers">Trackers</a>
-    <a  href="log">Log Game</a> 
+    <a href="tournament">Standings</a>
+    <a class="active"href="trackers">Trackers</a>
+    <a href="log">Log Game</a> 
 </div>
 <br>
 <br>
@@ -32,7 +32,7 @@ Users
 {{range .u}}
 <tr>
     <td class="tcol1">
-       hey <form method="POST"><button type="submit" name="showdata" value="{{.}}">{{.}}</button></form> 
+       <form method="POST"><button type="submit" name="showdata" value="{{.Username}}">{{.Username}}</button></form> 
     </td>
 </tr>
 {{end}}

@@ -298,10 +298,10 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		log.Println("before struct db call")
 		data := struct {
 			g []apexdb.Game
-			u []string
+			u []apexdb.Onlineuser
 		}{
 			g: games,
-			u: sl,
+			u: users,
 		}
 		log.Println("after struct db call")
 		log.Println("data.u", data.u)
