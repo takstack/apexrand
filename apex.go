@@ -275,6 +275,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 	if !validsess {
 		return
 	}
+	log.Println("trackers started")
 	ip, ips, err := fromRequest(r)
 	_ = ips
 	if err != nil {
@@ -304,7 +305,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Println("after struct db call")
 		log.Println("data.u", data.u)
-		log.Println("trackers started")
+
 		tmpl := template.Must(template.ParseFiles("static/html/trackersapi.html"))
 
 		//set focus to get trackers-----------------------------------------------------------------------------------------------------
