@@ -279,6 +279,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		focus := r.URL.Query().Get("focus")
 		users := apexdb.Getactiveusers()
 		games := apexdb.Seltourntrackers(focus)
+		log.Println("active users", users)
 		log.Println("focus, games", focus, games)
 
 		var sl []string
