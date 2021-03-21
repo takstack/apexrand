@@ -309,7 +309,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		//data.u = apexdb.Getactiveusers()
 		//r.URL.Query().Del("focus")
 
-		log.Printf("after redir web param: %s \n+%v\n", focus, Data)
+		log.Printf("after redir web param: %s \n\n", focus)
 
 		tmpl.Execute(w, Data)
 		return //check============================================================================================================================
