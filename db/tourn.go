@@ -1,6 +1,7 @@
 package apexdb
 
 import (
+	"fmt"
 	"strconv"
 
 	_ "github.com/go-sql-driver/mysql" //comment
@@ -291,10 +292,9 @@ func getplayersgames(player string) []Game {
 */
 
 func apigetplayerstrackers(user string) []Game {
-	form, err := db.Prepare("select c.gameid, c.psnid, c.tstamp, c.legend, c.totaldmg, c.adjdmg, b.nameid, b.val from (select a.uid,a.gameid,a.psnid,a.tstamp,a.legend,a.totaldmg,a.adjdmg,a.inctourn from apigames as a where a.tstamp > '?' and a.tstamp < '?' and a.username='?'	order by a.totaldmg desc limit 0,?) as c left join apitracker as b on c.uid=b.uid and c.tstamp=b.tstamp and c.inctourn='1';")
-	handleError(err)
-	defer form.Close()
-	res, err := form.Query(Tvar.Starttime, Tvar.Endtime, user, Tvar.Numgames)
+	qry := fmt.Sprintf("select c.gameid, c.psnid, c.tstamp, c.legend, c.totaldmg, c.adjdmg, b.nameid, b.val from (select a.uid,a.gameid,a.psnid,a.tstamp,a.legend,a.totaldmg,a.adjdmg,a.inctourn from apigames as a where a.tstamp > '%v' and a.tstamp < '%v' and a.username='%s' order by a.totaldmg desc limit 0,%d) as c left join apitracker as b on c.uid=b.uid and c.tstamp=b.tstamp and c.inctourn='1';", Tvar.Starttime, Tvar.Endtime, user, Tvar.Numgames)
+
+	res, err := db.Query(qry)
 	handleError(err)
 
 	var sl []Game
