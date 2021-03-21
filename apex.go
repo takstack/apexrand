@@ -280,10 +280,12 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		log.Println("before active users db call")
 		users := apexdb.Getactiveusers()
 		log.Println("after active users db call")
+
 		var sl []string
 		for _, elem := range users {
 			sl = append(sl, elem.Username)
 		}
+
 		log.Println("before struct db call")
 		data := struct {
 			g []apexdb.Game
