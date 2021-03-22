@@ -72,6 +72,7 @@ func main() {
 	http.HandleFunc("/teams", teams)
 	http.HandleFunc("/user", user)
 	http.HandleFunc("/tournament", tourneyapi)
+	http.HandleFunc("/loggame", loggame)
 	http.HandleFunc("/wipetourn", wipetourn)
 	http.HandleFunc("/redirtourn", redirtourn)
 	http.HandleFunc("/redirtrackers", redirtrackers)
@@ -269,6 +270,55 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 		log.Println("before execute")
 		tmpl.Execute(w, Tourney)
 	*/
+
+}
+func loggame(w http.ResponseWriter, r *http.Request) {
+	validsess := chkvalidsession(w, r)
+	if !validsess {
+		return
+	}
+
+	log.Println("loggame started")
+	tmpl := template.Must(template.ParseFiles("static/html/loggame.html"))
+	ip, ips, err := fromRequest(r)
+	_ = ips
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
+	log.Printf("request ip: %v \n\n", ip)
+
+	var Tourney apexdb.Tourney
+	Tourney.Activeusers = apexdb.Getactiveusers()
+
+	if r.Method != http.MethodPost {
+		tmpl.Execute(w, Tourney)
+		return
+	}
+
+	//to log a game for that player
+	player := r.FormValue("player")
+	field1 := r.FormValue("field1")
+	field2 := r.FormValue("field2")
+	field3 := r.FormValue("field3")
+
+	log.Println("field1, field2, field3:", field1, field2, field3)
+
+	if len(player) > 0 {
+		log.Println("userform player >0")
+		err := apexdb.Logmanualgame(player, field1, field2, field3)
+		if err != nil {
+			Tourney.Errcode = err.Error()
+			log.Println("logmanualgame error: ", Tourney.Errcode)
+
+		} else {
+			Tourney.Errcode = ""
+			Tourney.T = apexdb.Seltourngames()
+			//http.Redirect(w, r, "/redir", http.StatusFound) //redirect instead of executing template directly
+
+		}
+		http.Redirect(w, r, "/loggame"+"&err="+Tourney.Errcode, http.StatusFound) //redirect instead of executing template directly
+		return
+	}
 
 }
 func trackersapi(w http.ResponseWriter, r *http.Request) {
