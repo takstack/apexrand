@@ -2,6 +2,7 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
 <style type="text/css">
     
     table{
@@ -43,9 +44,29 @@
         
     }
 </style>
+-->
+
+<link rel="stylesheet" type="text/css" href="/static/css/style.css">
 </head>
 
 <h1>Teams</h1>
+<div class="topnav">
+    <a href="home">Home</a>
+    <a class="active" href="roulette">Roulette</a>
+    <a href="tournament">Tournament</a> 
+    <a id=profile name="profile"href="/profile">Profile</a>
+</div> 
+<p></p> 
+<div class="subtopnav">
+    <a href="roulette">Scenarios</a>
+    <a class="active" href="teams">Teams</a>
+    <a href="stats">Stats</a> 
+</div>
+<br>
+<br>
+<br>
+<p></p>
+</head>
     
 <button onclick="location.href = '/apex'">Back to roulette</button> &nbsp &nbsp &nbsp     
 
@@ -101,18 +122,4 @@ Users
 <br>
 <br>
 <br>
-Change Player Name (20 char limit) 
-<form method="POST"><input type="text" name="chgname"> <input type="submit"></form>
 
-<br>
-<br>
-<br>
-Change Username and Password (must enter both)
-<form method="POST">
-    <input type="text" name="username"> 
-    <input type="text" name="pass" > 
-    <button type="submit" name="userchg" value="">Submit</button>
-</form>
-<br>
-<br>
-<br>
