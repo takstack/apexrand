@@ -103,16 +103,16 @@ Users
 {{range .Activeusers}}
 <table class="style1">
 <tr>
-    <td class="col">
+    <td class="tcol4">
         {{.Username}}
     </td>
-    <td class="col1">
+    <td class="tcol1">
         <form method="POST"><button type="submit" name="remove" value="{{.Username}}">Remove</button></form>
     </td>
-    <td class="col1">
+    <td class="tcol1">
         <form method="POST"><button type="submit" name="adduser" value="{{.Username}}">Add</button></form>
     </td>
-    <td class="col1">
+    <td class="tcol1">
         {{.Online}}
     </td>
 </tr>
