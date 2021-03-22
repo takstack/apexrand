@@ -92,7 +92,8 @@ Total Rolls: {{.Totalrolls}}
 </tr>
 {{end}}
 </table>
-
+Note: 100 range is for player curses and 200 are team curses.<br>
+Baseline threshold is {{.Thresh}}/1000.
 <p></p>
 <b>Players</b> 
 <table class="style2">
@@ -106,8 +107,7 @@ Total Rolls: {{.Totalrolls}}
     </td>
     
 </tr>
-Note: 100 range is for player curses and 200 are team curses.<br>
-Baseline threshold is {{.Thresh}}/1000.
+
 <p></p>
 
 {{range $p:= .Playercount}}

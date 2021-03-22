@@ -70,6 +70,7 @@ func main() {
 	http.HandleFunc("/confirm", confirm)
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/teams", teams)
+	http.HandleFunc("/user", user)
 	http.HandleFunc("/tournament", tourneyapi)
 	http.HandleFunc("/wipetourn", wipetourn)
 	http.HandleFunc("/redirtourn", redirtourn)
@@ -486,7 +487,21 @@ func apires(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, Apimain)
 
 }
+func user(w http.ResponseWriter, r *http.Request) {
+	validsess := chkvalidsession(w, r)
+	if !validsess {
+		return
+	}
+	_, ips, err := fromRequest(r)
+	_ = ips
+	if err != nil {
+		log.Println("Error - IP Parse: ", err)
+	}
 
+	tmpl := template.Must(template.ParseFiles("static/html/user.html"))
+	tmpl.Execute(w, nil)
+
+}
 func handler1(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if !validsess {
