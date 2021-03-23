@@ -70,7 +70,8 @@ table.style2{
     padding: 10px 5px; 
 }
 .pcol1{
-    border-right:1px solid black;
+    /*border-right:1px solid black;*/
+    border:1px solid black;
     background-color: rgba(255, 255, 255, 0.9);
     width: 25%;
     padding: 0px 5px;
