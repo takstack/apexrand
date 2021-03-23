@@ -5,7 +5,7 @@
 <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 </head>
 
-<h1>API Results</h1>
+<h2>API</h2>
 <div class="topnav">
     <a href="home">Home</a>
     <a href="roulette">Roulette</a>
@@ -17,14 +17,15 @@
     <a href="user">Profile</a>
     <a href="trackers">Friends</a>
     <a href="trackers">Manage</a>
-    <a class="active" href="apires">API Results</a>
+    <a class="active" href="apires">API</a>
     <a href="log">Logout</a> 
 </div>
 <br>
 <br>
 <br>
 <div style="padding-left:10px">
-<h1>API Results</h1>
+<h1>Pulled data</h1>
+<p>---check here for your correct trackers being pulled---</p>
     
 <!--<button onclick="location.href = '/tournament'">Back to tournament</button> &nbsp &nbsp &nbsp     -->
 
@@ -33,56 +34,56 @@
 
 <table class="style1">
 <tr>
-    <th class="col1">
+    <th class="pcol1">
         Player
     </th>
-    <th class="col4">
+    <th class="pcol1">
         Time
     </th>
-    <th class="col1">
+    <th class="pcol1">
         Legend
     </th>
-    <th class="col1">
+    <th class="pcol1">
         Points
     </th>
-    <th class="col1">
+    <th class="pcol1">
         Inc_tourn
     </th>
-    <th class="col1">
+    <th class="pcol1">
         Headshots
     </th>
-    <th class="col1">
+    <th class="pcol1">
         Damage
     </th>
-    <th class="col1">
+    <th class="pcol1">
         Top 3
     </th>
 
 </tr>
 {{range .Apiseries}}
 <tr>
-    <td class="col1">
+    <td class="pcol1">
         {{.Player}}
     </td>
-    <td class="col4">
+    <td class="pcol1">
         {{.Stampconv.Format "01-02 T15:04"}}
     </td>
-    <td class="col1">
+    <td class="pcol1">
         {{.Legend}}
     </td>
-    <td class="col1">
+    <td class="pcol1">
         {{.Totdmg}}
     </td>
-    <td class="col1">
+    <td class="pcol1">
         {{.Inctourn}}
     </td>
-    <td class="col1">
+    <td class="pcol1">
         {{.Seltrackers.Val1}}
     </td>
-    <td class="col1">
+    <td class="pcol1">
         {{.Seltrackers.Val2}}
     </td>
-    <td class="col1">
+    <td class="pcol1">
         {{.Seltrackers.Val3}}
     </td>
     

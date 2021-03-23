@@ -184,7 +184,7 @@ func Seluid(p string) (string, error) {
 
 //SeltopAPImatches gets most recent match list for any user from api
 func SeltopAPImatches(username string) Apimain {
-	qry := fmt.Sprintf("select uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,inctourn, importdate from apigames where username='%s' order by tstamp desc limit 3;", username)
+	qry := fmt.Sprintf("select uid,username,psnid,tstamp,legend,totaldmg,handicap,adjdmg,inctourn, importdate from apigames where username='%s' order by tstamp desc limit 5;", username)
 	res, err := db.Query(qry)
 	handleError(err)
 
