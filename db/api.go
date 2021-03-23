@@ -89,6 +89,19 @@ type Apievent struct {
 	A1 string `json:"action"`
 }
 
+//Homepage used for homepage summary
+type Homepage struct {
+	Curr struct {
+		Currmap string `json:"map"`
+		Currrem string `json:"remainingTimer"`
+	} `json:"current"`
+	Next struct {
+		Nextmap string `json:"map"`
+	} `json:"next"`
+	Platform   string
+	Playername string
+}
+
 //Tournvar is global var for tourney setup
 var Tvar Tournvar
 

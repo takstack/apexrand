@@ -566,11 +566,22 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	//log.Println(r.Header)
 	//log.Println("Read cookie:", r.Header.Get("Cookie"))
 
+	cookie, err := r.Cookie("apextoken")
+	if err != nil {
+		log.Println("error retrieving cookie")
+		http.Redirect(w, r, "/login", http.StatusFound)
+
+	}
+	sessid := cookie.Value
+	username := apexdb.Getuserfromsess(sessid)
+	api.H.Playername = apexdb.Getplayeridfromuser(username)
+	api.H.Platform = apexdb.Getplatfromuser(username)
+
 	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
 	log.Printf("Request executed \n\n")
 
 	tmpl := template.Must(template.ParseFiles("static/html/home.html"))
-	tmpl.Execute(w, Res)
+	tmpl.Execute(w, api.H)
 
 }
 func roulette(w http.ResponseWriter, r *http.Request) {

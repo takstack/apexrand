@@ -169,6 +169,16 @@ func Getplatfrompsn(psnid string) string {
 	return res
 }
 
+//Getplatfromuser returns the actual username for a players proper name
+func Getplatfromuser(user string) string {
+	var res string
+	qry := fmt.Sprintf("select platform from user where username = '%s';", user)
+	err := db.QueryRow(qry).Scan(&res)
+	handleError(err)
+
+	return res
+}
+
 //Gethandifromuser returns the handicap for actual username
 func Gethandifromuser(username string) int {
 	var res int

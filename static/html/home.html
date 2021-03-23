@@ -13,16 +13,21 @@
     <a href="user">Profile</a>
 </div>
 
-  <div style="padding-left:16px">
+<div style="padding-left:10px">
     <h2>Player details</h2>
-    <p>Platform:</p>
-    <p>Player name:</p>
-  </div>
-
+    <p>Platform: {{.Platform}}</p>
+    <p>Player name:  {{.Playername}}</p>
+    <br><br>
+    <h2>Map Rotation</h2>
+    <p>Current map: {{.Curr.Currmap}}</p>
+    <p>Time remaining:  {{.Curr.Currrem}}</p>
+    <p>Next map: {{.Next.Nextmap}}</p>
+    <br><br>
 <p><br><br><u>Guidelines for harmonious living</u><br><br>
 1. Break a rule? Drop shield (if no shield, drop weapon)<br>
 2. Don't pick your character? Don't pick up any mags either<br>
 3. Break the spirit of the game? Drop all your stuff, homie<br>
 </p>
+</div>
 </body>
 

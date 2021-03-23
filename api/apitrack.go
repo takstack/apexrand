@@ -37,6 +37,9 @@ type Stats struct {
 var APIerr string
 var lastpull time.Time
 
+//Maprot holds map rotation data
+var H apexdb.Homepage
+
 //Apipull main process to pull down api data
 func Apipull() {
 	apikey := getapikey()
@@ -65,6 +68,10 @@ func Apipull() {
 		}
 		if status == "SLOW" || status == "OVERLOADED" {
 			log.Println("API Servers are: ", status, ", operations continued")
+		}
+		err = decmaprot(apikey)
+		if err != nil {
+			log.Println("from decjsonmap err:", err)
 		}
 		now := time.Now()
 		sl, err := apexdb.Getplayerlist()
@@ -184,6 +191,46 @@ func decjsonmap(apikey string) (string, error) {
 	}
 
 	return j["Mozambiquehere_StatsAPI"].Area.Status, nil
+	//fmt.Println("body:", string(body))
+	//fmt.Println("j unmarshaled", j["Mozambiquehere_StatsAPI"].Area.Status)
+}
+
+//decodes json map of map rotations
+func decmaprot(apikey string) error {
+	s := fmt.Sprintf("https://api.mozambiquehe.re/maprotation?auth=%s", apikey)
+	//req, err := http.NewRequest("GET", "https://api.mozambiquehe.re/bridge?player=pow_chaser&platform=PS4&auth=8uoPgHih7oHp8D8HXjuZ&history=1&action=info", nil)
+	req, err := http.NewRequest("GET", s, nil)
+	//_ = s
+	if err != nil {
+		fmt.Println("err decmaprot newreq:", err)
+		return errors.New("decmaprot err newreq")
+	}
+	client := http.Client{
+		Timeout: 5 * time.Second,
+	}
+	resp, err := client.Do(req)
+	if os.IsTimeout(err) {
+		return errors.New("client.Timeout decmaprot exceeded while awaiting headers")
+	}
+	if resp.StatusCode != 200 {
+		//log.Println("statuscode: ", resp.StatusCode)
+		return fmt.Errorf("non-200 http response. Statuscode: %d", resp.StatusCode)
+	}
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("err decmaprot readall:", err)
+		return errors.New("decmaprot err readall")
+	}
+	//fmt.Println("body:", string(body))
+
+	err = json.Unmarshal(body, &H)
+	if err != nil {
+		fmt.Println("err decmaprot unmar:", err)
+		return errors.New("decmaprot err unmarshal")
+	}
+
+	return nil
 	//fmt.Println("body:", string(body))
 	//fmt.Println("j unmarshaled", j["Mozambiquehere_StatsAPI"].Area.Status)
 }
@@ -405,15 +452,15 @@ func getuid(p string, platform string, apikey string) (string, error) {
 	req, err := http.NewRequest("GET", s, nil)
 	//_ = s
 	if err != nil {
-		fmt.Println("err decjsonmap newreq:", err)
-		return "", errors.New("decjsonmap err newreq")
+		fmt.Println("err getuid newreq:", err)
+		return "", errors.New("getuid err newreq")
 	}
 	client := http.Client{
 		Timeout: 5 * time.Second,
 	}
 	resp, err := client.Do(req)
 	if os.IsTimeout(err) {
-		return "", errors.New("client.Timeout decjsonmap exceeded while awaiting headers")
+		return "", errors.New("client.Timeout getuid exceeded while awaiting headers")
 	}
 	if resp.StatusCode != 200 {
 		//log.Println("statuscode: ", resp.StatusCode)
@@ -422,8 +469,8 @@ func getuid(p string, platform string, apikey string) (string, error) {
 
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("err decjsonmap readall:", err)
-		return "", errors.New("decjsonmap err readall")
+		fmt.Println("err getuid readall:", err)
+		return "", errors.New("getuid err readall")
 	}
 	//fmt.Println("body:", string(body))
 
