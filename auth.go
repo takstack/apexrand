@@ -61,7 +61,7 @@ func reg(w http.ResponseWriter, r *http.Request) {
 	log.Println("reg started")
 	tmpl := template.Must(template.ParseFiles("static/html/reg.html"))
 
-	_, _, _ = fromRequest(r)
+	//_, _, _ = fromRequest(r)
 
 	if r.Method != http.MethodPost {
 		tmpl.Execute(w, nil)
@@ -105,7 +105,7 @@ func confirm(w http.ResponseWriter, r *http.Request) {
 	log.Println("tourney started")
 	tmpl := template.Must(template.ParseFiles("static/html/confirmed.html"))
 	//ip prints
-	_, _, _ = fromRequest(r)
+	//_, _, _ = fromRequest(r)
 	//check confirmation code, update user db if code matches
 	conf := r.URL.Query().Get("conf")
 	err := apexdb.Updconfirmed(conf)
@@ -147,7 +147,7 @@ func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
 	sessid := cookie.Value
 
 	_, ips, _ := fromRequest(r)
-	log.Printf("sess: %s\n", apexdb.Getuserfromsess(sessid))
+	//log.Printf("userfromsess: %s\n", apexdb.Getuserfromsess(sessid))
 
 	apexdb.Logip(sessid, ips)
 	log.Println("entered user ip: ", sessid, ips)
@@ -221,7 +221,7 @@ func renewcookie(w http.ResponseWriter, r *http.Request, user string, ips string
 
 }
 func getcookie(w http.ResponseWriter, r *http.Request, s string) (*http.Cookie, error) {
-	_, _, _ = fromRequest(r)
+	//_, _, _ = fromRequest(r)
 
 	cookie, err := r.Cookie(s)
 	if err != nil {

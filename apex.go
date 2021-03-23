@@ -112,7 +112,7 @@ func getstats(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("stats started")
-	_, _, _ = fromRequest(r)
+	//_, _, _ = fromRequest(r)
 
 	var st apexdb.Stats
 	st.Cursecount = apexdb.Selcursestats()
@@ -167,7 +167,7 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("tourney started")
 	tmpl := template.Must(template.ParseFiles("static/html/tourneyapi.html"))
-	_, _, _ = fromRequest(r)
+	//_, _, _ = fromRequest(r)
 
 	var Tourney apexdb.Tourney
 	Tourney.T = apexdb.Seltourngames()
@@ -269,7 +269,7 @@ func loggame(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("loggame started")
 	tmpl := template.Must(template.ParseFiles("static/html/loggame.html"))
-	_, _, _ = fromRequest(r)
+	//_, _, _ = fromRequest(r)
 
 	var Tourney apexdb.Tourney
 	Tourney.Activeusers = apexdb.Getactiveusers()
@@ -311,7 +311,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("trackers started")
-	_, _, _ = fromRequest(r)
+	//_, _, _ = fromRequest(r)
 
 	if r.Method != http.MethodPost {
 		focus := r.URL.Query().Get("focus")
@@ -353,7 +353,7 @@ func teams(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
 		log.Println("teams started")
-		_, _, _ = fromRequest(r)
+		//_, _, _ = fromRequest(r)
 
 		cookie, err := r.Cookie("apextoken")
 		if err != nil {
@@ -488,7 +488,7 @@ func apires(w http.ResponseWriter, r *http.Request) {
 	if !validsess {
 		return
 	}
-	_, _, _ = fromRequest(r)
+	//_, _, _ = fromRequest(r)
 
 	cookie, err := r.Cookie("apextoken")
 	if err != nil {
@@ -513,7 +513,7 @@ func user(w http.ResponseWriter, r *http.Request) {
 	if !validsess {
 		return
 	}
-	_, _, _ = fromRequest(r)
+	//_, _, _ = fromRequest(r)
 
 	tmpl := template.Must(template.ParseFiles("static/html/user.html"))
 	tmpl.Execute(w, nil)
@@ -525,7 +525,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	viewcounter++
-	_, _, _ = fromRequest(r)
+	//_, _, _ = fromRequest(r)
 	//log.Println(r.Header)
 	//log.Println("Read cookie:", r.Header.Get("Cookie"))
 
@@ -541,7 +541,6 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	api.H.Platform = apexdb.Getplatfromuser(username)
 
 	log.Printf("viewcounter:%d \n", viewcounter)
-	log.Printf("Request executed \n\n")
 
 	tmpl := template.Must(template.ParseFiles("static/html/home.html"))
 	tmpl.Execute(w, api.H)
@@ -553,7 +552,7 @@ func roulette(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	viewcounter++
-	_, _, _ = fromRequest(r)
+	//_, _, _ = fromRequest(r)
 
 	//log.Println(r.Header)
 	//log.Println("Read cookie:", r.Header.Get("Cookie"))
