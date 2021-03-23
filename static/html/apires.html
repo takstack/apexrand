@@ -34,56 +34,56 @@
 
 <table class="style1">
 <tr>
-    <th class="pcol1">
+    <th class="tcol1">
         Player
     </th>
-    <th class="pcol1">
+    <th class="tcol1">
         Time
     </th>
-    <th class="pcol1">
+    <th class="tcol1">
         Legend
     </th>
-    <th class="pcol1">
+    <th class="tcol1">
         Points
     </th>
-    <th class="pcol1">
+    <th class="tcol1">
         Inc_tourn
     </th>
-    <th class="pcol1">
+    <th class="tcol1">
         Headshots
     </th>
-    <th class="pcol1">
+    <th class="tcol1">
         Damage
     </th>
-    <th class="pcol1">
+    <th class="tcol1">
         Top 3
     </th>
 
 </tr>
 {{range .Apiseries}}
 <tr>
-    <td class="pcol1">
+    <td class="tcol1">
         {{.Player}}
     </td>
-    <td class="pcol1">
+    <td class="tcol1">
         {{.Stampconv.Format "01-02 T15:04"}}
     </td>
-    <td class="pcol1">
+    <td class="tcol1">
         {{.Legend}}
     </td>
-    <td class="pcol1">
+    <td class="tcol1">
         {{.Totdmg}}
     </td>
-    <td class="pcol1">
+    <td class="tcol1">
         {{.Inctourn}}
     </td>
-    <td class="pcol1">
+    <td class="tcol1">
         {{.Seltrackers.Val1}}
     </td>
-    <td class="pcol1">
+    <td class="tcol1">
         {{.Seltrackers.Val2}}
     </td>
-    <td class="pcol1">
+    <td class="tcol1">
         {{.Seltrackers.Val3}}
     </td>
     
