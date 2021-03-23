@@ -45,11 +45,7 @@ func login(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "login failed")
 		return
 	}
-	_, ips, err := fromRequest(r)
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
-	//log.Printf("login ip: %v\n", ip)
+	_, ips, _ := fromRequest(r)
 	renewcookie(w, r, det.user, ips)
 
 	teamassignment, err := assignteams()
@@ -65,10 +61,8 @@ func reg(w http.ResponseWriter, r *http.Request) {
 	log.Println("reg started")
 	tmpl := template.Must(template.ParseFiles("static/html/reg.html"))
 
-	_, _, err := fromRequest(r)
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
+	_, _, _ = fromRequest(r)
+
 	if r.Method != http.MethodPost {
 		tmpl.Execute(w, nil)
 		return
@@ -92,7 +86,7 @@ func reg(w http.ResponseWriter, r *http.Request) {
 	log.Println("form action received reg:", user.Email, user.Platform, user.Playerid, user.Romanname, user.Username, user.Pass)
 
 	user.Confstr = createsessid()
-	err = apexdb.Createuser(user)
+	err := apexdb.Createuser(user)
 	if err != nil {
 		//Tourney.Errcode = err.Error()
 		log.Println("reg error: ", err)
@@ -111,13 +105,10 @@ func confirm(w http.ResponseWriter, r *http.Request) {
 	log.Println("tourney started")
 	tmpl := template.Must(template.ParseFiles("static/html/confirmed.html"))
 	//ip prints
-	_, _, err := fromRequest(r)
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
+	_, _, _ = fromRequest(r)
 	//check confirmation code, update user db if code matches
 	conf := r.URL.Query().Get("conf")
-	err = apexdb.Updconfirmed(conf)
+	err := apexdb.Updconfirmed(conf)
 
 	if err != nil {
 		http.Redirect(w, r, "/waitconf", http.StatusFound)
@@ -155,12 +146,8 @@ func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
 
 	sessid := cookie.Value
 
-	ip, ips, err := fromRequest(r)
-	_ = ips
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
-	log.Printf("user ip: %v, %s\n", ip, apexdb.Getuserfromsess(sessid))
+	_, ips, _ := fromRequest(r)
+	log.Printf("sess: %s\n", apexdb.Getuserfromsess(sessid))
 
 	apexdb.Logip(sessid, ips)
 	log.Println("entered user ip: ", sessid, ips)
@@ -234,14 +221,8 @@ func renewcookie(w http.ResponseWriter, r *http.Request, user string, ips string
 
 }
 func getcookie(w http.ResponseWriter, r *http.Request, s string) (*http.Cookie, error) {
-	ip, ips, err := fromRequest(r)
-	_ = ips
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
+	_, _, _ = fromRequest(r)
 
-	log.Printf("request ip-getcookie: %v\n", ip)
-	//log.Println("r.header:", r.Header)
 	cookie, err := r.Cookie(s)
 	if err != nil {
 		for _, c := range r.Cookies() {

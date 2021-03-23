@@ -93,12 +93,7 @@ func main() {
 func shopbot(w http.ResponseWriter, r *http.Request) {
 	log.Println("shopbot started")
 	tmpl := template.Must(template.ParseFiles("static/html/shopbot.html"))
-	ip, ips, err := fromRequest(r)
-	_ = ips
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
-	log.Printf("request ip: %v \n\n", ip)
+	_, _, _ = fromRequest(r)
 
 	focus := r.URL.Query().Get("key")
 	if focus == "shop2020getit" {
@@ -117,10 +112,7 @@ func getstats(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("stats started")
-	_, _, err := fromRequest(r)
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
+	_, _, _ = fromRequest(r)
 
 	var st apexdb.Stats
 	st.Cursecount = apexdb.Selcursestats()
@@ -175,12 +167,7 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("tourney started")
 	tmpl := template.Must(template.ParseFiles("static/html/tourneyapi.html"))
-	ip, ips, err := fromRequest(r)
-	_ = ips
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
-	log.Printf("request ip: %v \n\n", ip)
+	_, _, _ = fromRequest(r)
 
 	var Tourney apexdb.Tourney
 	Tourney.T = apexdb.Seltourngames()
@@ -282,12 +269,7 @@ func loggame(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("loggame started")
 	tmpl := template.Must(template.ParseFiles("static/html/loggame.html"))
-	ip, ips, err := fromRequest(r)
-	_ = ips
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
-	log.Printf("request ip: %v \n\n", ip)
+	_, _, _ = fromRequest(r)
 
 	var Tourney apexdb.Tourney
 	Tourney.Activeusers = apexdb.Getactiveusers()
@@ -329,12 +311,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Println("trackers started")
-	ip, ips, err := fromRequest(r)
-	_ = ips
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
-	log.Printf("request ip: %v \n\n", ip)
+	_, _, _ = fromRequest(r)
 
 	if r.Method != http.MethodPost {
 		focus := r.URL.Query().Get("focus")
@@ -376,12 +353,7 @@ func teams(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
 	if validsess {
 		log.Println("teams started")
-		ip, ips, err := fromRequest(r)
-		_ = ips
-		if err != nil {
-			log.Println("Error - IP Parse: ", err)
-		}
-		log.Printf("request ip: %v \n\n", ip)
+		_, _, _ = fromRequest(r)
 
 		cookie, err := r.Cookie("apextoken")
 		if err != nil {
@@ -516,11 +488,8 @@ func apires(w http.ResponseWriter, r *http.Request) {
 	if !validsess {
 		return
 	}
-	ip, ips, err := fromRequest(r)
-	_ = ips
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
+	_, _, _ = fromRequest(r)
+
 	cookie, err := r.Cookie("apextoken")
 	if err != nil {
 		log.Println("error retrieving cookie")
@@ -533,8 +502,6 @@ func apires(w http.ResponseWriter, r *http.Request) {
 	//log.Println("Read cookie:", r.Header.Get("Cookie"))
 
 	Apimain := api.Reqtopapimatches(username)
-	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
-	log.Printf("Request executed \n\n")
 	//log.Println("runtime heap allocation: ", runtime.ReadMemStats())
 
 	tmpl := template.Must(template.ParseFiles("static/html/apires.html"))
@@ -546,11 +513,7 @@ func user(w http.ResponseWriter, r *http.Request) {
 	if !validsess {
 		return
 	}
-	_, ips, err := fromRequest(r)
-	_ = ips
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
+	_, _, _ = fromRequest(r)
 
 	tmpl := template.Must(template.ParseFiles("static/html/user.html"))
 	tmpl.Execute(w, nil)
@@ -562,11 +525,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	viewcounter++
-	ip, ips, err := fromRequest(r)
-	_ = ips
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
+	_, _, _ = fromRequest(r)
 	//log.Println(r.Header)
 	//log.Println("Read cookie:", r.Header.Get("Cookie"))
 
@@ -581,7 +540,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	api.H.Playername = apexdb.Getplayeridfromuser(username)
 	api.H.Platform = apexdb.Getplatfromuser(username)
 
-	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
+	log.Printf("viewcounter:%d \n", viewcounter)
 	log.Printf("Request executed \n\n")
 
 	tmpl := template.Must(template.ParseFiles("static/html/home.html"))
@@ -594,15 +553,12 @@ func roulette(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	viewcounter++
-	ip, ips, err := fromRequest(r)
-	_ = ips
-	if err != nil {
-		log.Println("Error - IP Parse: ", err)
-	}
+	_, _, _ = fromRequest(r)
+
 	//log.Println(r.Header)
 	//log.Println("Read cookie:", r.Header.Get("Cookie"))
 
-	log.Printf("%v, viewcounter:%d \n", ip, viewcounter)
+	log.Printf("viewcounter:%d \n", viewcounter)
 	log.Printf("Request executed \n\n")
 
 	tmpl := template.Must(template.ParseFiles("static/html/roulette.html"))
