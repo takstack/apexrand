@@ -70,6 +70,8 @@ func main() {
 	http.HandleFunc("/confirm", confirm)
 	http.HandleFunc("/logout", logout)
 	http.HandleFunc("/teams", teams)
+	http.HandleFunc("/friends", friends)
+	http.HandleFunc("/manage", manage)
 	http.HandleFunc("/user", user)
 	http.HandleFunc("/tournament", tourneyapi)
 	http.HandleFunc("/loggame", loggame)
@@ -606,6 +608,14 @@ func roulette(w http.ResponseWriter, r *http.Request) {
 	tmpl := template.Must(template.ParseFiles("static/html/roulette.html"))
 	tmpl.Execute(w, Res)
 
+}
+func friends(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("static/html/friends.html"))
+	tmpl.Execute(w, nil)
+}
+func manage(w http.ResponseWriter, r *http.Request) {
+	tmpl := template.Must(template.ParseFiles("static/html/manage.html"))
+	tmpl.Execute(w, nil)
 }
 func helloServer(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprintf(w, "The server you were connecting to was disconnected or no longer in use.  Please try your request again or leave a message below")
