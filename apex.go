@@ -346,9 +346,11 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		Data := struct {
 			G []apexdb.Game
 			U []apexdb.Onlineuser
+			T apexdb.Tournvar //tourninfo
 		}{
 			G: games,
 			U: users,
+			T: apexdb.Tvar,
 		}
 		//log.Println("data.U", Data.U)
 

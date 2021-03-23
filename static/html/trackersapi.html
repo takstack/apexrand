@@ -22,7 +22,18 @@
 <br>
 <br>
 <div style="padding-left:10px">
-Users
+
+<h2>Current Trackers</h2>
+{{range .T.Cat}}
+{{.}}
+{{end}}
+
+<h2>Tournament Parameters</h2>
+Starttime: {{.T.Starttime}}
+Endtime: {{.T.Endtime}}
+Num of games counted: {{.T.Numgames}}
+
+<h2>Users</h2>
 <br><br>
 <table class="style2">
 <tr>
@@ -41,7 +52,7 @@ Users
 <br>
 <br>
 <br>
-Trackers
+<h2>Trackers</h2>
 <br>
 <table class="style1">
 <tr>
