@@ -321,14 +321,14 @@ func apigetplayerstrackers(user string) []Game {
 //Sellatesttrackers will get game data
 func Sellatesttrackers(p string) []Game {
 	u := Getuser(p)
-	//log.Println("Seltourntrackers, user:", u)
+	log.Println("Sellatesttrackers, u,p:", u, p)
 	gsl := apigetlatesttrackers(u)
 
 	//if there are no games, add empty set
 	if len(gsl) == 0 {
 		g := Game{}
 		gsl = append(gsl, g)
-		log.Println("seltourntrackers end len==0. gsl:", gsl)
+		log.Println("apigetlatesttrackers end len==0. gsl:", gsl)
 
 	}
 	/*
@@ -340,7 +340,7 @@ func Sellatesttrackers(p string) []Game {
 }
 
 func apigetlatesttrackers(user string) []Game {
-	qry := fmt.Sprintf("select c.gameid, c.psnid, c.tstamp, c.legend, c.totaldmg, c.adjdmg, c.inctourn,b.nameid, b.val from (select a.uid,a.gameid,a.psnid,a.tstamp,a.legend,a.totaldmg,a.adjdmg,a.inctourn from apigames as a where a.username='%s' order by a.tstamp desc limit 0,%d) as c left join apitracker as b on c.uid=b.uid and c.tstamp=b.tstamp and c.inctourn='1';", user, Tvar.Numgames)
+	qry := fmt.Sprintf("select c.gameid, c.psnid, c.tstamp, c.legend, c.totaldmg, c.adjdmg, c.inctourn,b.nameid, b.val from (select a.uid,a.gameid,a.psnid,a.tstamp,a.legend,a.totaldmg,a.adjdmg,a.inctourn from apigames as a where a.username='%s' order by a.tstamp desc limit 0,%d) as c left join apitracker as b on c.uid=b.uid and c.tstamp=b.tstamp;", user, 5)
 
 	res, err := db.Query(qry)
 	handleError(err)
