@@ -501,7 +501,7 @@ func apires(w http.ResponseWriter, r *http.Request) {
 	//log.Println(r.Header)
 	//log.Println("Read cookie:", r.Header.Get("Cookie"))
 
-	Apimain := api.Reqtopapimatches(username)
+	Apimain := api.Reqlatesttrackers(username)
 	//log.Println("runtime heap allocation: ", runtime.ReadMemStats())
 
 	tmpl := template.Must(template.ParseFiles("static/html/apires.html"))

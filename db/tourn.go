@@ -17,12 +17,14 @@ import (
 
 //Tourney exp
 type Tourney struct {
-	T           []Tourn
-	P           string
-	G           []Game //holds game vals for individual games
-	Activeusers []Onlineuser
-	Errcode     string //err val for incorrect dmg input
-	APIerr      string
+	T             []Tourn
+	P             string
+	G             []Game //holds game vals for individual games
+	Activeusers   []Onlineuser
+	Errcode       string //err val for incorrect dmg input
+	APIerr        string
+	Timesincepull time.Duration
+	Timeselect    time.Duration
 }
 
 //Tourn is dataset to show standings
@@ -52,7 +54,7 @@ type Game struct {
 	Gametime time.Time
 	Nameid   string
 	Val      int
-	C Cats
+	C        Cats
 	Inctourn bool
 }
 
@@ -250,7 +252,8 @@ func getplayersgamesspecdate(player string, tourndate time.Time) [][]string {
 	res.Close()
 
 	return sl
-} 
+}
+
 //Seltourntrackers will get game data
 func Seltourntrackers(p string) []Game {
 	u := Getuser(p)
@@ -356,6 +359,7 @@ func apigetlatesttrackers(user string) []Game {
 
 	return sl
 }
+
 //Convertutc exp
 func Convertutc(t time.Time) time.Time {
 	var local time.Time

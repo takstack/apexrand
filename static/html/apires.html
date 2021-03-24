@@ -2,95 +2,99 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" type="text/css" href="/static/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css">
 </head>
 
 <h1>Apexlott</h1>
 <div class="topnav">
     <a href="home">Home</a>
     <a href="roulette">Roulette</a>
-    <a href="tournament">Tournament</a> 
+    <a href="tournament">Tournament</a>
     <a class="active" href="user">Account</a>
 </div>
-<p></p> 
+<p></p>
 <div class="subtopnav">
     <a href="user">User</a>
     <!--<a href="friends">Friends</a>
     <a href="manage">Manage</a>-->
     <a class="active" href="apires">API</a>
-    <a href="logout">Logout</a> 
+    <a href="logout">Logout</a>
 </div>
 <br>
 <br>
 <br>
 <div style="padding-left:10px">
-<h2>Pulled data</h2>
-<p>---check here for your correct trackers being pulled---</p>
-    
-<!--<button onclick="location.href = '/tournament'">Back to tournament</button> &nbsp &nbsp &nbsp     -->
+    <h2>Pulled data</h2>
+    <p>---check here for your correct trackers being pulled---</p>
 
-<p></p>
+    <!--<button onclick="location.href = '/tournament'">Back to tournament</button> &nbsp &nbsp &nbsp     -->
+
+    <p></p>
 
 
-<table class="style1">
-<tr>
-    <th class="tcol1">
-        Player
-    </th>
-    <th class="tcol1">
-        Time
-    </th>
-    <th class="tcol1">
-        Legend
-    </th>
-    <th class="tcol1">
-        Points
-    </th>
-    <th class="tcol1">
-        Inc_tourn
-    </th>
-    <th class="tcol1">
-        Headshots
-    </th>
-    <th class="tcol1">
-        Damage
-    </th>
-    <th class="tcol1">
-        Top 3
-    </th>
+    <table class="style1">
+        <tr>
+            <th class="tcol1">
+                Player
+            </th>
+            <th class="tcol1">
+                Time
+            </th>
+            <th class="tcol1">
+                Legend
+            </th>
+            <th class="tcol1">
+                Points
+            </th>
+            <th class="tcol1">
+                Inc_tourn
+            </th>
+            <th class="tcol1">
+                Headshots
+            </th>
+            <th class="tcol1">
+                Damage
+            </th>
+            <th class="tcol1">
+                Top 3
+            </th>
 
-</tr>
-{{range .Apiseries}}
-<tr>
-    <td class="tcol1">
-        {{.Player}}
-    </td>
-    <td class="tcol1">
-        {{.Stampconv.Format "01-02 T15:04"}}
-    </td>
-    <td class="tcol1">
-        {{.Legend}}
-    </td>
-    <td class="tcol1">
-        {{.Totdmg}}
-    </td>
-    <td class="tcol1">
-        {{.Inctourn}}
-    </td>
-    <td class="tcol1">
-        {{.Seltrackers.Val1}}
-    </td>
-    <td class="tcol1">
-        {{.Seltrackers.Val2}}
-    </td>
-    <td class="tcol1">
-        {{.Seltrackers.Val3}}
-    </td>
-    
-</tr>
-{{end}}
-</table>
-<p><br></p>
-Database select statements completed in: {{.Timeselect}} <br><br>
-Time since last API pull:  {{.Timesincepull}}
+        </tr>
+        {{range .G}}
+        <tr>
+            <td class="tcol1">
+                {{.Player}}
+            </td>
+            <td class="tcol1">
+                <!--{{.Stampconv.Format "01-02 T15:04"}}-->
+                {{.Gametime..Format "01-02 T15:04"}}
+            </td>
+            <td class="tcol1">
+                {{.Legend}}
+            </td>
+            <td class="tcol1">
+                {{.Totdmg}}
+            </td>
+            <td class="tcol1">
+                {{.Inctourn}}
+            </td>
+            <td class="tcol1">
+                {{.C.Cat1}}:
+                {{.C.Cat1v}}
+            </td>
+            <td class="tcol1">
+                {{.C.Cat2}}:
+                {{.C.Cat2v}}
+            </td>
+            <td class="tcol1">
+                {{.C.Cat3}}:
+                {{.C.Cat3v}}
+            </td>
+
+        </tr>
+        {{end}}
+    </table>
+    <p><br></p>
+    Database select statements completed in: {{.Timeselect}} <br><br>
+    Time since last API pull: {{.Timesincepull}}
 </div>
