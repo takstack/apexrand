@@ -52,6 +52,8 @@ type Game struct {
 	Gametime time.Time
 	Nameid   string
 	Val      int
+	C Cats
+	Inctourn bool
 }
 
 //Loggame will enter data from games
@@ -248,8 +250,8 @@ func getplayersgamesspecdate(player string, tourndate time.Time) [][]string {
 	res.Close()
 
 	return sl
-} /////
-//Seltourngames will get game data
+} 
+//Seltourntrackers will get game data
 func Seltourntrackers(p string) []Game {
 	u := Getuser(p)
 	//log.Println("Seltourntrackers, user:", u)
@@ -313,6 +315,47 @@ func apigetplayerstrackers(user string) []Game {
 	return sl
 }
 
+//Sellatesttrackers will get game data
+func Sellatesttrackers(p string) []Game {
+	u := Getuser(p)
+	//log.Println("Seltourntrackers, user:", u)
+	gsl := apigetlatesttrackers(u)
+
+	//if there are no games, add empty set
+	if len(gsl) == 0 {
+		g := Game{}
+		gsl = append(gsl, g)
+		log.Println("seltourntrackers end len==0. gsl:", gsl)
+
+	}
+	/*
+		sort.SliceStable(pSL, func(i, j int) bool {
+			return pSL[i].Adjsum > pSL[j].Adjsum
+		})
+	*/
+	return gsl
+}
+
+func apigetlatesttrackers(user string) []Game {
+	qry := fmt.Sprintf("select c.gameid, c.psnid, c.tstamp, c.legend, c.totaldmg, c.adjdmg, c.inctourn,b.nameid, b.val from (select a.uid,a.gameid,a.psnid,a.tstamp,a.legend,a.totaldmg,a.adjdmg,a.inctourn from apigames as a where a.username='%s' order by a.tstamp desc limit 0,%d) as c left join apitracker as b on c.uid=b.uid and c.tstamp=b.tstamp and c.inctourn='1';", user, Tvar.Numgames)
+
+	res, err := db.Query(qry)
+	handleError(err)
+
+	var sl []Game
+	for res.Next() {
+		var g Game
+		// for each row, scan the result into our tag composite object
+		err := res.Scan(&g.ID, &g.Player, &g.Gametime, &g.Legend, &g.Totdmg, &g.Adjdmg, &g.Inctourn, &g.Nameid, &g.Val)
+		g.Gametime = Convertutc(g.Gametime)
+		handleError(err)
+
+		sl = append(sl, g)
+	}
+	res.Close()
+
+	return sl
+}
 //Convertutc exp
 func Convertutc(t time.Time) time.Time {
 	var local time.Time

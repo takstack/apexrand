@@ -557,8 +557,8 @@ func roulette(w http.ResponseWriter, r *http.Request) {
 	//log.Println(r.Header)
 	//log.Println("Read cookie:", r.Header.Get("Cookie"))
 
-	log.Printf("viewcounter:%d \n", viewcounter)
-	log.Printf("Request executed \n\n")
+	//log.Printf("viewcounter:%d \n", viewcounter)
+	//log.Printf("Request executed \n\n")
 
 	tmpl := template.Must(template.ParseFiles("static/html/roulette.html"))
 	tmpl.Execute(w, Res)

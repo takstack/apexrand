@@ -102,7 +102,7 @@ type Homepage struct {
 	Playername string
 }
 
-//Tournvar is global var for tourney setup
+//Tvar is global var for tourney setup
 var Tvar Tournvar
 
 //set logmanual games as well as tourn times

@@ -69,6 +69,7 @@ func Insuserfromfile() {
 		log.Fatalln("Commit Error")
 	}
 }
+//Createuser exp
 func Createuser(user Creds) error {
 	form, err := db.Prepare("INSERT INTO user (eaddr,platform,psnid,propername,username,pass,handicap,tournpart,confstr,confirmed) VALUES(?,?,?,?,?,?,?,?,?,?);")
 	handleError(err)
@@ -239,6 +240,7 @@ func Getactiveusers() []Onlineuser {
 	res.Close()
 	return sl
 }
+
 func isonline(exp time.Time) string {
 	now := time.Now()
 	d1 := now.AddDate(0, 1, 0)

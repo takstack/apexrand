@@ -37,7 +37,7 @@ type Stats struct {
 var APIerr string
 var lastpull time.Time
 
-//Maprot holds map rotation data
+//H holds map rotation data
 var H apexdb.Homepage
 
 //Apipull main process to pull down api data
@@ -349,6 +349,9 @@ func sendapitodb(a apexdb.Apimain) {
 		elem.Adjdmg = int(float64(elem.Totdmg) * ((10000 - float64(elem.Handi)) / 10000))
 		//check if char is allowed in tourn
 		//elem.Inctourn = checkchar(elem.Legend)
+
+
+		//check this for other users
 		elem.Inctourn = true
 		//log.Println("len(elem.Throwaway)", len(elem.Throwaway))
 		//log.Println("elem.Importdate", elem.Importdate)
@@ -531,6 +534,7 @@ func readjson() {
 	unmarjson(body)
 }
 */
+
 //Reqtopapimatches exp
 func Reqtopapimatches(username string) apexdb.Apimain {
 	now := time.Now()
@@ -562,6 +566,53 @@ func Reqtopapimatches(username string) apexdb.Apimain {
 	log.Println("req top matches in: ", time.Since(now))
 	return matchlist
 }
+//Reqlatesttrackers exp
+func Reqlatesttrackers(username string) []apexdb.Game {
+	//now := time.Now()
+	matches := apexdb.Sellatesttrackers(username)
+	if len(matches)<=0{
+		log.Println("Reqlatesttrackers matches empty")
+		return matches
+	}
+	var g []apexdb.Game
+	//var c = apexdb.Cats{Cat1:"0",Cat2:"0",Cat3:"0",Cat1v: 0, Cat2v: 0, Cat3v: 0}
+	var curr apexdb.Game
+	curr.Gametime= g[0].Gametime
+keyplace:=0
+
+	for i := range matches {
+		if curr.Gametime!=g[i].Gametime{
+			g=append(g,curr)
+			keyplace=0
+			curr=apexdb.Game{}
+		}
+
+curr.ID=matches[i].ID
+curr.Legend=matches[i].Legend
+curr.Totdmg=matches[i].Totdmg
+curr.Inctourn=matches[i].Inctourn
+
+switch keyplace{
+case 1:
+	curr.C.Cat1=matches[i].Nameid
+	curr.C.Cat1v=matches[i].Val
+case 2:
+	curr.C.Cat2=matches[i].Nameid
+	curr.C.Cat2v=matches[i].Val
+case 3:
+	curr.C.Cat3=matches[i].Nameid
+	curr.C.Cat3v=matches[i].Val
+	
+}
+keyplace++
+		}
+
+		g=append(g,curr)
+return g
+		}
+		
+		
+
 func getapikey() string {
 	f, err := os.Open("/var/lib/api/apikey")
 	if err != nil {
