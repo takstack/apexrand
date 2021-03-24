@@ -319,9 +319,9 @@ func apigetplayerstrackers(user string) []Game {
 }
 
 //Sellatesttrackers will get game data
-func Sellatesttrackers(p string) []Game {
-	u := Getuser(p)
-	log.Println("Sellatesttrackers, u:", u, "p:", p)
+func Sellatesttrackers(u string) []Game {
+	//u := Getuser(p)
+	//log.Println("Sellatesttrackers, u:", u, "p:", p)
 	gsl := apigetlatesttrackers(u)
 
 	//if there are no games, add empty set
