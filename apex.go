@@ -190,7 +190,10 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		Tourney.APIerr = api.APIerr
-		tmpl.Execute(w, Tourney)
+		err := tmpl.Execute(w, Tourney)
+		if err != nil {
+			log.Println("roulette exec error")
+		}
 		Tourney.Errcode = ""
 		return
 	}
@@ -343,7 +346,10 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 
 		log.Printf("after redir web param: %s \n\n", focus)
 
-		tmpl.Execute(w, Data)
+		err := tmpl.Execute(w, Data)
+		if err != nil {
+			log.Println("roulette exec error")
+		}
 		return //check============================================================================================================================
 	}
 	showdata := r.FormValue("showdata") //selected to show players games
@@ -544,8 +550,10 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	log.Printf("viewcounter-handler1:%d \n", viewcounter)
 
 	tmpl := template.Must(template.ParseFiles("static/html/home.html"))
-	tmpl.Execute(w, api.H)
-
+	err = tmpl.Execute(w, api.H)
+	if err != nil {
+		log.Println("handler1 exec error")
+	}
 }
 func roulette(w http.ResponseWriter, r *http.Request) {
 	validsess := chkvalidsession(w, r)
@@ -563,7 +571,10 @@ func roulette(w http.ResponseWriter, r *http.Request) {
 	//log.Printf("Request executed \n\n")
 
 	tmpl := template.Must(template.ParseFiles("static/html/roulette.html"))
-	tmpl.Execute(w, Res)
+	err := tmpl.Execute(w, Res)
+	if err != nil {
+		log.Println("roulette exec error")
+	}
 
 }
 func friends(w http.ResponseWriter, r *http.Request) {
