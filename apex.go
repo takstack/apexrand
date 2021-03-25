@@ -575,9 +575,9 @@ func manage(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 func helloServer(w http.ResponseWriter, r *http.Request) {
+	log.Println("helloserver started, redirect to /apex")
 	//fmt.Fprintf(w, "The server you were connecting to was disconnected or no longer in use.  Please try your request again or leave a message below")
 	http.Redirect(w, r, "/apex", http.StatusFound)
-
 }
 func fromRequest(req *http.Request) (net.IP, string, error) {
 	//log.Println("parsing new req ip")
