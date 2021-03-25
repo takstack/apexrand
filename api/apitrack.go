@@ -602,15 +602,15 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 
 		switch keyplace {
 		case 1:
-			log.Println("setting cat1")
+			//log.Println("setting cat1")
 			curr.C.Cat1 = match.Nameid
 			curr.C.Cat1v = match.Val
 		case 2:
-			log.Println("setting cat2")
+			//log.Println("setting cat2")
 			curr.C.Cat2 = match.Nameid
 			curr.C.Cat2v = match.Val
 		case 3:
-			log.Println("setting cat3")
+			//log.Println("setting cat3")
 			curr.C.Cat3 = match.Nameid
 			curr.C.Cat3v = match.Val
 
