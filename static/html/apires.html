@@ -62,11 +62,11 @@
             <td class="tcol1">
                 {{.Player}}
                 {{.Legend}}
-            </td>
+            </td><!--
             <td class="tcol1">
                 ID{{.ID}}
-                <!--{{.Stampconv.Format "01-02 T15:04"}}
-                {{.Gametime.Format "01-02 T15:04"}}-->
+                {{.Stampconv.Format "01-02 T15:04"}}
+                {{.Gametime.Format "01-02 T15:04"}}
             </td>
             <td class="tcol1">
                 {{.Inctourn}}
@@ -74,7 +74,7 @@
             <td class="tcol1">
                 {{.Totdmg}}
             </td>
-            <!--{{with .C}}
+            {{with .C}}
             <td class="tcol1">
                 
                 {{.Cat1}}
