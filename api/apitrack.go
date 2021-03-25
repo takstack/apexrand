@@ -593,6 +593,7 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 			curr = apexdb.Game{}
 		}
 		curr.ID = match.ID
+		curr.Player = match.Player
 		curr.Gametime = match.Gametime
 		curr.Legend = match.Legend
 		curr.Totdmg = match.Totdmg
