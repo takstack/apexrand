@@ -621,7 +621,7 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 	Tourn.G = append(Tourn.G, curr)
 	Tourn.Timesincepull = time.Since(lastpull).Round(time.Second / 100)
 	Tourn.Timeselect = time.Since(now).Round(time.Millisecond / 100)
-	log.Println("Tourn.G:", Tourn.G)
+	//log.Println("Tourn.G:", Tourn.G)
 	return Tourn
 }
 
