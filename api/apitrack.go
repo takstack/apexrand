@@ -582,7 +582,7 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 	var Tourn apexdb.Tourney
 	//var c = apexdb.Cats{Cat1:"0",Cat2:"0",Cat3:"0",Cat1v: 0, Cat2v: 0, Cat3v: 0}
 	var curr apexdb.Game
-	curr.Gametime = Tourn.G[0].Gametime
+	curr.Gametime = matches[0].Gametime
 	keyplace := 0
 
 	for i := range matches {
