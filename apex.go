@@ -592,7 +592,7 @@ func helloServer(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/apex", http.StatusFound)
 }
 func donothing(w http.ResponseWriter, r *http.Request) {
-	log.Println("ignoring favicon.ico")
+	//log.Println("ignoring favicon.ico")
 	//fmt.Fprintf(w, "The server you were connecting to was disconnected or no longer in use.  Please try your request again or leave a message below")
 	//http.Redirect(w, r, "/apex", http.StatusFound)
 }
