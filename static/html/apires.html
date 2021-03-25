@@ -41,13 +41,10 @@
                 Time
             </th>
             <th class="tcol1">
-                Legend
+                Inc_tourn
             </th>
             <th class="tcol1">
                 Points
-            </th>
-            <th class="tcol1">
-                Inc_tourn
             </th>
             <th class="tcol1">
                 Headshots
@@ -64,6 +61,29 @@
         <tr>
             <td class="tcol1">
                 {{.Player}}
+                {{.Legend}}
+            </td>
+            <td class="tcol1">
+                ID:{{.ID}}
+                <!--{{.Stampconv.Format "01-02 T15:04"}}
+                {{.Gametime.Format "01-02 T15:04"}}-->
+            </td>
+            <td class="tcol1">
+                {{.Inctourn}}
+            </td><td class="tcol1">
+                {{.Totdmg}}
+            </td>
+            <td class="tcol1">
+                {{.C.Cat1}}:
+                {{.C.Cat1v}}
+            </td>
+            <td class="tcol1">
+                {{.C.Cat2}}:
+                {{.C.Cat2v}}
+            </td>
+            <td class="tcol1">
+                {{.C.Cat3}}:
+                {{.C.Cat3v}}
             </td>
         </tr>
         {{end}}
