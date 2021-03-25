@@ -574,7 +574,7 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 		log.Println("Reqlatesttrackers err from sellatesttrackers:", err)
 		return apexdb.Tourney{}
 	}
-	//log.Println("Reqlatesttrackers matches: ", matches)
+	log.Println("Reqlatesttrackers matches: ", matches)
 	if len(matches) <= 0 {
 		log.Println("Reqlatesttrackers matches empty")
 		return apexdb.Tourney{}
@@ -585,31 +585,32 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 	curr.Gametime = matches[0].Gametime
 	keyplace := 1
 
-	for i := range matches {
-		if curr.Gametime != matches[i].Gametime {
+	for _, match := range matches {
+		log.Println("curr.Gametime, match.Gametime", curr.Gametime, match.Gametime)
+		if curr.Gametime != match.Gametime {
 			Tourn.G = append(Tourn.G, curr)
 			keyplace = 1
 			curr = apexdb.Game{}
 		}
-		curr.Gametime = matches[i].Gametime
-		curr.ID = matches[i].ID
-		curr.Legend = matches[i].Legend
-		curr.Totdmg = matches[i].Totdmg
-		curr.Inctourn = matches[i].Inctourn
+		curr.Gametime = match.Gametime
+		curr.ID = match.ID
+		curr.Legend = match.Legend
+		curr.Totdmg = match.Totdmg
+		curr.Inctourn = match.Inctourn
 
 		switch keyplace {
 		case 1:
 			log.Println("setting cat1")
-			curr.C.Cat1 = matches[i].Nameid
-			curr.C.Cat1v = matches[i].Val
+			curr.C.Cat1 = match.Nameid
+			curr.C.Cat1v = match.Val
 		case 2:
 			log.Println("setting cat2")
-			curr.C.Cat2 = matches[i].Nameid
-			curr.C.Cat2v = matches[i].Val
+			curr.C.Cat2 = match.Nameid
+			curr.C.Cat2v = match.Val
 		case 3:
 			log.Println("setting cat3")
-			curr.C.Cat3 = matches[i].Nameid
-			curr.C.Cat3v = matches[i].Val
+			curr.C.Cat3 = match.Nameid
+			curr.C.Cat3v = match.Val
 
 		}
 		keyplace++
