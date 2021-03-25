@@ -64,7 +64,7 @@
                 {{.Legend}}
             </td>
             <td class="tcol1">
-                ID:{{.ID}}
+                ID{{.ID}}
                 <!--{{.Stampconv.Format "01-02 T15:04"}}
                 {{.Gametime.Format "01-02 T15:04"}}-->
             </td>
@@ -75,8 +75,9 @@
                 {{.Totdmg}}
             </td>
             <td class="tcol1">
-                {{.C.Cat1}}
-                {{.C.Cat1v}}
+                {{with .C}}
+                {{.Cat1}}
+                {{.Cat1v}}
             </td>
             <td class="tcol1">
                 {{.C.Cat2}}
@@ -85,6 +86,7 @@
             <td class="tcol1">
                 {{.C.Cat3}}
                 {{.C.Cat3v}}
+            {{end}}
             </td>
         </tr>
         {{end}}
