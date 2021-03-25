@@ -583,12 +583,12 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 	//var c = apexdb.Cats{Cat1:"0",Cat2:"0",Cat3:"0",Cat1v: 0, Cat2v: 0, Cat3v: 0}
 	var curr apexdb.Game
 	curr.Gametime = matches[0].Gametime
-	keyplace := 0
+	keyplace := 1
 
 	for i := range matches {
 		if curr.Gametime != matches[i].Gametime {
 			Tourn.G = append(Tourn.G, curr)
-			keyplace = 0
+			keyplace = 1
 			curr = apexdb.Game{}
 		}
 
@@ -599,12 +599,15 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 
 		switch keyplace {
 		case 1:
+			log.Println("setting cat1")
 			curr.C.Cat1 = matches[i].Nameid
 			curr.C.Cat1v = matches[i].Val
 		case 2:
+			log.Println("setting cat2")
 			curr.C.Cat2 = matches[i].Nameid
 			curr.C.Cat2v = matches[i].Val
 		case 3:
+			log.Println("setting cat3")
 			curr.C.Cat3 = matches[i].Nameid
 			curr.C.Cat3v = matches[i].Val
 
