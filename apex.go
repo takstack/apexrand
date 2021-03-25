@@ -524,6 +524,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	if !validsess {
 		return
 	}
+	log.Println("handler1 started")
 	viewcounter++
 	//_, _, _ = fromRequest(r)
 	//log.Println(r.Header)
@@ -540,7 +541,7 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	api.H.Playername = apexdb.Getplayeridfromuser(username)
 	api.H.Platform = apexdb.Getplatfromuser(username)
 
-	log.Printf("viewcounter:%d \n", viewcounter)
+	log.Printf("viewcounter-handler1:%d \n", viewcounter)
 
 	tmpl := template.Must(template.ParseFiles("static/html/home.html"))
 	tmpl.Execute(w, api.H)
@@ -551,6 +552,7 @@ func roulette(w http.ResponseWriter, r *http.Request) {
 	if !validsess {
 		return
 	}
+	log.Println("roulette handler started")
 	viewcounter++
 	//_, _, _ = fromRequest(r)
 
