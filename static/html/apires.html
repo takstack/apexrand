@@ -45,7 +45,7 @@
             </th>
             <th class="tcol1">
                 Points
-            </th>
+            </th><!--
             <th class="tcol1">
                 Cat1
             </th>
@@ -54,7 +54,7 @@
             </th>
             <th class="tcol1">
                 Cat3
-            </th>
+            </th>-->
 
         </tr>
         {{range .G}}
@@ -74,11 +74,12 @@
             <td class="tcol1">
                 {{.Totdmg}}
             </td>
+            {{with .C}}<!--
             <td class="tcol1">
-                {{with .C}}
+                
                 {{.Cat1}}
-                <!--{{.Cat1v}}-->
-            </td><!--
+                {{.Cat1v}
+            </td>
             <td class="tcol1">
                 {{.C.Cat2}}
                 {{.C.Cat2v}}
