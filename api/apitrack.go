@@ -582,18 +582,18 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 	var Tourn apexdb.Tourney
 	//var c = apexdb.Cats{Cat1:"0",Cat2:"0",Cat3:"0",Cat1v: 0, Cat2v: 0, Cat3v: 0}
 	var curr apexdb.Game
-	curr.Gametime = matches[0].Gametime
+	curr.ID = matches[0].ID
 	keyplace := 1
 
 	for _, match := range matches {
-		log.Println("curr.Gametime, match.Gametime", curr.Gametime, match.Gametime)
-		if curr.Gametime != match.Gametime {
+		log.Println("curr.ID, match.ID", curr.ID, match.ID)
+		if curr.ID != match.ID {
 			Tourn.G = append(Tourn.G, curr)
 			keyplace = 1
 			curr = apexdb.Game{}
 		}
-		curr.Gametime = match.Gametime
 		curr.ID = match.ID
+		curr.Gametime = match.Gametime
 		curr.Legend = match.Legend
 		curr.Totdmg = match.Totdmg
 		curr.Inctourn = match.Inctourn
