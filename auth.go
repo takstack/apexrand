@@ -136,6 +136,8 @@ func auth(l formlogin) error {
 	return nil
 }
 func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
+	_, ips, _ := fromRequest(r)
+	//log.Printf("userfromsess: %s\n", apexdb.Getuserfromsess(sessid))
 
 	cookie, err := getcookie(w, r, "apextoken")
 	if err != nil {
@@ -145,9 +147,6 @@ func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
 	}
 
 	sessid := cookie.Value
-
-	_, ips, _ := fromRequest(r)
-	//log.Printf("userfromsess: %s\n", apexdb.Getuserfromsess(sessid))
 
 	apexdb.Logip(sessid, ips)
 	//log.Println("entered user ip: ", sessid, ips)

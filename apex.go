@@ -549,6 +549,9 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 	username := apexdb.Getuserfromsess(sessid)
 	api.H.Playername = apexdb.Getplayeridfromuser(username)
 	api.H.Platform = apexdb.Getplatfromuser(username)
+	if api.H.Platform == "PS4" {
+		api.H.Platform = "PSN"
+	}
 
 	log.Printf("viewcounter-handler1:%d \n", viewcounter)
 
