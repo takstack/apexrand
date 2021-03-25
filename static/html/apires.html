@@ -32,67 +32,11 @@
     <p></p>
 
 
-    <table class="style1">
-        <tr>
-            <th class="tcol1">
-                Player
-            </th><!--
-            <th class="tcol1">
-                Time
-            </th>
-            <th class="tcol1">
-                Inc_tourn
-            </th>
-            <th class="tcol1">
-                Points
-            </th>
-            <th class="tcol1">
-                Cat1
-            </th>
-            <th class="tcol1">
-                Cat2
-            </th>
-            <th class="tcol1">
-                Cat3
-            </th>-->
-
-        </tr>
+    
         {{range .G}}
-        <tr>
-            <td class="tcol1">
-                {{.Player}}
-                {{.Legend}}
-            </td><!--
-            <td class="tcol1">
-                ID{{.ID}}
-                {{.Stampconv.Format "01-02 T15:04"}}
-                {{.Gametime.Format "01-02 T15:04"}}
-            </td>
-            <td class="tcol1">
-                {{.Inctourn}}
-            </td>
-            <td class="tcol1">
-                {{.Totdmg}}
-            </td>
-            {{with .C}}
-            <td class="tcol1">
-                
-                {{.Cat1}}
-                {{.Cat1v}
-            </td>
-            <td class="tcol1">
-                {{.C.Cat2}}
-                {{.C.Cat2v}}
-            </td>
-            <td class="tcol1">
-                {{.C.Cat3}}
-                {{.C.Cat3v}}
-            
-            </td>
-            {{end}}-->
-        </tr>
+        {{.Player}} {{.Legend}} {{.Totdmg}}
         {{end}}
-    </table>
+
     <p><br></p>
     Database select statements completed in: {{.Timeselect}} <br><br>
     Time since last API pull: {{.Timesincepull}}
