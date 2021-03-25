@@ -79,6 +79,7 @@ func main() {
 	http.HandleFunc("/redirtourn", redirtourn)
 	http.HandleFunc("/redirtrackers", redirtrackers)
 	http.HandleFunc("/apires", apires)
+	http.HandleFunc("/favicon.ico", donothing)
 	http.HandleFunc("/", helloServer)
 
 	//http.Handle("/images/", http.StripPrefix("/images/", http.FileServer(http.Dir("./images"))))
@@ -589,6 +590,11 @@ func helloServer(w http.ResponseWriter, r *http.Request) {
 	log.Println("helloserver started, redirect to /apex")
 	//fmt.Fprintf(w, "The server you were connecting to was disconnected or no longer in use.  Please try your request again or leave a message below")
 	http.Redirect(w, r, "/apex", http.StatusFound)
+}
+func donothing(w http.ResponseWriter, r *http.Request) {
+	log.Println("ignoring favicon.ico")
+	//fmt.Fprintf(w, "The server you were connecting to was disconnected or no longer in use.  Please try your request again or leave a message below")
+	//http.Redirect(w, r, "/apex", http.StatusFound)
 }
 func fromRequest(req *http.Request) (net.IP, string, error) {
 	//log.Println("parsing new req ip")
