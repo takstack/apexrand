@@ -41,19 +41,19 @@
                 Time
             </th>
             <th class="tcol1">
-                Inc_tourn
+                Tourn
             </th>
             <th class="tcol1">
                 Points
             </th>
             <th class="tcol1">
-                Cat1
+                Tracker 1
             </th>
             <th class="tcol1">
-                Cat2
+                Tracker 2
             </th>
             <th class="tcol1">
-                Cat3
+                Tracker 3
             </th>
 
         </tr>
@@ -64,7 +64,7 @@
                 {{.Legend}}
             </td>
             <td class="tcol1">
-                ID{{.ID}}
+                ID:{{.ID}},
                 {{.Gametime.Format "01-02 T15:04"}}
             </td>
             <td class="tcol1">
@@ -93,6 +93,6 @@
     </table>
 
     <p><br></p>
-    Database select statements completed in: {{.Timeselect}} <br><br>
+    Database query completed in: {{.Timeselect}} <br><br>
     Time since last API pull: {{.Timesincepull}}
 </div>

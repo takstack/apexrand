@@ -533,7 +533,7 @@ func readjson() {
 	unmarjson(body)
 }
 */
-
+/*
 //Reqtopapimatches exp
 func Reqtopapimatches(username string) apexdb.Apimain {
 	now := time.Now()
@@ -565,6 +565,7 @@ func Reqtopapimatches(username string) apexdb.Apimain {
 	log.Println("req top matches in: ", time.Since(now))
 	return matchlist
 }
+*/
 
 //Reqlatesttrackers exp
 func Reqlatesttrackers(username string) apexdb.Tourney {
@@ -574,7 +575,7 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 		log.Println("Reqlatesttrackers err from sellatesttrackers:", err)
 		return apexdb.Tourney{}
 	}
-	log.Println("Reqlatesttrackers matches: ", matches)
+	//log.Println("Reqlatesttrackers matches: ", matches)
 	if len(matches) <= 0 {
 		log.Println("Reqlatesttrackers matches empty")
 		return apexdb.Tourney{}
@@ -586,7 +587,7 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 	keyplace := 1
 
 	for _, match := range matches {
-		log.Println("curr.ID, match.ID", curr.ID, match.ID)
+		//log.Println("curr.ID, match.ID", curr.ID, match.ID)
 		if curr.ID != match.ID {
 			Tourn.G = append(Tourn.G, curr)
 			keyplace = 1
