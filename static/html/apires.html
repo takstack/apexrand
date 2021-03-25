@@ -34,7 +34,8 @@
 
     
         {{range .G}}
-        {{.Player}} {{.Legend}} {{.Totdmg}} {{.Inctourn}}{{with .C}} {{.Cat1}}{{end}}</br>
+        {{.Player}} {{.Legend}} {{.Totdmg}} {{.Inctourn}}
+        {{with .C}} {{.Cat1}}{{end}} {{.Gametime.Format "01-02 T15:04"}}</br>
         {{end}}
 
     <p><br></p>
