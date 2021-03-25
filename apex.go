@@ -9,7 +9,6 @@ import (
 	//"bytes"
 	//"encoding/json"
 	"fmt"
-	"html/template"
 
 	//"io/ioutil"
 	"log"
@@ -31,6 +30,9 @@ var Res random.Player
 
 var viewcounter int = 0
 
+func init() {
+	parsetemplates()
+}
 func main() {
 
 	srv := &http.Server{
@@ -93,12 +95,12 @@ func main() {
 //func for shopbot
 func shopbot(w http.ResponseWriter, r *http.Request) {
 	log.Println("shopbot started")
-	tmpl := template.Must(template.ParseFiles("static/html/shopbot.html"))
+	//tmpl := template.Must(template.ParseFiles("static/html/shopbot.html"))
 	_, _, _ = fromRequest(r)
 
 	focus := r.URL.Query().Get("key")
 	if focus == "shop2020getit" {
-		tmpl.Execute(w, "")
+		tmpl.shopbot.Execute(w, "")
 		//texting disabled due to no longer in use
 		//sendtxts()
 		log.Println("send texts should have been executed but disabled for now")
@@ -120,8 +122,8 @@ func getstats(w http.ResponseWriter, r *http.Request) {
 	st.Playercount = apexdb.Selplayerstats()
 	st.Totalrolls = apexdb.Getnumrolls()
 	st.Thresh = random.Thresh
-	tmpl := template.Must(template.ParseFiles("static/html/stats.html"))
-	tmpl.Execute(w, st)
+	//tmpl := template.Must(template.ParseFiles("static/html/stats.html"))
+	tmpl.getstats.Execute(w, st)
 }
 
 func rollauto(w http.ResponseWriter, r *http.Request) {
@@ -167,7 +169,7 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("tourney started")
-	tmpl := template.Must(template.ParseFiles("static/html/tourneyapi.html"))
+	//tmpl := template.Must(template.ParseFiles("static/html/tourneyapi.html"))
 	//_, _, _ = fromRequest(r)
 
 	var Tourney apexdb.Tourney
@@ -191,7 +193,7 @@ func tourneyapi(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 		Tourney.APIerr = api.APIerr
-		err := tmpl.Execute(w, Tourney)
+		err := tmpl.tourneyapi.Execute(w, Tourney)
 		if err != nil {
 			log.Println("roulette exec error")
 		}
@@ -272,14 +274,14 @@ func loggame(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println("loggame started")
-	tmpl := template.Must(template.ParseFiles("static/html/loggame.html"))
+	//tmpl := template.Must(template.ParseFiles("static/html/loggame.html"))
 	//_, _, _ = fromRequest(r)
 
 	var Tourney apexdb.Tourney
 	Tourney.Activeusers = apexdb.Getactiveusers()
 
 	if r.Method != http.MethodPost {
-		tmpl.Execute(w, Tourney)
+		tmpl.loggame.Execute(w, Tourney)
 		return
 	}
 
@@ -337,7 +339,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 		}
 		//log.Println("data.U", Data.U)
 
-		tmpl := template.Must(template.ParseFiles("static/html/trackersapi.html"))
+		//tmpl := template.Must(template.ParseFiles("static/html/trackersapi.html"))
 
 		//set focus to get trackers-----------------------------------------------------------------------------------------------------
 
@@ -347,7 +349,7 @@ func trackersapi(w http.ResponseWriter, r *http.Request) {
 
 		log.Printf("after redir web param: %s \n\n", focus)
 
-		err := tmpl.Execute(w, Data)
+		err := tmpl.trackersapi.Execute(w, Data)
 		if err != nil {
 			log.Println("roulette exec error")
 		}
@@ -369,14 +371,14 @@ func teams(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		sessid := cookie.Value
-		tmpl := template.Must(template.ParseFiles("static/html/teams.html"))
+		//tmpl := template.Must(template.ParseFiles("static/html/teams.html"))
 
 		var user apexdb.User
 		user.Teams = apexdb.Getbothteams()
 		user.Activeusers = apexdb.Getactiveusers()
 
 		if r.Method != http.MethodPost {
-			tmpl.Execute(w, user)
+			tmpl.teams.Execute(w, user)
 			return
 		}
 
@@ -409,7 +411,7 @@ func teams(w http.ResponseWriter, r *http.Request) {
 
 		//log.Println("teams:", user)
 		//tmpl := template.Must(template.ParseFiles("static/html/teams.html"))
-		tmpl.Execute(w, user)
+		tmpl.teams.Execute(w, user)
 	}
 
 }
@@ -511,8 +513,8 @@ func apires(w http.ResponseWriter, r *http.Request) {
 	Apimain := api.Reqlatesttrackers(username)
 	//log.Println("runtime heap allocation: ", runtime.ReadMemStats())
 
-	tmpl := template.Must(template.ParseFiles("static/html/apires.html"))
-	tmpl.Execute(w, Apimain)
+	//tmpl := template.Must(template.ParseFiles("static/html/apires.html"))
+	tmpl.apires.Execute(w, Apimain)
 
 }
 func user(w http.ResponseWriter, r *http.Request) {
@@ -522,8 +524,8 @@ func user(w http.ResponseWriter, r *http.Request) {
 	}
 	//_, _, _ = fromRequest(r)
 
-	tmpl := template.Must(template.ParseFiles("static/html/user.html"))
-	tmpl.Execute(w, nil)
+	//tmpl := template.Must(template.ParseFiles("static/html/user.html"))
+	tmpl.user.Execute(w, nil)
 
 }
 func handler1(w http.ResponseWriter, r *http.Request) {
@@ -550,8 +552,8 @@ func handler1(w http.ResponseWriter, r *http.Request) {
 
 	log.Printf("viewcounter-handler1:%d \n", viewcounter)
 
-	tmpl := template.Must(template.ParseFiles("static/html/home.html"))
-	err = tmpl.Execute(w, api.H)
+	//tmpl := template.Must(template.ParseFiles("static/html/home.html"))
+	err = tmpl.handler1.Execute(w, api.H)
 	if err != nil {
 		log.Println("handler1 exec error")
 	}
@@ -571,20 +573,20 @@ func roulette(w http.ResponseWriter, r *http.Request) {
 	//log.Printf("viewcounter:%d \n", viewcounter)
 	//log.Printf("Request executed \n\n")
 
-	tmpl := template.Must(template.ParseFiles("static/html/roulette.html"))
-	err := tmpl.Execute(w, Res)
+	//tmpl := template.Must(template.ParseFiles("static/html/roulette.html"))
+	err := tmpl.roulette.Execute(w, Res)
 	if err != nil {
 		log.Println("roulette exec error")
 	}
 
 }
 func friends(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("static/html/friends.html"))
-	tmpl.Execute(w, nil)
+	//tmpl := template.Must(template.ParseFiles("static/html/friends.html"))
+	tmpl.friends.Execute(w, nil)
 }
 func manage(w http.ResponseWriter, r *http.Request) {
-	tmpl := template.Must(template.ParseFiles("static/html/manage.html"))
-	tmpl.Execute(w, nil)
+	//tmpl := template.Must(template.ParseFiles("static/html/manage.html"))
+	tmpl.manage.Execute(w, nil)
 }
 func helloServer(w http.ResponseWriter, r *http.Request) {
 	log.Println("helloserver started, redirect to /apex")
