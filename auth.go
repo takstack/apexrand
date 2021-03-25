@@ -150,7 +150,7 @@ func chkvalidsession(w http.ResponseWriter, r *http.Request) bool {
 	//log.Printf("userfromsess: %s\n", apexdb.Getuserfromsess(sessid))
 
 	apexdb.Logip(sessid, ips)
-	log.Println("entered user ip: ", sessid, ips)
+	//log.Println("entered user ip: ", sessid, ips)
 	////log.Println("before chkvalid db call")
 	c := apexdb.Selsess(sessid)
 	//log.Println("token expire time:", c.Exp)
