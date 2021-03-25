@@ -574,7 +574,7 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 		log.Println("Reqlatesttrackers err from sellatesttrackers:", err)
 		return apexdb.Tourney{}
 	}
-	log.Println("Reqlatesttrackers matches: ", matches)
+	//log.Println("Reqlatesttrackers matches: ", matches)
 	if len(matches) <= 0 {
 		log.Println("Reqlatesttrackers matches empty")
 		return apexdb.Tourney{}
@@ -582,9 +582,6 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 	var Tourn apexdb.Tourney
 	//var c = apexdb.Cats{Cat1:"0",Cat2:"0",Cat3:"0",Cat1v: 0, Cat2v: 0, Cat3v: 0}
 	var curr apexdb.Game
-	log.Println("made before")
-	log.Println("matches[0].Gametime", matches[0].Gametime)
-	log.Println("made after")
 	curr.Gametime = matches[0].Gametime
 	keyplace := 0
 
@@ -618,6 +615,7 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 	Tourn.G = append(Tourn.G, curr)
 	Tourn.Timesincepull = time.Since(lastpull).Round(time.Second / 100)
 	Tourn.Timeselect = time.Since(now).Round(time.Millisecond / 100)
+	log.Println("Tourn.G:", Tourn.G)
 	return Tourn
 }
 
