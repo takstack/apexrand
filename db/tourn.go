@@ -319,33 +319,35 @@ func apigetplayerstrackers(user string) []Game {
 }
 
 //Sellatesttrackers will get game data
-func Sellatesttrackers(u string) []Game {
+func Sellatesttrackers(u string) ([]Game, error) {
 	//u := Getuser(p)
 	//log.Println("Sellatesttrackers, u:", u, "p:", p)
-	gsl := apigetlatesttrackers(u)
+	gsl, err := apigetlatesttrackers(u)
 
 	//if there are no games, add empty set
 	if len(gsl) == 0 {
-		g := Game{}
-		gsl = append(gsl, g)
 		log.Println("apigetlatesttrackers end len==0. gsl:", gsl)
-
+		//g := Game{}
+		//gsl = append(gsl, g)
 	}
 	/*
 		sort.SliceStable(pSL, func(i, j int) bool {
 			return pSL[i].Adjsum > pSL[j].Adjsum
 		})
 	*/
-	return gsl
+	return gsl, err
 }
 
-func apigetlatesttrackers(user string) []Game {
+func apigetlatesttrackers(user string) ([]Game, error) {
 	qry := fmt.Sprintf("select c.gameid, c.psnid, c.tstamp, c.legend, c.totaldmg, c.adjdmg, c.inctourn,b.nameid, b.val from (select a.uid,a.gameid,a.psnid,a.tstamp,a.legend,a.totaldmg,a.adjdmg,a.inctourn from apigames as a where a.username='%s' order by a.tstamp desc limit 0,%d) as c left join apitracker as b on c.uid=b.uid and c.tstamp=b.tstamp;", user, 5)
 
 	res, err := db.Query(qry)
-	handleError(err)
-
 	var sl []Game
+	if err != nil {
+		log.Println("apigetlatesttrackers err:", err)
+		return sl, err
+	}
+
 	for res.Next() {
 		var g Game
 		// for each row, scan the result into our tag composite object
@@ -357,7 +359,7 @@ func apigetlatesttrackers(user string) []Game {
 	}
 	res.Close()
 
-	return sl
+	return sl, err
 }
 
 //Convertutc exp

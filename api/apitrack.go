@@ -569,7 +569,12 @@ func Reqtopapimatches(username string) apexdb.Apimain {
 //Reqlatesttrackers exp
 func Reqlatesttrackers(username string) apexdb.Tourney {
 	now := time.Now()
-	matches := apexdb.Sellatesttrackers(username)
+	matches, err := apexdb.Sellatesttrackers(username)
+	if err != nil {
+		log.Println("Reqlatesttrackers err from sellatesttrackers:", err)
+		return apexdb.Tourney{}
+	}
+	log.Println("Reqlatesttrackers matches: ", matches)
 	if len(matches) <= 0 {
 		log.Println("Reqlatesttrackers matches empty")
 		return apexdb.Tourney{}
