@@ -589,7 +589,7 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 	keyplace := 0
 
 	for i := range matches {
-		if curr.Gametime != Tourn.G[i].Gametime {
+		if curr.Gametime != matches[i].Gametime {
 			Tourn.G = append(Tourn.G, curr)
 			keyplace = 0
 			curr = apexdb.Game{}
