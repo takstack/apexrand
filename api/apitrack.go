@@ -591,7 +591,7 @@ func Reqlatesttrackers(username string) apexdb.Tourney {
 			keyplace = 1
 			curr = apexdb.Game{}
 		}
-
+		curr.Gametime = matches[i].Gametime
 		curr.ID = matches[i].ID
 		curr.Legend = matches[i].Legend
 		curr.Totdmg = matches[i].Totdmg
