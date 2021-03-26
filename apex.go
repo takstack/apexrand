@@ -65,6 +65,7 @@ func main() {
 	http.HandleFunc("/wipestats", wipestats)
 	http.HandleFunc("/rollauto", rollauto)
 	http.HandleFunc("/apex", handler1)
+	http.HandleFunc("/home", handler1)
 	http.HandleFunc("/roulette", roulette)
 	http.HandleFunc("/login", login)
 	http.HandleFunc("/waitconf", waitconf)
