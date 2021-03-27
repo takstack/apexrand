@@ -593,9 +593,13 @@ func manage(w http.ResponseWriter, r *http.Request) {
 	tmpl.manage.Execute(w, nil)
 }
 func helloServer(w http.ResponseWriter, r *http.Request) {
-	log.Println("helloserver started, redirect to /apex")
+	log.Println("helloserver started, redirect to /home")
+	validsess := chkvalidsession(w, r)
+	if !validsess {
+		return
+	}
 	//fmt.Fprintf(w, "The server you were connecting to was disconnected or no longer in use.  Please try your request again or leave a message below")
-	http.Redirect(w, r, "/apex", http.StatusFound)
+	http.Redirect(w, r, "/home", http.StatusFound)
 }
 func donothing(w http.ResponseWriter, r *http.Request) {
 	//log.Println("ignoring favicon.ico")
