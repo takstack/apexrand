@@ -74,11 +74,11 @@ services:
     #build:
     #  context: ./mysql
     restart: always
-    volumes:
+    #volumes:
       #- ./mysql/apexdump201015.sql:/docker-entrypoint-initdb.d/init.sql
       #- /C/ProgramData/MySQL/MySQL Server 8.0/Data/dockertest:/var/lib/mysql
-      - ./mysql/data:/var/lib/mysql
-      - ./logs/mysql.log:/var/log/mysql/general-log.log
+      #- ./mysql/data:/var/lib/mysql
+      #- ./logs/mysql.log:/var/log/mysql/general-log.log
       #volumes_from:
       #  - data
     environment:
