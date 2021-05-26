@@ -62,3 +62,39 @@ services:
     #  interval: 30s
     #  timeout: 10s
     #  retries: 5
+  
+  mysql_stockdb:
+    #image: "mysql:8.0.19"
+    #command: --default-authentication-plugin=mysql_native_password
+    
+    command: --default-authentication-plugin=mysql_native_password --lower_case_table_names=2
+    #command: mysqld --general-log=1 --general-log-file=/var/log/mysql/general-log.log  #check if 2nd command executed
+
+    container_name: mysql_stockdb
+    build:
+      context: ./mysql
+    restart: always
+    volumes:
+      #- ./mysql/apexdump201015.sql:/docker-entrypoint-initdb.d/init.sql
+      #- /C/ProgramData/MySQL/MySQL Server 8.0/Data/dockertest:/var/lib/mysql
+      - ./mysql/data:/var/lib/mysql
+      - ./logs/mysql.log:/var/log/mysql/general-log.log
+      #volumes_from:
+      #  - data
+    environment:
+      MYSQL_ROOT_PASSWORD: Mysqlpass1
+      MYSQL_USER: stockuser
+      MYSQL_PASSWORD: MysqlStock1#
+      MYSQL_DATABASE: stockdb
+      DATA_PATH_HOST: ./mysql
+      #MYSQL_ROOT_PASSWORD: ${ROOTPASS}
+      #MYSQL_USER: ${USERNAME}
+      #MYSQL_PASSWORD: ${USERPASS}
+      #MYSQL_DATABASE: dockertest
+    ports:
+      - "3300:3300"
+    #expose:  #using expose only will open port for only other containers, not host
+    #  - 3306
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
+    tty: true
