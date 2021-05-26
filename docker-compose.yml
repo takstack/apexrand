@@ -92,7 +92,7 @@ services:
       #MYSQL_PASSWORD: ${USERPASS}
       #MYSQL_DATABASE: dockertest
     ports:
-      - "3300:3300"
+      - "3300:3306"
     #expose:  #using expose only will open port for only other containers, not host
     #  - 3306
     cap_add:
