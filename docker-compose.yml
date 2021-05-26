@@ -71,13 +71,13 @@ services:
     #command: mysqld --general-log=1 --general-log-file=/var/log/mysql/general-log.log  #check if 2nd command executed
 
     container_name: mysql_stockdb
-    #build:
-    #  context: ./mysql
+    build:
+      context: ./mysql_stocks
     restart: always
-    #volumes:
+    volumes:
       #- ./mysql/apexdump201015.sql:/docker-entrypoint-initdb.d/init.sql
       #- /C/ProgramData/MySQL/MySQL Server 8.0/Data/dockertest:/var/lib/mysql
-      #- ./mysql/data:/var/lib/mysql
+      - ./mysql_stocks/data:/var/lib/mysql
       #- ./logs/mysql.log:/var/log/mysql/general-log.log
       #volumes_from:
       #  - data
