@@ -77,7 +77,7 @@ services:
     volumes:
       #- ./mysql/apexdump201015.sql:/docker-entrypoint-initdb.d/init.sql
       #- /C/ProgramData/MySQL/MySQL Server 8.0/Data/dockertest:/var/lib/mysql
-      - ./mysql_stocks/data:/var/lib/mysql
+      - ./mysql_stocks/data:/var/lib/mysql_stocks
       #- ./logs/mysql.log:/var/log/mysql/general-log.log
       #volumes_from:
       #  - data
