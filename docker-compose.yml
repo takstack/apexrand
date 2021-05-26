@@ -86,7 +86,7 @@ services:
       MYSQL_USER: stockuser
       MYSQL_PASSWORD: MysqlStock1#
       MYSQL_DATABASE: stockdb
-      DATA_PATH_HOST: ./mysql
+      DATA_PATH_HOST: ./mysql_stocks
       #MYSQL_ROOT_PASSWORD: ${ROOTPASS}
       #MYSQL_USER: ${USERNAME}
       #MYSQL_PASSWORD: ${USERPASS}
