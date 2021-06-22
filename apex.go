@@ -5,12 +5,12 @@ import (
 	"apexrand/api"
 	apexdb "apexrand/db"
 	"apexrand/random"
+	"io"
 
 	//"bytes"
 	//"encoding/json"
 	"fmt"
 
-	//"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -55,6 +55,7 @@ func main() {
 
 	log.Println("reminder: set tournament time in loggame, logmangames params if in tournament")
 	http.HandleFunc("/reg", reg)
+	http.HandleFunc("/arduino", arduinoresp)
 	http.HandleFunc("/shopbot", shopbot)
 	http.HandleFunc("/current", handler1)
 	//http.HandleFunc("/testroll", testroll)
@@ -91,6 +92,26 @@ func main() {
 	srv.SetKeepAlivesEnabled(false)
 	log.Fatalln(srv.ListenAndServe())
 
+}
+func arduinoresp(w http.ResponseWriter, r *http.Request) {
+	log.Println("arduino started")
+	//tmpl := template.Must(template.ParseFiles("static/html/tourneyapi.html"))
+	//_, _, _ = fromRequest(r)
+	data := r.URL.Query().Get("data")
+	log.Println("data: ", data)
+
+	time.Sleep(10 * time.Second)
+
+	resp, err := http.Get("http://sheldonconn.ddns.net:8010/1/on")
+	if err != nil {
+		log.Println("arduino: ", err)
+	}
+	defer resp.Body.Close()
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("arduino readall: ", err)
+	}
+	log.Println(body)
 }
 
 //func for shopbot
