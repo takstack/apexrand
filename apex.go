@@ -55,7 +55,7 @@ func main() {
 
 	log.Println("reminder: set tournament time in loggame, logmangames params if in tournament")
 	http.HandleFunc("/reg", reg)
-	http.HandleFunc("/arduino", arduinoresp)
+	http.HandleFunc("/ard", arduinoresp)
 	http.HandleFunc("/shopbot", shopbot)
 	http.HandleFunc("/current", handler1)
 	//http.HandleFunc("/testroll", testroll)
