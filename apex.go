@@ -5,7 +5,7 @@ import (
 	"apexrand/api"
 	apexdb "apexrand/db"
 	"apexrand/random"
-	"io"
+	"io/ioutil"
 
 	//"bytes"
 	//"encoding/json"
@@ -107,7 +107,7 @@ func arduinoresp(w http.ResponseWriter, r *http.Request) {
 		log.Println("arduino: ", err)
 	}
 	defer resp.Body.Close()
-	body, err := io.ReadAll(resp.Body)
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("arduino readall: ", err)
 	}
